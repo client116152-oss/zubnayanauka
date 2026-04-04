@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>Зубная наука | Современная стоматология в Казани</title>
-    <!-- Google Fonts & Font Awesome -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <style>
@@ -45,7 +44,6 @@
             padding: 0 24px;
         }
 
-        /* Navigation */
         .navbar {
             background: rgba(255,255,255,0.98);
             backdrop-filter: blur(8px);
@@ -61,10 +59,6 @@
             padding: 16px 24px;
             max-width: 1400px;
             margin: 0 auto;
-        }
-        .logo {
-            display: flex;
-            align-items: center;
         }
         .logo img {
             max-height: 52px;
@@ -118,7 +112,6 @@
             }
         }
 
-        /* Buttons */
         .btn-primary {
             background: var(--gold);
             color: white;
@@ -154,7 +147,6 @@
             color: white;
         }
 
-        /* Hero */
         .hero {
             background: linear-gradient(135deg, #FFFCF5 0%, #FFFFFF 100%);
             padding: 60px 0 80px;
@@ -217,7 +209,6 @@
             .hero-content h1 { font-size: 2.2rem; }
         }
 
-        /* sections */
         section {
             padding: 80px 0;
         }
@@ -236,7 +227,7 @@
             font-size: 1.1rem;
         }
 
-        /* about clinic */
+        /* about clinic - десктопная версия (две колонки) */
         .about-grid {
             display: flex;
             gap: 50px;
@@ -280,13 +271,33 @@
             object-fit: cover;
             box-shadow: var(--shadow-sm);
         }
-        .clinic-image .image-placeholder-text {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-top: 12px;
+
+        /* Мобильная версия раздела "О клинике" */
+        @media (max-width: 768px) {
+            .about-grid {
+                flex-direction: column;
+                text-align: center;
+            }
+            .about-text {
+                text-align: center;
+            }
+            .about-text h3 {
+                text-align: center;
+            }
+            .about-text p {
+                text-align: justify;
+            }
+            .features-list li {
+                justify-content: center;
+                flex-wrap: wrap;
+                text-align: center;
+            }
+            .clinic-image {
+                margin-top: 30px;
+                order: 2;
+            }
         }
 
-        /* why us */
         .why-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -312,7 +323,6 @@
             margin-bottom: 12px;
         }
 
-        /* doctor card with photo */
         .doctor-card {
             background: var(--pure-white);
             border-radius: 40px;
@@ -377,7 +387,6 @@
             margin-top: 12px;
         }
 
-        /* services */
         .services-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
@@ -414,7 +423,6 @@
             font-size: 1.2rem;
         }
 
-        /* technology block */
         .tech-grid {
             display: flex;
             flex-wrap: wrap;
@@ -436,7 +444,6 @@
             margin-bottom: 12px;
         }
 
-        /* reviews */
         .reviews-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -477,7 +484,6 @@
             letter-spacing: 2px;
         }
 
-        /* contacts */
         .contact-wrapper {
             display: flex;
             flex-wrap: wrap;
@@ -528,10 +534,6 @@
             padding: 32px 0;
             text-align: center;
         }
-        .footer-links {
-            margin-top: 12px;
-            font-size: 0.85rem;
-        }
         @media (max-width: 680px) {
             .container { padding: 0 20px; }
             section { padding: 60px 0; }
@@ -554,7 +556,6 @@
             max-width: 100%;
             height: auto;
         }
-        /* уведомление формы */
         .form-message {
             margin-top: 15px;
             padding: 10px;
@@ -576,7 +577,7 @@
 <nav class="navbar">
     <div class="nav-container">
         <div class="logo">
-            <img src="images/logo.png" alt="Логотип Зубная наука" style="max-height: 55px;">
+            <img src="images/logo.png" alt="Логотип Зубная наука">
         </div>
         <button class="menu-btn" id="menuToggle"><i class="fas fa-bars"></i></button>
         <ul class="nav-links" id="navLinks">
@@ -604,7 +605,7 @@
                 </div>
             </div>
             <div class="hero-image">
-                <img src="images/hero-interior.jpg" alt="Интерьер стоматологии Зубная наука">
+                <img src="images/hero-interior.jpg" alt="Интерьер стоматологии">
             </div>
         </div>
     </section>
@@ -626,8 +627,7 @@
                     </ul>
                 </div>
                 <div class="clinic-image">
-                    <img src="images/clinic-interior.jpg" alt="Интерьер стоматологии Зубная наука">
-                    <div class="image-placeholder-text">Современный интерьер клиники</div>
+                    <img src="images/clinic-interior.jpg" alt="Интерьер клиники">
                 </div>
             </div>
         </div>
@@ -707,7 +707,7 @@
             <div class="reviews-grid">
                 <div class="review-card">
                     <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                    <p class="review-text">«Очень изысканная клиника, чувствуется уровень. Доктор Шайдуллин — врач от Бога. Поставил виниры, результат превзошёл ожидания. Атмосфера как в SPA).»</p>
+                    <p class="review-text">«Очень изысканная клиника, чувствуется уровень. Доктор Шайдуллин — врач от Бога. Поставил виниры, результат превзошёл ожидания.»</p>
                     <div class="review-author">
                         <img src="images/review-avatar-1.jpg" alt="Фото пациента">
                         <span><strong>Алина К.</strong><br>Виниры</span>
@@ -715,7 +715,7 @@
                 </div>
                 <div class="review-card">
                     <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                    <p class="review-text">«Делала гигиену и отбеливание. Очень бережно, без дискомфорта. Давно искала такую клинику. Теперь вся семья ходит только в "Зубную науку".»</p>
+                    <p class="review-text">«Делала гигиену и отбеливание. Очень бережно, без дискомфорта. Теперь вся семья ходит только в "Зубную науку".»</p>
                     <div class="review-author">
                         <img src="images/review-avatar-2.jpg" alt="Фото пациента">
                         <span><strong>Екатерина В.</strong><br>Гигиена + отбеливание</span>
@@ -723,7 +723,7 @@
                 </div>
                 <div class="review-card">
                     <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
-                    <p class="review-text">«Попал с острой болью, спасли зуб, который другие хотели удалять. Лечение под микроскопом — это чудо! Врач объяснил каждый этап лечения и меры профилактики. Спасибо!»</p>
+                    <p class="review-text">«Попал с острой болью, спасли зуб, который другие хотели удалять. Лечение под микроскопом — это чудо!»</p>
                     <div class="review-author">
                         <img src="images/review-avatar-3.jpg" alt="Фото пациента">
                         <span><strong>Марат Ф.</strong><br>Эндодонтия</span>
@@ -736,7 +736,7 @@
         </div>
     </section>
 
-    <!-- Контакты с рабочей формой Formspree -->
+    <!-- Форма с отправкой через Formspree -->
     <section id="contacts">
         <div class="container">
             <div class="section-title">Контакты и запись</div>
@@ -756,16 +756,16 @@
                 </div>
                 <div class="contact-form">
                     <h4><i class="fas fa-calendar-alt"></i> Запись на приём</h4>
-                    <p>Оставьте заявку, и мы свяжемся с вами.</p>
-                    <form id="callbackForm" action="https://formspree.io/f/ваш_ид" method="POST">
-                        <!-- Замените 'ваш_ид' на реальный ID из Formspree -->
+                    <p>Заполните форму, и мы свяжемся с вами.</p>
+                    <form id="callbackForm" action="https://formspree.io/f/ВАШ_ИД" method="POST">
+                        <!-- Замените ВАШ_ИД на реальный ID из Formspree -->
                         <input type="hidden" name="_subject" value="Новая заявка с сайта Зубная наука">
                         <div class="form-group"><input type="text" name="name" placeholder="Ваше имя" required id="nameInput"></div>
                         <div class="form-group"><input type="tel" name="phone" placeholder="Номер телефона" required id="phoneInput"></div>
                         <div class="form-group"><textarea name="message" rows="3" placeholder="Удобное время или вопрос" id="msgInput"></textarea></div>
                         <button type="submit" class="btn-primary" style="width:100%;"><i class="fas fa-paper-plane"></i> Отправить заявку</button>
                         <div id="formMessage" class="form-message" style="display: none;"></div>
-                        
+                        <p style="font-size: 12px; margin-top: 12px;"></p>
                     </form>
                 </div>
             </div>
@@ -780,7 +780,6 @@
         </div>
         <p>© 2025 Стоматологическая клиника «Зубная наука». Лицензия № Л041-01187-16/00987.</p>
         <div class="footer-links">
-            <a href="#" style="color: #B8C5CE;"></a> 
             <span>Создано с заботой о вашей улыбке</span>
         </div>
     </div>
@@ -801,7 +800,7 @@
         });
     }
 
-    // Отправка формы через Formspree без перезагрузки
+    // Отправка через Formspree с помощью fetch
     const form = document.getElementById('callbackForm');
     const formMessageDiv = document.getElementById('formMessage');
     
