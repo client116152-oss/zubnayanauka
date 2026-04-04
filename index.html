@@ -1,0 +1,849 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Зубная наука | Современная стоматология в Казани</title>
+    <!-- Google Fonts & Font Awesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #ffffff;
+            color: #1f2d3d;
+            line-height: 1.5;
+            scroll-behavior: smooth;
+        }
+
+        :root {
+            --pure-white: #FFFFFF;
+            --soft-white: #FEFCF8;
+            --gold: #C9A03D;
+            --gold-light: #E6C468;
+            --gold-dark: #A47E2E;
+            --dark-charcoal: #1E2A36;
+            --slate: #2C3E4E;
+            --gray-light: #F5F5F5;
+            --gray-mid: #E9ECEF;
+            --text-dark: #1F2D3D;
+            --text-muted: #5A6E7C;
+            --shadow-sm: 0 8px 20px rgba(0,0,0,0.02), 0 2px 6px rgba(0,0,0,0.05);
+            --shadow-md: 0 20px 35px -12px rgba(0,0,0,0.08);
+            --border-gold: 1px solid rgba(201, 160, 61, 0.2);
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 24px;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: rgba(255,255,255,0.98);
+            backdrop-filter: blur(8px);
+            box-shadow: 0 1px 0 rgba(0,0,0,0.03), 0 2px 8px rgba(0,0,0,0.02);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 24px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        .logo img {
+            max-height: 52px;
+            width: auto;
+            display: block;
+        }
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+        }
+        .nav-links a {
+            text-decoration: none;
+            font-weight: 500;
+            color: var(--text-dark);
+            transition: 0.2s;
+            font-size: 1rem;
+        }
+        .nav-links a:hover {
+            color: var(--gold);
+        }
+        .menu-btn {
+            display: none;
+            font-size: 1.8rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--dark-charcoal);
+        }
+        @media (max-width: 820px) {
+            .nav-links {
+                position: fixed;
+                top: 72px;
+                left: -100%;
+                width: 80%;
+                height: calc(100vh - 72px);
+                background: white;
+                flex-direction: column;
+                padding: 2rem;
+                gap: 1.8rem;
+                box-shadow: var(--shadow-md);
+                transition: 0.3s ease;
+                z-index: 99;
+                border-right: 1px solid var(--gray-mid);
+            }
+            .nav-links.active {
+                left: 0;
+            }
+            .menu-btn {
+                display: block;
+            }
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background: var(--gold);
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 40px;
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: 0.25s;
+            display: inline-block;
+            text-decoration: none;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        }
+        .btn-primary:hover {
+            background: var(--gold-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 18px rgba(201,160,61,0.2);
+        }
+        .btn-outline {
+            background: transparent;
+            border: 2px solid var(--gold);
+            color: var(--gold);
+            padding: 10px 26px;
+            border-radius: 40px;
+            font-weight: 600;
+            transition: 0.2s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-outline:hover {
+            background: var(--gold);
+            color: white;
+        }
+
+        /* Hero */
+        .hero {
+            background: linear-gradient(135deg, #FFFCF5 0%, #FFFFFF 100%);
+            padding: 60px 0 80px;
+        }
+        .hero-grid {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 40px;
+        }
+        .hero-content {
+            flex: 1;
+        }
+        .hero-badge {
+            background: rgba(201, 160, 61, 0.12);
+            color: var(--gold-dark);
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+        .hero-content h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            line-height: 1.2;
+            color: var(--dark-charcoal);
+            margin-bottom: 20px;
+        }
+        .hero-content p {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            margin-bottom: 30px;
+            max-width: 90%;
+        }
+        .hero-stats {
+            display: flex;
+            gap: 28px;
+            margin-top: 32px;
+        }
+        .stat-item h3 {
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--gold-dark);
+        }
+        .hero-image {
+            flex: 1;
+            text-align: center;
+        }
+        .hero-image img {
+            max-width: 100%;
+            border-radius: 32px;
+            box-shadow: var(--shadow-md);
+            background: #FEF9EF;
+            padding: 8px;
+            border: 1px solid rgba(201,160,61,0.2);
+        }
+        @media (max-width: 768px) {
+            .hero-content h1 { font-size: 2.2rem; }
+        }
+
+        /* sections */
+        section {
+            padding: 80px 0;
+        }
+        .section-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--dark-charcoal);
+            margin-bottom: 16px;
+            text-align: center;
+        }
+        .section-sub {
+            text-align: center;
+            color: var(--text-muted);
+            max-width: 700px;
+            margin: 0 auto 48px auto;
+            font-size: 1.1rem;
+        }
+
+        /* about clinic */
+        .about-grid {
+            display: flex;
+            gap: 50px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+        .about-text {
+            flex: 1;
+        }
+        .about-text h3 {
+            font-size: 1.7rem;
+            margin-bottom: 20px;
+            color: var(--dark-charcoal);
+        }
+        .features-list {
+            list-style: none;
+            margin-top: 20px;
+        }
+        .features-list li {
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .features-list i {
+            color: var(--gold);
+            font-size: 1.3rem;
+        }
+        .clinic-image {
+            flex: 1;
+            background: var(--soft-white);
+            border-radius: 40px;
+            padding: 20px;
+            text-align: center;
+            border: var(--border-gold);
+        }
+        .clinic-image img {
+            width: 100%;
+            max-width: 400px;
+            border-radius: 28px;
+            object-fit: cover;
+            box-shadow: var(--shadow-sm);
+        }
+        .clinic-image .image-placeholder-text {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-top: 12px;
+        }
+
+        /* why us */
+        .why-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+        }
+        .why-card {
+            background: white;
+            border-radius: 28px;
+            padding: 32px 24px;
+            text-align: center;
+            box-shadow: var(--shadow-sm);
+            border: 1px solid #F2EFE8;
+            transition: 0.2s;
+        }
+        .why-card i {
+            font-size: 2.8rem;
+            color: var(--gold);
+            margin-bottom: 20px;
+        }
+        .why-card h4 {
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+        }
+
+        /* doctor card with photo */
+        .doctor-card {
+            background: var(--pure-white);
+            border-radius: 40px;
+            box-shadow: var(--shadow-sm);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            border: 1px solid #F0EDE5;
+            padding: 30px;
+        }
+        .doctor-photo {
+            flex: 0.8;
+            text-align: center;
+            background: #FEF9EF;
+            border-radius: 32px;
+            padding: 20px;
+        }
+        .doctor-photo img {
+            width: 100%;
+            max-width: 220px;
+            border-radius: 28px;
+            object-fit: cover;
+            box-shadow: var(--shadow-sm);
+        }
+        .doctor-info {
+            flex: 2;
+        }
+        .doctor-info h3 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--dark-charcoal);
+        }
+        .doctor-title {
+            color: var(--gold-dark);
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        .doctor-detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px,1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+        .detail-item {
+            background: #FCF9F2;
+            border-radius: 20px;
+            padding: 12px 16px;
+        }
+        .detail-item i {
+            width: 28px;
+            color: var(--gold);
+            margin-right: 10px;
+        }
+        .doctor-badge {
+            background: var(--gold);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 40px;
+            display: inline-block;
+            font-size: 0.8rem;
+            margin-top: 12px;
+        }
+
+        /* services */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+            gap: 30px;
+            margin-top: 20px;
+        }
+        .service-card {
+            background: white;
+            border-radius: 28px;
+            padding: 28px 20px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.25s;
+            text-align: center;
+            border: 1px solid #F2EFE8;
+        }
+        .service-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-md);
+            border-color: rgba(201,160,61,0.3);
+        }
+        .service-icon {
+            font-size: 2.8rem;
+            color: var(--gold);
+            margin-bottom: 20px;
+        }
+        .service-card h4 {
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+        }
+        .price-tag {
+            font-weight: 800;
+            color: var(--gold-dark);
+            margin-top: 12px;
+            font-size: 1.2rem;
+        }
+
+        /* technology block */
+        .tech-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        .tech-item {
+            background: #FEFCF8;
+            border-radius: 32px;
+            padding: 20px 28px;
+            text-align: center;
+            width: 200px;
+            border: 1px solid #F0E8DA;
+        }
+        .tech-item i {
+            font-size: 2.5rem;
+            color: var(--gold);
+            margin-bottom: 12px;
+        }
+
+        /* reviews */
+        .reviews-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 30px;
+        }
+        .review-card {
+            background: white;
+            border-radius: 28px;
+            padding: 28px;
+            box-shadow: var(--shadow-sm);
+            border-left: 5px solid var(--gold);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        .review-text {
+            margin: 15px 0;
+            color: #2d3e4e;
+            line-height: 1.5;
+            flex: 1;
+        }
+        .review-author {
+            font-weight: 700;
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .review-author img {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #E9ECEF;
+        }
+        .stars i {
+            color: var(--gold);
+            letter-spacing: 2px;
+        }
+
+        /* contacts */
+        .contact-wrapper {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            background: #FEFCF8;
+            border-radius: 48px;
+            padding: 40px;
+            border: 1px solid #F0E8DA;
+        }
+        .contact-info {
+            flex: 1;
+        }
+        .contact-info p {
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .contact-info i {
+            width: 32px;
+            color: var(--gold);
+            font-size: 1.3rem;
+        }
+        .contact-form {
+            flex: 1;
+            background: white;
+            border-radius: 32px;
+            padding: 28px;
+            box-shadow: var(--shadow-sm);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 28px;
+            border: 1px solid #E6E0D4;
+            font-family: inherit;
+            outline: none;
+        }
+        input:focus, textarea:focus {
+            border-color: var(--gold);
+        }
+        footer {
+            background: var(--dark-charcoal);
+            color: #D4DCE4;
+            padding: 32px 0;
+            text-align: center;
+        }
+        .footer-links {
+            margin-top: 12px;
+            font-size: 0.85rem;
+        }
+        @media (max-width: 680px) {
+            .container { padding: 0 20px; }
+            section { padding: 60px 0; }
+            .contact-wrapper { flex-direction: column; }
+        }
+        a {
+            text-decoration: none;
+        }
+        .yandex-link {
+            background: #FFF2E0;
+            padding: 10px 20px;
+            border-radius: 30px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-weight: 500;
+            color: #B47C2E;
+        }
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+        /* уведомление формы */
+        .form-message {
+            margin-top: 15px;
+            padding: 10px;
+            border-radius: 30px;
+            text-align: center;
+            font-size: 0.9rem;
+        }
+        .form-message.success {
+            background: #e0f2e9;
+            color: #2c6e4f;
+        }
+        .form-message.error {
+            background: #ffe6e5;
+            color: #c7362b;
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar">
+    <div class="nav-container">
+        <div class="logo">
+            <img src="images/logo.png" alt="Логотип Зубная наука" style="max-height: 55px;">
+        </div>
+        <button class="menu-btn" id="menuToggle"><i class="fas fa-bars"></i></button>
+        <ul class="nav-links" id="navLinks">
+            <li><a href="#about">О клинике</a></li>
+            <li><a href="#doctor">Главный врач</a></li>
+            <li><a href="#services">Услуги</a></li>
+            <li><a href="#reviews">Отзывы</a></li>
+            <li><a href="#contacts">Контакты</a></li>
+        </ul>
+    </div>
+</nav>
+
+<main>
+    <section class="hero">
+        <div class="container hero-grid">
+            <div class="hero-content">
+                <div class="hero-badge"><i class="fas fa-crown"></i> доказательная стоматология</div>
+                <h1>Зубная наука<br>Место, где улыбка становится искусством</h1>
+                <p>Инновационная клиника под руководством доктора Шайдуллина. Золотой стандарт лечения, безупречный сервис и эстетика.</p>
+                <a href="#contacts" class="btn-primary"><i class="fas fa-calendar-check"></i> Записаться на приём</a>
+                <div class="hero-stats">
+                    <div class="stat-item"><h3>14+</h3><span>лет экспертизы</span></div>
+                    <div class="stat-item"><h3>3000+</h3><span>улыбок восстановлено</span></div>
+                    <div class="stat-item"><h3>5.0</h3><span>рейтинг на картах</span></div>
+                </div>
+            </div>
+            <div class="hero-image">
+                <img src="images/hero-interior.jpg" alt="Интерьер стоматологии Зубная наука">
+            </div>
+        </div>
+    </section>
+
+    <section id="about">
+        <div class="container">
+            <div class="section-title">О клинике «Зубная наука»</div>
+            <div class="section-sub">Современная стоматология, основанная на принципах доказательной медицины</div>
+            <div class="about-grid">
+                <div class="about-text">
+                    <h3>Эстетика, наука, забота</h3>
+                    <p>Мы - новая стоматологическая клиника с современным подходом к лечению. Работаем по принципам доказательной медицины, используя только те методы и препараты, эффективность которых доказана мировой наукой. Мы постарались отразить данный подход даже в названии.</p>
+                    <ul class="features-list">
+                        <li><i class="fas fa-microscope"></i> Лечение под микроскопом</li>
+                        <li><i class="fas fa-gem"></i> Материалы премиум-класса (Ivoclar, 3M)</li>
+                        <li><i class="fas fa-clock"></i> Протоколы лечения без боли и стресса</li>
+                        <li><i class="fas fa-award"></i> Гарантия на все работы до 7 лет</li>
+                        <li><i class="fas fa-chart-line"></i> Цифровая диагностика и 3D-планирование</li>
+                    </ul>
+                </div>
+                <div class="clinic-image">
+                    <img src="images/clinic-interior.jpg" alt="Интерьер стоматологии Зубная наука">
+                    <div class="image-placeholder-text">Современный интерьер клиники</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section style="background: #FDFBF7;">
+        <div class="container">
+            <div class="section-title">Почему выбирают нас</div>
+            <div class="section-sub">Наши принципы — ваша уверенность и здоровье</div>
+            <div class="why-grid">
+                <div class="why-card"><i class="fas fa-flask"></i><h4>Доказательный подход</h4><p>Только методики с подтверждённой эффективностью.</p></div>
+                <div class="why-card"><i class="fas fa-microchip"></i><h4>Цифровые технологии</h4><p>3D-томография, внутриротовые сканеры.</p></div>
+                <div class="why-card"><i class="fas fa-hand-holding-heart"></i><h4>Безболезненно</h4><p>Компьютерная анестезия, седация.</p></div>
+                <div class="why-card"><i class="fas fa-calendar-check"></i><h4>Прозрачные цены</h4><p>Фиксированная стоимость до лечения.</p></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="doctor">
+        <div class="container">
+            <div class="section-title">Основатель и главный стоматолог</div>
+            <div class="section-sub">Кандидат медицинских наук, член Европейской ассоциации стоматологов</div>
+            <div class="doctor-card">
+                <div class="doctor-photo">
+                    <img src="images/doctor.jpg" alt="Доктор Шайдуллин">
+                    <div class="doctor-badge">Владелец клиники</div>
+                </div>
+                <div class="doctor-info">
+                    <h3>Шайдуллин Ильдар Рашидович</h3>
+                    <div class="doctor-title"><i class="fas fa-stethoscope"></i> Врач-стоматолог, главный врач, к.м.н.</div>
+                    <p>Стаж более 14 лет. Кандидат медицинских наук, постоянный участник международных конгрессов по эстетической стоматологии. Проводит лечение самых сложных случаев, восстанавливает зубы с прогнозом на десятилетия.</p>
+                    <div class="doctor-detail-grid">
+                        <div class="detail-item"><i class="fas fa-graduation-cap"></i> КГМУ, интернатура, аспирантура</div>
+                        <div class="detail-item"><i class="fas fa-certificate"></i> Сертификаты: цифровая стоматология, эндодонтия, имплантология</div>
+                        <div class="detail-item"><i class="fas fa-star-of-life"></i> Член EDA (Европейская стоматологическая ассоциация)</div>
+                    </div>
+                    <p><i class="fas fa-star" style="color: var(--gold);"></i> <strong>Рейтинг на Prodoctorov: 5,0 ★</strong> — более 80 отзывов. <a href="https://prodoctorov.ru/kazan/vrach/105127-shaydullin/" target="_blank" style="color: var(--gold); font-weight: 500;">Посмотреть профиль и отзывы →</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section id="services" style="background: #FEFCF9;">
+        <div class="container">
+            <div class="section-title">Услуги и стоимость</div>
+            <div class="section-sub">Прозрачные цены, индивидуальные планы лечения</div>
+            <div class="services-grid">
+                <div class="service-card"><div class="service-icon"><i class="fas fa-teeth-open"></i></div><h4>Консультация + КТ</h4><p>Осмотр, 3D-диагностика, план лечения</p><div class="price-tag">1 500 ₽</div></div>
+                <div class="service-card"><div class="service-icon"><i class="fas fa-fill-drip"></i></div><h4>Эстетическая реставрация</h4><p>Лечение кариеса, восстановление зуба</p><div class="price-tag">от 4 500 ₽</div></div>
+                <div class="service-card"><div class="service-icon"><i class="fas fa-broom"></i></div><h4>Профессиональная гигиена</h4><p>AirFlow, ультразвук, полировка</p><div class="price-tag">4 200 ₽</div></div>
+                <div class="service-card"><div class="service-icon"><i class="fas fa-smile"></i></div><h4>Отбеливание ZOOM 4</h4><p>Щадящее, результат до 12 тонов</p><div class="price-tag">16 500 ₽</div></div>
+                <div class="service-card"><div class="service-icon"><i class="fas fa-gem"></i></div><h4>Керамические виниры</h4><p>Голливудская улыбка, эстетика max</p><div class="price-tag">от 28 000 ₽/ед.</div></div>
+                <div class="service-card"><div class="service-icon"><i class="fas fa-microscope"></i></div><h4>Эндодонтия под микроскопом</h4><p>Спасение сложных зубов</p><div class="price-tag">от 7 500 ₽</div></div>
+                <div class="service-card"><div class="service-icon"><i class="fas fa-teeth"></i></div><h4>Имплантация</h4><p>Под ключ, Nobel Biocare, Straumann</p><div class="price-tag">от 45 000 ₽</div></div>
+                <div class="service-card"><div class="service-icon"><i class="fas fa-tooth"></i></div><h4>Ортодонтия</h4><p>Элайнеры, брекеты (взрослые/дети)</p><div class="price-tag">от 35 000 ₽</div></div>
+            </div>
+        </div>
+    </section>
+
+    <section>
+        <div class="container">
+            <div class="section-title">Технологии и оборудование</div>
+            <div class="section-sub">Мы работаем на оборудовании экспертного класса</div>
+            <div class="tech-grid">
+                <div class="tech-item"><i class="fas fa-microscope"></i><h4>Операционный микроскоп</h4><p>Точность до 25х</p></div>
+                <div class="tech-item"><i class="fas fa-cube"></i><h4>3D-томограф</h4><p>Низкая доза облучения</p></div>
+                <div class="tech-item"><i class="fas fa-laptop-medical"></i><h4>Цифровой сканер</h4><p>Слепки за 2 минуты</p></div>
+                <div class="tech-item"><i class="fas fa-tooth"></i><h4>CAD/CAM</h4><p>Реставрации за 1 день</p></div>
+            </div>
+        </div>
+    </section>
+
+    <section id="reviews" style="background: #FDFBF7;">
+        <div class="container">
+            <div class="section-title">Пациенты о нас</div>
+            <div class="section-sub">Реальные впечатления о клинике «Зубная наука» и докторе Шайдуллине</div>
+            <div class="reviews-grid">
+                <div class="review-card">
+                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="review-text">«Очень изысканная клиника, чувствуется уровень. Доктор Шайдуллин — врач от Бога. Поставил виниры, результат превзошёл ожидания. Атмосфера как в SPA).»</p>
+                    <div class="review-author">
+                        <img src="images/review-avatar-1.jpg" alt="Фото пациента">
+                        <span><strong>Алина К.</strong><br>Виниры</span>
+                    </div>
+                </div>
+                <div class="review-card">
+                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="review-text">«Делала гигиену и отбеливание. Очень бережно, без дискомфорта. Давно искала такую клинику. Теперь вся семья ходит только в "Зубную науку".»</p>
+                    <div class="review-author">
+                        <img src="images/review-avatar-2.jpg" alt="Фото пациента">
+                        <span><strong>Екатерина В.</strong><br>Гигиена + отбеливание</span>
+                    </div>
+                </div>
+                <div class="review-card">
+                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="review-text">«Попал с острой болью, спасли зуб, который другие хотели удалять. Лечение под микроскопом — это чудо! Врач объяснил каждый этап лечения и меры профилактики. Спасибо!»</p>
+                    <div class="review-author">
+                        <img src="images/review-avatar-3.jpg" alt="Фото пациента">
+                        <span><strong>Марат Ф.</strong><br>Эндодонтия</span>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 40px;">
+                <a href="https://prodoctorov.ru/kazan/vrach/105127-shaydullin/" target="_blank" class="btn-outline"><i class="fas fa-external-link-alt"></i> Все отзывы на Prodoctorov</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Контакты с рабочей формой Formspree -->
+    <section id="contacts">
+        <div class="container">
+            <div class="section-title">Контакты и запись</div>
+            <div class="section-sub">Ждём вас в нашей клинике в Казани</div>
+            <div class="contact-wrapper">
+                <div class="contact-info">
+                    <h3>«Зубная наука»</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> г. Казань, пр. Яраткан, 3 (бизнес-центр «Яраткан», 2 этаж)</p>
+                    <p><i class="fas fa-phone-alt"></i> +7 (843) 266-22-23</p>
+                    <p><i class="fas fa-envelope"></i> welcome@zubnayanauka.ru</p>
+                    <p><i class="fas fa-clock"></i> Пн–Пт: 09:00 – 21:00 | Сб: 10:00 – 18:00 | Вс: по записи</p>
+                    <a href="https://yandex.ru/maps/?text=Казань,+пр.+Яраткан,+3" target="_blank" class="yandex-link"><i class="fab fa-yandex"></i> Открыть на Яндекс.Картах</a>
+                    <div style="margin-top: 30px;">
+                        <i class="fas fa-parking"></i> Бесплатная парковка для пациентов<br>
+                        <i class="fas fa-wheelchair"></i> Доступная среда, пандус
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <h4><i class="fas fa-calendar-alt"></i> Запись на приём</h4>
+                    <p>Оставьте заявку, и мы свяжемся с вами.</p>
+                    <form id="callbackForm" action="https://formspree.io/f/ваш_ид" method="POST">
+                        <!-- Замените 'ваш_ид' на реальный ID из Formspree -->
+                        <input type="hidden" name="_subject" value="Новая заявка с сайта Зубная наука">
+                        <div class="form-group"><input type="text" name="name" placeholder="Ваше имя" required id="nameInput"></div>
+                        <div class="form-group"><input type="tel" name="phone" placeholder="Номер телефона" required id="phoneInput"></div>
+                        <div class="form-group"><textarea name="message" rows="3" placeholder="Удобное время или вопрос" id="msgInput"></textarea></div>
+                        <button type="submit" class="btn-primary" style="width:100%;"><i class="fas fa-paper-plane"></i> Отправить заявку</button>
+                        <div id="formMessage" class="form-message" style="display: none;"></div>
+                        
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+<footer>
+    <div class="container">
+        <div class="logo" style="justify-content: center; margin-bottom: 12px;">
+            <img src="images/logo.png" alt="Логотип" style="max-height: 45px;">
+        </div>
+        <p>© 2025 Стоматологическая клиника «Зубная наука». Лицензия № Л041-01187-16/00987.</p>
+        <div class="footer-links">
+            <a href="#" style="color: #B8C5CE;"></a> 
+            <span>Создано с заботой о вашей улыбке</span>
+        </div>
+    </div>
+</footer>
+
+<script>
+    // Мобильное меню
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
+    if(menuToggle) {
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+        });
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
+        });
+    }
+
+    // Отправка формы через Formspree без перезагрузки
+    const form = document.getElementById('callbackForm');
+    const formMessageDiv = document.getElementById('formMessage');
+    
+    if(form) {
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = new FormData(form);
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Отправка...';
+            
+            try {
+                const response = await fetch(form.action, {
+                    method: 'POST',
+                    body: formData,
+                    headers: { 'Accept': 'application/json' }
+                });
+                if (response.ok) {
+                    formMessageDiv.style.display = 'block';
+                    formMessageDiv.className = 'form-message success';
+                    formMessageDiv.textContent = '✅ Спасибо! Ваша заявка принята. Администратор свяжется с вами в ближайшее время.';
+                    form.reset();
+                    setTimeout(() => {
+                        formMessageDiv.style.display = 'none';
+                    }, 6000);
+                } else {
+                    throw new Error('Ошибка отправки');
+                }
+            } catch (error) {
+                formMessageDiv.style.display = 'block';
+                formMessageDiv.className = 'form-message error';
+                formMessageDiv.textContent = '❌ Произошла ошибка. Пожалуйста, позвоните нам или попробуйте позже.';
+                setTimeout(() => {
+                    formMessageDiv.style.display = 'none';
+                }, 5000);
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalText;
+            }
+        });
+    }
+</script>
+</body>
+</html>
