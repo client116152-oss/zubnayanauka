@@ -227,7 +227,6 @@
             font-size: 1.1rem;
         }
 
-        /* about clinic - десктопная версия (две колонки) */
         .about-grid {
             display: flex;
             gap: 50px;
@@ -274,7 +273,6 @@
             box-shadow: var(--shadow-sm);
         }
 
-        /* Мобильная версия раздела "О клинике" */
         @media (max-width: 768px) {
             .about-grid {
                 flex-direction: column;
@@ -486,7 +484,6 @@
             letter-spacing: 2px;
         }
 
-        /* Контакты: карта + информация */
         .contact-wrapper {
             display: flex;
             flex-wrap: wrap;
@@ -714,7 +711,6 @@
         </div>
     </section>
 
-    <!-- Контакты с исправленной картой и одинаковыми отступами -->
     <section id="contacts">
         <div class="container">
             <div class="section-title">Контакты и запись</div>
@@ -726,13 +722,12 @@
                     <p><i class="fas fa-phone-alt"></i> +7 (843) 266-22-23</p>
                     <p><i class="fas fa-envelope"></i> welcome@zubnayanauka.ru</p>
                     <p><i class="fas fa-clock"></i> Пн–Пт: 08:00 – 20:00 | Сб: 08:00 – 20:00 | Вс: выходной</p>
-                    <!-- Теперь парковка и доступная среда — обычные пункты с такими же отступами -->
                     <p><i class="fas fa-parking"></i> Бесплатная парковка для пациентов</p>
                     <p><i class="fas fa-wheelchair"></i> Доступная среда, пандус</p>
                 </div>
                 <div class="map-container">
-                    <!-- Исправленные координаты: широта 55.796, долгота 49.108 (пр. Яраткан, 3) -->
-                    <iframe src="https://yandex.ru/map-widget/v1/?ll=55.796,49.108&z=18&pt=55.796,49.108&l=map" frameborder="0" allowfullscreen="true" style="position:relative;"></iframe>
+                    <!-- Правильные координаты: 55.762378, 49.201052 -->
+                    <iframe src="https://yandex.ru/map-widget/v1/?ll=55.762378,49.201052&z=18&pt=55.762378,49.201052&l=map" frameborder="0" allowfullscreen="true" style="position:relative;"></iframe>
                 </div>
             </div>
         </div>
@@ -752,7 +747,6 @@
 </footer>
 
 <script>
-    // Мобильное меню
     const menuToggle = document.getElementById('menuToggle');
     const navLinks = document.getElementById('navLinks');
     if(menuToggle) {
