@@ -514,6 +514,9 @@
             box-shadow: var(--shadow-sm);
             background: #fff;
             min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
         .map-container iframe {
             width: 100%;
@@ -521,6 +524,26 @@
             min-height: 320px;
             border: 0;
             display: block;
+            border-radius: 28px;
+        }
+        .route-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: var(--gold);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: 0.2s;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .route-btn:hover {
+            background: var(--gold-dark);
+            transform: translateY(-2px);
         }
         @media (max-width: 768px) {
             .map-container iframe {
@@ -726,8 +749,11 @@
                     <p><i class="fas fa-wheelchair"></i> Доступная среда, пандус</p>
                 </div>
                 <div class="map-container">
-                    <!-- Исправленный порядок: долгота, широта -->
                     <iframe src="https://yandex.ru/map-widget/v1/?ll=49.201052,55.762378&z=18&pt=49.201052,55.762378&l=map" frameborder="0" allowfullscreen="true" style="position:relative;"></iframe>
+                    <!-- Кнопка построения маршрута -->
+                    <a href="https://yandex.ru/maps/?rtext=~55.762378,49.201052&rtt=auto" target="_blank" class="route-btn">
+                        <i class="fas fa-directions"></i> Построить маршрут
+                    </a>
                 </div>
             </div>
         </div>
