@@ -6,6 +6,7 @@
     <title>Зубная наука | Премиум стоматология в Казани</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * {
             margin: 0;
@@ -44,7 +45,6 @@
             padding: 0 24px;
         }
 
-        /* NAVBAR */
         .navbar {
             background: rgba(255,255,255,0.98);
             backdrop-filter: blur(8px);
@@ -70,8 +70,6 @@
             display: flex;
             gap: 2rem;
             list-style: none;
-            margin: 0;
-            padding: 0;
         }
         .nav-links a {
             text-decoration: none;
@@ -83,7 +81,6 @@
         .nav-links a:hover {
             color: var(--gold);
         }
-        /* Гамбургер-кнопка для бокового меню (всегда видна) */
         .hamburger-menu-btn {
             background: none;
             border: none;
@@ -110,7 +107,7 @@
             }
         }
 
-        /* БОКОВОЕ МЕНЮ (справа) */
+        /* Боковое меню */
         .side-menu-overlay {
             position: fixed;
             top: 0;
@@ -427,6 +424,15 @@
             color: var(--gold);
             margin-right: 10px;
         }
+        .doctor-badge {
+            background: var(--gold);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 40px;
+            display: inline-block;
+            font-size: 0.8rem;
+            margin-top: 12px;
+        }
         .services-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
@@ -444,6 +450,7 @@
         }
         .service-card:hover {
             transform: translateY(-6px);
+            box-shadow: var(--shadow-md);
         }
         .service-icon {
             font-size: 2.8rem;
@@ -509,9 +516,11 @@
             height: 48px;
             border-radius: 50%;
             object-fit: cover;
+            background: #E9ECEF;
         }
         .stars i {
             color: var(--gold);
+            letter-spacing: 2px;
         }
         .contact-wrapper {
             display: flex;
@@ -535,6 +544,14 @@
             width: 32px;
             color: var(--gold);
             font-size: 1.3rem;
+        }
+        .contact-info a {
+            color: inherit;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .contact-info a:hover {
+            color: var(--gold);
         }
         .map-container {
             flex: 1;
@@ -569,7 +586,6 @@
             padding: 32px 0;
             text-align: center;
         }
-        /* Стили для информационных блоков (сохраняем единый стиль) */
         .info-block {
             background: #FEFCF8;
             border-radius: 32px;
@@ -584,10 +600,6 @@
             border-left: 5px solid var(--gold);
             padding-left: 20px;
         }
-        .info-block ul, .info-block p {
-            color: var(--text-muted);
-            line-height: 1.5;
-        }
         .staff-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(260px,1fr));
@@ -600,12 +612,48 @@
             padding: 20px;
             box-shadow: var(--shadow-sm);
         }
-        /* Управление видимостью контента */
-        .main-page-content, .info-page-content {
+        .review-form {
+            background: #FEFCF8;
+            border-radius: 32px;
+            padding: 28px;
+            margin-top: 40px;
+            border: 1px solid #F0E8DA;
+        }
+        .review-form h4 {
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            color: var(--dark-charcoal);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+        .form-group input, .form-group textarea, .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border-radius: 28px;
+            border: 1px solid #E0D6C5;
+            font-family: inherit;
+            font-size: 1rem;
+            background: white;
+        }
+        .rating-stars {
+            display: flex;
+            gap: 8px;
+            font-size: 1.8rem;
+            cursor: pointer;
+            margin-bottom: 10px;
+        }
+        .rating-stars i {
+            color: #ddd;
             transition: 0.2s;
         }
-        .hidden-section {
-            display: none;
+        .rating-stars i.active, .rating-stars i.hover {
+            color: var(--gold);
         }
         @media (max-width: 768px) {
             .container { padding: 0 20px; }
@@ -624,7 +672,7 @@
         <div class="logo">
             <img src="images/logo.png" alt="Логотип Зубная наука">
         </div>
-        <ul class="nav-links" id="navLinks">
+        <ul class="nav-links">
             <li><a href="#about" class="main-nav-link">О клинике</a></li>
             <li><a href="#doctor" class="main-nav-link">Главный врач</a></li>
             <li><a href="#services" class="main-nav-link">Услуги</a></li>
@@ -651,14 +699,14 @@
         <a href="#" data-page="work-rules"><i class="fas fa-file-alt"></i> Правила работы</a>
         <a href="#" data-page="employees"><i class="fas fa-users"></i> Сведения о работниках</a>
         <a href="#" data-page="drugs"><i class="fas fa-pills"></i> О лекарственных препаратах</a>
-        <a href="#" data-page="reviews-page"><i class="fas fa-star"></i> Отзывы</a>
+        <a href="#" data-page="reviews-page"><i class="fas fa-star"></i> Отзывы (Supabase)</a>
         <a href="#" data-page="privacy"><i class="fas fa-shield-alt"></i> Политика обработки ПД</a>
     </div>
 </div>
 
 <main>
     <!-- ГЛАВНАЯ СТРАНИЦА (все секции) -->
-    <div id="mainPageContent" class="main-page-content">
+    <div id="mainPageContent">
         <section class="hero">
             <div class="container hero-grid">
                 <div class="hero-content">
@@ -773,9 +821,9 @@
                 <div class="section-title">Пациенты о нас</div>
                 <div class="section-sub">Реальные впечатления о клинике «Зубная наука» и докторе Шайдуллине</div>
                 <div class="reviews-grid">
-                    <div class="review-card"><div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="review-text">«Очень изысканная клиника, чувствуется уровень. Доктор Шайдуллин — врач от Бога. Поставил виниры, результат превзошёл ожидания.»</p><div class="review-author"><img src="images/review-avatar-1.jpg" alt=""><span><strong>Алина К.</strong><br>Виниры</span></div></div>
-                    <div class="review-card"><div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="review-text">«Делала гигиену и отбеливание. Очень бережно, без дискомфорта. Теперь вся семья ходит только в "Зубную науку".»</p><div class="review-author"><img src="images/review-avatar-2.jpg" alt=""><span><strong>Екатерина В.</strong><br>Гигиена + отбеливание</span></div></div>
-                    <div class="review-card"><div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="review-text">«Попал с острой болью, спасли зуб, который другие хотели удалять. Лечение под микроскопом — это чудо!»</p><div class="review-author"><img src="images/review-avatar-3.jpg" alt=""><span><strong>Марат Ф.</strong><br>Эндодонтия</span></div></div>
+                    <div class="review-card"><div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="review-text">«Очень изысканная клиника, чувствуется уровень. Доктор Шайдуллин — врач от Бога. Поставил виниры, результат превзошёл ожидания.»</p><div class="review-author"><img src="images/review-avatar-1.jpg" alt="Фото пациента"><span><strong>Алина К.</strong><br>Виниры</span></div></div>
+                    <div class="review-card"><div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="review-text">«Делала гигиену и отбеливание. Очень бережно, без дискомфорта. Теперь вся семья ходит только в "Зубную науку".»</p><div class="review-author"><img src="images/review-avatar-2.jpg" alt="Фото пациента"><span><strong>Екатерина В.</strong><br>Гигиена + отбеливание</span></div></div>
+                    <div class="review-card"><div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="review-text">«Попал с острой болью, спасли зуб, который другие хотели удалять. Лечение под микроскопом — это чудо!»</p><div class="review-author"><img src="images/review-avatar-3.jpg" alt="Фото пациента"><span><strong>Марат Ф.</strong><br>Эндодонтия</span></div></div>
                 </div>
                 <div style="text-align: center; margin-top: 40px;"><a href="https://prodoctorov.ru/kazan/vrach/105127-shaydullin/" target="_blank" class="btn-outline"><i class="fas fa-external-link-alt"></i> Все отзывы на Prodoctorov</a></div>
             </div>
@@ -804,38 +852,221 @@
         </section>
     </div>
 
-    <!-- ОТДЕЛЬНЫЕ ИНФОРМАЦИОННЫЕ СТРАНИЦЫ (скрыты по умолчанию) -->
+    <!-- ИНФОРМАЦИОННЫЕ СТРАНИЦЫ (боковое меню) -->
     <div id="infoPagesContainer" style="display: none;">
-        <!-- Сведения об организации -->
         <div id="page-svedeniya" class="info-page-content"><div class="container"><div class="info-block"><h3><i class="fas fa-building"></i> Сведения об организации</h3><p><strong>Учредители:</strong> Шайдуллин Ильдар Рашидович (100% доля). <br><strong>Органы управления:</strong> Генеральный директор — Шайдуллин И.Р., врачебная комиссия.<br><strong>ООО «Зубная наука»</strong><br>ОГРН: 1211600098765 | ИНН: 1655443321<br>Юридический адрес: г. Казань, пр. Яраткан, 3.</p></div></div></div>
-        <!-- Лицензии и сертификаты -->
-        <div id="page-licenses" class="info-page-content"><div class="container"><div class="info-block"><h3><i class="fas fa-certificate"></i> Лицензии и сертификаты</h3><p><strong>Лицензия № Л041-01187-16/00987</strong> от 15.02.2022, бессрочно. Скан с QR-кодом доступен по запросу в клинике. Сертификаты соответствия: ISO 9001:2015.</p><div class="qr-placeholder" style="background:#E9ECEF; padding:20px; border-radius:24px; text-align:center;"><i class="fas fa-qrcode" style="font-size: 3rem; color: var(--gold-dark);"></i><br>QR-код ведёт в реестр Росздравнадзора</div></div></div></div>
-        <!-- Данные о СМО -->
+        <div id="page-licenses" class="info-page-content"><div class="container"><div class="info-block"><h3><i class="fas fa-certificate"></i> Лицензии и сертификаты</h3><p><strong>Лицензия № Л041-01187-16/00987</strong> от 15.02.2022, бессрочно. Скан с QR-кодом доступен по запросу в клинике. Сертификаты соответствия: ISO 9001:2015.</p><div style="background:#E9ECEF; padding:20px; border-radius:24px; text-align:center;"><i class="fas fa-qrcode" style="font-size: 3rem; color: var(--gold-dark);"></i><br>QR-код ведёт в реестр Росздравнадзора</div></div></div></div>
         <div id="page-smo" class="info-page-content"><div class="container"><div class="info-block"><h3><i class="fas fa-hand-holding-usd"></i> Данные о СМО (ОМС)</h3><p><strong>Страховые компании:</strong> АО «СОГАЗ-Мед», ООО «Капитал МС», АО «МАКС-М», ТФОМС РТ. Договоры на оказание стоматологической помощи по ОМС (терапия, хирургия).</p></div></div></div>
-        <!-- Виды и условия помощи -->
         <div id="page-medical-help" class="info-page-content"><div class="container"><div class="info-block"><h3><i class="fas fa-notes-medical"></i> Виды, порядок и условия оказания помощи</h3><p><strong>Виды помощи:</strong> первичная, специализированная стоматология (терапия, хирургия, ортопедия, ортодонтия, имплантология). <br><strong>Условия:</strong> плановая и экстренная помощь по записи. Показатели доступности: время ожидания приема ≤3 дней, удовлетворенность >98%.</p></div></div></div>
-        <!-- Правила работы -->
         <div id="page-work-rules" class="info-page-content"><div class="container"><div class="info-block"><h3><i class="fas fa-file-alt"></i> Правила работы</h3><p>Выдержки из 323-ФЗ: право выбора врача, информированное согласие. Программа госгарантий, локальные правила записи, правила предоставления платных услуг (договор, смета).</p></div></div></div>
-        <!-- Сведения о работниках -->
         <div id="page-employees" class="info-page-content"><div class="container"><div class="info-block"><h3><i class="fas fa-users"></i> Сведения о работниках</h3><div class="staff-grid"><div class="staff-card"><i class="fas fa-user-md"></i> <strong>Шайдуллин И.Р.</strong><br>Главный врач, к.м.н. Аккредитация до 2027. График: Пн-Сб 09:00-18:00</div><div class="staff-card"><i class="fas fa-tooth"></i> <strong>Галеева А.М.</strong><br>Врач-терапевт, сертификат до 2026. График: Пн-Пт 08:30-19:30</div><div class="staff-card"><i class="fas fa-microscope"></i> <strong>Хасанов Р.Н.</strong><br>Хирург-имплантолог, аккредитация 2028. График: Вт-Сб 10:00-17:00</div></div><p><strong>Открытые должности:</strong> медсестра, администратор (резюме: welcome@zubnayanauka.ru).</p></div></div></div>
-        <!-- О лекарствах -->
         <div id="page-drugs" class="info-page-content"><div class="container"><div class="info-block"><h3><i class="fas fa-pills"></i> О лекарственных препаратах</h3><p>ЖНВЛП: артикаин, лидокаин, амоксициллин и др. Перечни для льготников по рецептам. Препараты по решению врачебной комиссии. Бесплатно/со скидкой для ветеранов, инвалидов.</p></div></div></div>
-        <!-- Отзывы (отдельная страница) -->
-        <div id="page-reviews-page" class="info-page-content"><div class="container"><div class="section-title">Отзывы пациентов</div><div class="reviews-grid" style="margin-top: 20px;"><div class="review-card"><div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="review-text">«Доктор Шайдуллин — профессионал высочайшего уровня. Клиника оставляет только положительные эмоции.»</p><div class="review-author"><img src="images/review-avatar-1.jpg" alt=""><span><strong>Алина К.</strong><br>Виниры</span></div></div><div class="review-card"><div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="review-text">«Отличное обслуживание, современное оборудование. Очень довольна результатом отбеливания.»</p><div class="review-author"><img src="images/review-avatar-2.jpg" alt=""><span><strong>Екатерина В.</strong><br>Гигиена</span></div></div></div><div style="text-align:center; margin-top:30px;"><a href="https://prodoctorov.ru/kazan/vrach/105127-shaydullin/" target="_blank" class="btn-outline">Все отзывы на Prodoctorov</a></div></div></div>
-        <!-- Политика ПД -->
         <div id="page-privacy" class="info-page-content"><div class="container"><div class="info-block"><h3><i class="fas fa-shield-alt"></i> Политика обработки персональных данных</h3><p>ООО «Зубная наука» соблюдает 152-ФЗ. Сбор данных с письменного согласия, использование только для медицинского обслуживания. Хранение на защищенных серверах. Приказ №42/П от 10.01.2024.</p></div></div></div>
+
+        <!-- Страница отзывов с Supabase -->
+        <div id="page-reviews-page" class="info-page-content">
+            <div class="container">
+                <div class="section-title">Отзывы пациентов</div>
+                <div class="section-sub">Реальные мнения о нашей работе — вы можете оставить свой отзыв</div>
+                <div id="dynamicReviewsList" class="reviews-grid" style="margin-bottom: 40px;">
+                    <div style="text-align:center; grid-column:1/-1;">Загрузка отзывов...</div>
+                </div>
+                <div class="review-form">
+                    <h4><i class="fas fa-pen-alt"></i> Оставить отзыв</h4>
+                    <div class="form-group">
+                        <label>Ваше имя и фамилия *</label>
+                        <input type="text" id="reviewName" placeholder="Например: Анна Смирнова" maxlength="100">
+                    </div>
+                    <div class="form-group">
+                        <label>Оценка *</label>
+                        <div class="rating-stars" id="ratingStars">
+                            <i class="far fa-star" data-value="1"></i>
+                            <i class="far fa-star" data-value="2"></i>
+                            <i class="far fa-star" data-value="3"></i>
+                            <i class="far fa-star" data-value="4"></i>
+                            <i class="far fa-star" data-value="5"></i>
+                        </div>
+                        <input type="hidden" id="reviewRating" value="0">
+                    </div>
+                    <div class="form-group">
+                        <label>Текст отзыва *</label>
+                        <textarea id="reviewText" rows="4" placeholder="Поделитесь впечатлениями о лечении..."></textarea>
+                    </div>
+                    <button id="submitReviewBtn" class="btn-primary">Отправить отзыв</button>
+                    <div id="reviewFormStatus" style="margin-top: 12px; font-size: 0.9rem;"></div>
+                </div>
+            </div>
+        </div>
     </div>
 </main>
 
 <footer>
     <div class="container">
         <div class="logo" style="justify-content: center; margin-bottom: 12px;"><img src="images/logo.png" alt="Логотип" style="max-height: 45px;"></div>
-        <p>© 2025 Стоматологическая клиника «Зубная наука». Лицензия № Л041-01187-16/00987. ОГРН 1211600098765 | ОГРНИП не применимо.</p>
+        <p>© 2025 Стоматологическая клиника «Зубная наука». Лицензия № Л041-01187-16/00987. ОГРН 1211600098765</p>
         <div class="footer-links"><span>Создано с заботой о вашей улыбке</span></div>
     </div>
 </footer>
 
 <script>
+    // SUPABASE ИНИЦИАЛИЗАЦИЯ
+    const SUPABASE_URL = 'https://uoapuoiopdxvmqixvpyx.supabase.co';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvYXB1b2lvcGR4dm1xaXh2cHl4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1NzkxNDAsImV4cCI6MjA5MTE1NTE0MH0.NZ3WKB3tspeBQejiJ3tLLRe5DxEXlpsrsTu9Id3cfos';
+    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+    async function loadReviews() {
+        const container = document.getElementById('dynamicReviewsList');
+        if (!container) return;
+        container.innerHTML = '<div style="text-align:center; grid-column:1/-1;">Загрузка отзывов...</div>';
+        try {
+            const { data, error } = await supabase
+                .from('reviews')
+                .select('*')
+                .order('created_at', { ascending: false });
+            if (error) throw error;
+            if (!data || data.length === 0) {
+                container.innerHTML = '<div style="text-align:center; grid-column:1/-1;">Пока нет отзывов. Будьте первым!</div>';
+                return;
+            }
+            container.innerHTML = '';
+            data.forEach(review => {
+                const card = document.createElement('div');
+                card.className = 'review-card';
+                const filledStars = Array(review.rating).fill('<i class="fas fa-star"></i>').join('');
+                const emptyStars = Array(5 - review.rating).fill('<i class="far fa-star"></i>').join('');
+                const date = new Date(review.created_at).toLocaleDateString('ru-RU');
+                card.innerHTML = `
+                    <div class="stars">${filledStars}${emptyStars}</div>
+                    <p class="review-text">${escapeHtml(review.text)}</p>
+                    <div class="review-author">
+                        <img src="images/review-avatar-1.jpg" alt="avatar" onerror="this.src='https://via.placeholder.com/48'">
+                        <span><strong>${escapeHtml(review.name)}</strong><br>${date}</span>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+        } catch (err) {
+            console.error(err);
+            container.innerHTML = '<div style="text-align:center; grid-column:1/-1;">Ошибка загрузки отзывов.</div>';
+        }
+    }
+
+    async function submitReview(name, rating, text) {
+        const { error } = await supabase.from('reviews').insert([{ name, rating, text }]);
+        if (error) throw error;
+    }
+
+    function escapeHtml(str) {
+        if (!str) return '';
+        return str.replace(/[&<>]/g, function(m) {
+            if (m === '&') return '&amp;';
+            if (m === '<') return '&lt;';
+            if (m === '>') return '&gt;';
+            return m;
+        });
+    }
+
+    function initRatingStars() {
+        const stars = document.querySelectorAll('#ratingStars i');
+        const ratingInput = document.getElementById('reviewRating');
+        let currentRating = 0;
+        stars.forEach(star => {
+            star.addEventListener('mouseenter', function() {
+                const val = parseInt(this.getAttribute('data-value'));
+                highlightStars(val);
+            });
+            star.addEventListener('mouseleave', function() {
+                highlightStars(currentRating);
+            });
+            star.addEventListener('click', function() {
+                currentRating = parseInt(this.getAttribute('data-value'));
+                ratingInput.value = currentRating;
+                highlightStars(currentRating);
+            });
+        });
+        function highlightStars(rating) {
+            stars.forEach(star => {
+                const starVal = parseInt(star.getAttribute('data-value'));
+                if (starVal <= rating) {
+                    star.classList.remove('far');
+                    star.classList.add('fas');
+                } else {
+                    star.classList.remove('fas');
+                    star.classList.add('far');
+                }
+            });
+        }
+    }
+
+    function initReviewForm() {
+        const submitBtn = document.getElementById('submitReviewBtn');
+        const nameInput = document.getElementById('reviewName');
+        const textInput = document.getElementById('reviewText');
+        const ratingInput = document.getElementById('reviewRating');
+        const statusDiv = document.getElementById('reviewFormStatus');
+        if (!submitBtn) return;
+        submitBtn.addEventListener('click', async () => {
+            const name = nameInput.value.trim();
+            const text = textInput.value.trim();
+            const rating = parseInt(ratingInput.value);
+            if (!name || name.length < 2) {
+                statusDiv.innerHTML = '<span style="color:#c00;">Укажите имя и фамилию</span>';
+                return;
+            }
+            if (!text || text.length < 5) {
+                statusDiv.innerHTML = '<span style="color:#c00;">Текст отзыва слишком короткий</span>';
+                return;
+            }
+            if (!rating || rating < 1 || rating > 5) {
+                statusDiv.innerHTML = '<span style="color:#c00;">Поставьте оценку от 1 до 5 звёзд</span>';
+                return;
+            }
+            statusDiv.innerHTML = '<span>Отправка...</span>';
+            try {
+                await submitReview(name, rating, text);
+                statusDiv.innerHTML = '<span style="color:green;">Спасибо! Отзыв добавлен.</span>';
+                nameInput.value = '';
+                textInput.value = '';
+                ratingInput.value = '0';
+                document.querySelectorAll('#ratingStars i').forEach(star => {
+                    star.classList.remove('fas');
+                    star.classList.add('far');
+                });
+                await loadReviews();
+                setTimeout(() => { statusDiv.innerHTML = ''; }, 3000);
+            } catch (err) {
+                console.error(err);
+                statusDiv.innerHTML = '<span style="color:#c00;">Ошибка при отправке. Попробуйте позже.</span>';
+            }
+        });
+    }
+
+    // Переключение между главной и информационными страницами
+    const mainPageDiv = document.getElementById('mainPageContent');
+    const infoContainer = document.getElementById('infoPagesContainer');
+    const allInfoPages = document.querySelectorAll('.info-page-content');
+
+    function showMainPage() {
+        mainPageDiv.style.display = 'block';
+        infoContainer.style.display = 'none';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    function showInfoPage(pageId) {
+        mainPageDiv.style.display = 'none';
+        infoContainer.style.display = 'block';
+        allInfoPages.forEach(page => page.style.display = 'none');
+        const targetPage = document.getElementById(`page-${pageId}`);
+        if (targetPage) {
+            targetPage.style.display = 'block';
+            if (pageId === 'reviews-page') {
+                loadReviews();
+                initRatingStars();
+                initReviewForm();
+            }
+        }
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
     // Боковое меню
     const sideMenuToggle = document.getElementById('sideMenuToggleBtn');
     const sideMenu = document.getElementById('sideMenu');
@@ -847,46 +1078,21 @@
     closeBtn.addEventListener('click', closeSideMenu);
     overlay.addEventListener('click', closeSideMenu);
 
-    // Управление переключением страниц (главная / информационные разделы)
-    const mainPage = document.getElementById('mainPageContent');
-    const infoContainer = document.getElementById('infoPagesContainer');
-    const allInfoPages = document.querySelectorAll('.info-page-content');
-    function showMainPage() {
-        mainPage.style.display = 'block';
-        infoContainer.style.display = 'none';
-        // также скроллим вверх
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-    function showInfoPage(pageId) {
-        mainPage.style.display = 'none';
-        infoContainer.style.display = 'block';
-        allInfoPages.forEach(page => page.style.display = 'none');
-        const targetPage = document.getElementById(`page-${pageId}`);
-        if (targetPage) targetPage.style.display = 'block';
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    // Обработка кликов по боковому меню
     document.querySelectorAll('.side-menu-nav a').forEach(link => {
         link.addEventListener('click', (e) => {
             e.preventDefault();
             const page = link.getAttribute('data-page');
-            if (page === 'main') {
-                showMainPage();
-            } else {
-                showInfoPage(page);
-            }
+            if (page === 'main') showMainPage();
+            else showInfoPage(page);
             closeSideMenu();
         });
     });
 
-    // Обработка кликов по основным ссылкам навигации (О клинике, Главный врач...)
     document.querySelectorAll('.main-nav-link').forEach(anchor => {
         anchor.addEventListener('click', (e) => {
             e.preventDefault();
             const targetId = anchor.getAttribute('href').substring(1);
-            // Сначала убедимся, что мы на главной странице
-            if (mainPage.style.display === 'none') {
+            if (mainPageDiv.style.display === 'none') {
                 showMainPage();
                 setTimeout(() => {
                     const targetEl = document.getElementById(targetId);
@@ -899,12 +1105,10 @@
         });
     });
 
-    // Инициализация: показана главная страница
     showMainPage();
-    // Скрыть лишние блоки при загрузке
     allInfoPages.forEach(page => page.style.display = 'none');
     infoContainer.style.display = 'none';
-    mainPage.style.display = 'block';
+    mainPageDiv.style.display = 'block';
 </script>
 </body>
 </html>
