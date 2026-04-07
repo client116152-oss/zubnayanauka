@@ -97,14 +97,10 @@
             color: var(--gold);
         }
         @media (max-width: 820px) {
-            .nav-links {
-                gap: 1rem;
-            }
+            .nav-links { gap: 1rem; }
         }
         @media (max-width: 680px) {
-            .nav-links a {
-                font-size: 0.85rem;
-            }
+            .nav-links a { font-size: 0.85rem; }
         }
 
         /* Боковое меню */
@@ -200,7 +196,7 @@
             color: white;
         }
 
-        /* Основные стили (сохранены из исходника) */
+        /* Основные стили */
         .btn-primary {
             background: var(--gold);
             color: white;
@@ -909,206 +905,233 @@
 </footer>
 
 <script>
-    // SUPABASE ИНИЦИАЛИЗАЦИЯ
-    const SUPABASE_URL = 'https://uoapuoiopdxvmqixvpyx.supabase.co';
-    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvYXB1b2lvcGR4dm1xaXh2cHl4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1NzkxNDAsImV4cCI6MjA5MTE1NTE0MH0.NZ3WKB3tspeBQejiJ3tLLRe5DxEXlpsrsTu9Id3cfos';
-    const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    (function() {
+        // SUPABASE
+        const SUPABASE_URL = 'https://uoapuoiopdxvmqixvpyx.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvYXB1b2lvcGR4dm1xaXh2cHl4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1NzkxNDAsImV4cCI6MjA5MTE1NTE0MH0.NZ3WKB3tspeBQejiJ3tLLRe5DxEXlpsrsTu9Id3cfos';
+        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-    async function loadReviews() {
-        const container = document.getElementById('dynamicReviewsList');
-        if (!container) return;
-        container.innerHTML = '<div style="text-align:center; grid-column:1/-1;">Загрузка отзывов...</div>';
-        try {
-            const { data, error } = await supabase
-                .from('reviews')
-                .select('*')
-                .order('created_at', { ascending: false });
-            if (error) throw error;
-            if (!data || data.length === 0) {
-                container.innerHTML = '<div style="text-align:center; grid-column:1/-1;">Пока нет отзывов. Будьте первым!</div>';
-                return;
-            }
-            container.innerHTML = '';
-            data.forEach(review => {
-                const card = document.createElement('div');
-                card.className = 'review-card';
-                const filledStars = Array(review.rating).fill('<i class="fas fa-star"></i>').join('');
-                const emptyStars = Array(5 - review.rating).fill('<i class="far fa-star"></i>').join('');
-                const date = new Date(review.created_at).toLocaleDateString('ru-RU');
-                card.innerHTML = `
-                    <div class="stars">${filledStars}${emptyStars}</div>
-                    <p class="review-text">${escapeHtml(review.text)}</p>
-                    <div class="review-author">
-                        <img src="images/review-avatar-1.jpg" alt="avatar" onerror="this.src='https://via.placeholder.com/48'">
-                        <span><strong>${escapeHtml(review.name)}</strong><br>${date}</span>
-                    </div>
-                `;
-                container.appendChild(card);
-            });
-        } catch (err) {
-            console.error(err);
-            container.innerHTML = '<div style="text-align:center; grid-column:1/-1;">Ошибка загрузки отзывов.</div>';
+        // Элементы
+        const mainPageDiv = document.getElementById('mainPageContent');
+        const infoContainer = document.getElementById('infoPagesContainer');
+        const allInfoPages = document.querySelectorAll('.info-page-content');
+        const sideMenuToggle = document.getElementById('sideMenuToggleBtn');
+        const sideMenu = document.getElementById('sideMenu');
+        const overlay = document.getElementById('sideMenuOverlay');
+        const closeBtn = document.getElementById('closeSideMenuBtn');
+
+        // Функции бокового меню
+        function openSideMenu() {
+            if (sideMenu) sideMenu.classList.add('active');
+            if (overlay) overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
         }
-    }
+        function closeSideMenu() {
+            if (sideMenu) sideMenu.classList.remove('active');
+            if (overlay) overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
 
-    async function submitReview(name, rating, text) {
-        const { error } = await supabase.from('reviews').insert([{ name, rating, text }]);
-        if (error) throw error;
-    }
+        // Обработчики кнопок меню
+        if (sideMenuToggle) sideMenuToggle.addEventListener('click', openSideMenu);
+        if (closeBtn) closeBtn.addEventListener('click', closeSideMenu);
+        if (overlay) overlay.addEventListener('click', closeSideMenu);
 
-    function escapeHtml(str) {
-        if (!str) return '';
-        return str.replace(/[&<>]/g, function(m) {
-            if (m === '&') return '&amp;';
-            if (m === '<') return '&lt;';
-            if (m === '>') return '&gt;';
-            return m;
-        });
-    }
+        // Переключение между главной и информационными страницами
+        function showMainPage() {
+            mainPageDiv.style.display = 'block';
+            infoContainer.style.display = 'none';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+        function showInfoPage(pageId) {
+            mainPageDiv.style.display = 'none';
+            infoContainer.style.display = 'block';
+            allInfoPages.forEach(page => page.style.display = 'none');
+            const targetPage = document.getElementById(`page-${pageId}`);
+            if (targetPage) {
+                targetPage.style.display = 'block';
+                if (pageId === 'reviews-page') {
+                    loadReviews();
+                    initRatingStars();
+                    initReviewForm();
+                }
+            }
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
 
-    function initRatingStars() {
-        const stars = document.querySelectorAll('#ratingStars i');
-        const ratingInput = document.getElementById('reviewRating');
-        let currentRating = 0;
-        stars.forEach(star => {
-            star.addEventListener('mouseenter', function() {
-                const val = parseInt(this.getAttribute('data-value'));
-                highlightStars(val);
+        // Supabase: загрузка отзывов
+        async function loadReviews() {
+            const container = document.getElementById('dynamicReviewsList');
+            if (!container) return;
+            container.innerHTML = '<div style="text-align:center; grid-column:1/-1;">Загрузка отзывов...</div>';
+            try {
+                const { data, error } = await supabaseClient
+                    .from('reviews')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+                if (error) throw error;
+                if (!data || data.length === 0) {
+                    container.innerHTML = '<div style="text-align:center; grid-column:1/-1;">Пока нет отзывов. Будьте первым!</div>';
+                    return;
+                }
+                container.innerHTML = '';
+                data.forEach(review => {
+                    const card = document.createElement('div');
+                    card.className = 'review-card';
+                    const filledStars = Array(review.rating).fill('<i class="fas fa-star"></i>').join('');
+                    const emptyStars = Array(5 - review.rating).fill('<i class="far fa-star"></i>').join('');
+                    const date = new Date(review.created_at).toLocaleDateString('ru-RU');
+                    card.innerHTML = `
+                        <div class="stars">${filledStars}${emptyStars}</div>
+                        <p class="review-text">${escapeHtml(review.text)}</p>
+                        <div class="review-author">
+                            <img src="images/review-avatar-1.jpg" alt="avatar" onerror="this.src='https://via.placeholder.com/48'">
+                            <span><strong>${escapeHtml(review.name)}</strong><br>${date}</span>
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            } catch (err) {
+                console.error(err);
+                container.innerHTML = '<div style="text-align:center; grid-column:1/-1;">Ошибка загрузки отзывов.</div>';
+            }
+        }
+
+        async function submitReview(name, rating, text) {
+            const { error } = await supabaseClient.from('reviews').insert([{ name, rating, text }]);
+            if (error) throw error;
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
             });
-            star.addEventListener('mouseleave', function() {
-                highlightStars(currentRating);
-            });
-            star.addEventListener('click', function() {
-                currentRating = parseInt(this.getAttribute('data-value'));
-                ratingInput.value = currentRating;
-                highlightStars(currentRating);
-            });
-        });
-        function highlightStars(rating) {
+        }
+
+        function initRatingStars() {
+            const stars = document.querySelectorAll('#ratingStars i');
+            const ratingInput = document.getElementById('reviewRating');
+            if (!stars.length) return;
+            let currentRating = 0;
             stars.forEach(star => {
-                const starVal = parseInt(star.getAttribute('data-value'));
-                if (starVal <= rating) {
-                    star.classList.remove('far');
-                    star.classList.add('fas');
-                } else {
-                    star.classList.remove('fas');
-                    star.classList.add('far');
+                star.removeEventListener('mouseenter', star._mouseEnter);
+                star.removeEventListener('mouseleave', star._mouseLeave);
+                star.removeEventListener('click', star._click);
+                const mouseEnter = function() { highlightStars(parseInt(this.getAttribute('data-value'))); };
+                const mouseLeave = function() { highlightStars(currentRating); };
+                const click = function() {
+                    currentRating = parseInt(this.getAttribute('data-value'));
+                    ratingInput.value = currentRating;
+                    highlightStars(currentRating);
+                };
+                star.addEventListener('mouseenter', mouseEnter);
+                star.addEventListener('mouseleave', mouseLeave);
+                star.addEventListener('click', click);
+                star._mouseEnter = mouseEnter;
+                star._mouseLeave = mouseLeave;
+                star._click = click;
+            });
+            function highlightStars(rating) {
+                stars.forEach(star => {
+                    const starVal = parseInt(star.getAttribute('data-value'));
+                    if (starVal <= rating) {
+                        star.classList.remove('far');
+                        star.classList.add('fas');
+                    } else {
+                        star.classList.remove('fas');
+                        star.classList.add('far');
+                    }
+                });
+            }
+        }
+
+        function initReviewForm() {
+            const submitBtn = document.getElementById('submitReviewBtn');
+            if (!submitBtn) return;
+            // Убираем старый обработчик, чтобы не дублировать
+            const newBtn = submitBtn.cloneNode(true);
+            submitBtn.parentNode.replaceChild(newBtn, submitBtn);
+            const finalBtn = document.getElementById('submitReviewBtn');
+            finalBtn.addEventListener('click', async () => {
+                const nameInput = document.getElementById('reviewName');
+                const textInput = document.getElementById('reviewText');
+                const ratingInput = document.getElementById('reviewRating');
+                const statusDiv = document.getElementById('reviewFormStatus');
+                const name = nameInput.value.trim();
+                const text = textInput.value.trim();
+                const rating = parseInt(ratingInput.value);
+                if (!name || name.length < 2) {
+                    statusDiv.innerHTML = '<span style="color:#c00;">Укажите имя и фамилию</span>';
+                    return;
+                }
+                if (!text || text.length < 5) {
+                    statusDiv.innerHTML = '<span style="color:#c00;">Текст отзыва слишком короткий</span>';
+                    return;
+                }
+                if (!rating || rating < 1 || rating > 5) {
+                    statusDiv.innerHTML = '<span style="color:#c00;">Поставьте оценку от 1 до 5 звёзд</span>';
+                    return;
+                }
+                statusDiv.innerHTML = '<span>Отправка...</span>';
+                try {
+                    await submitReview(name, rating, text);
+                    statusDiv.innerHTML = '<span style="color:green;">Спасибо! Отзыв добавлен.</span>';
+                    nameInput.value = '';
+                    textInput.value = '';
+                    ratingInput.value = '0';
+                    const stars = document.querySelectorAll('#ratingStars i');
+                    stars.forEach(star => {
+                        star.classList.remove('fas');
+                        star.classList.add('far');
+                    });
+                    await loadReviews();
+                    setTimeout(() => { statusDiv.innerHTML = ''; }, 3000);
+                } catch (err) {
+                    console.error(err);
+                    statusDiv.innerHTML = '<span style="color:#c00;">Ошибка при отправке. Попробуйте позже.</span>';
                 }
             });
         }
-    }
 
-    function initReviewForm() {
-        const submitBtn = document.getElementById('submitReviewBtn');
-        const nameInput = document.getElementById('reviewName');
-        const textInput = document.getElementById('reviewText');
-        const ratingInput = document.getElementById('reviewRating');
-        const statusDiv = document.getElementById('reviewFormStatus');
-        if (!submitBtn) return;
-        submitBtn.addEventListener('click', async () => {
-            const name = nameInput.value.trim();
-            const text = textInput.value.trim();
-            const rating = parseInt(ratingInput.value);
-            if (!name || name.length < 2) {
-                statusDiv.innerHTML = '<span style="color:#c00;">Укажите имя и фамилию</span>';
-                return;
-            }
-            if (!text || text.length < 5) {
-                statusDiv.innerHTML = '<span style="color:#c00;">Текст отзыва слишком короткий</span>';
-                return;
-            }
-            if (!rating || rating < 1 || rating > 5) {
-                statusDiv.innerHTML = '<span style="color:#c00;">Поставьте оценку от 1 до 5 звёзд</span>';
-                return;
-            }
-            statusDiv.innerHTML = '<span>Отправка...</span>';
-            try {
-                await submitReview(name, rating, text);
-                statusDiv.innerHTML = '<span style="color:green;">Спасибо! Отзыв добавлен.</span>';
-                nameInput.value = '';
-                textInput.value = '';
-                ratingInput.value = '0';
-                document.querySelectorAll('#ratingStars i').forEach(star => {
-                    star.classList.remove('fas');
-                    star.classList.add('far');
-                });
-                await loadReviews();
-                setTimeout(() => { statusDiv.innerHTML = ''; }, 3000);
-            } catch (err) {
-                console.error(err);
-                statusDiv.innerHTML = '<span style="color:#c00;">Ошибка при отправке. Попробуйте позже.</span>';
-            }
+        // Обработчики кликов по пунктам бокового меню
+        document.querySelectorAll('.side-menu-nav a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const page = link.getAttribute('data-page');
+                if (page === 'main') showMainPage();
+                else showInfoPage(page);
+                closeSideMenu();
+            });
         });
-    }
 
-    // Переключение между главной и информационными страницами
-    const mainPageDiv = document.getElementById('mainPageContent');
-    const infoContainer = document.getElementById('infoPagesContainer');
-    const allInfoPages = document.querySelectorAll('.info-page-content');
-
-    function showMainPage() {
-        mainPageDiv.style.display = 'block';
-        infoContainer.style.display = 'none';
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-    function showInfoPage(pageId) {
-        mainPageDiv.style.display = 'none';
-        infoContainer.style.display = 'block';
-        allInfoPages.forEach(page => page.style.display = 'none');
-        const targetPage = document.getElementById(`page-${pageId}`);
-        if (targetPage) {
-            targetPage.style.display = 'block';
-            if (pageId === 'reviews-page') {
-                loadReviews();
-                initRatingStars();
-                initReviewForm();
-            }
-        }
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    // Боковое меню
-    const sideMenuToggle = document.getElementById('sideMenuToggleBtn');
-    const sideMenu = document.getElementById('sideMenu');
-    const overlay = document.getElementById('sideMenuOverlay');
-    const closeBtn = document.getElementById('closeSideMenuBtn');
-    function openSideMenu() { sideMenu.classList.add('active'); overlay.classList.add('active'); document.body.style.overflow = 'hidden'; }
-    function closeSideMenu() { sideMenu.classList.remove('active'); overlay.classList.remove('active'); document.body.style.overflow = ''; }
-    sideMenuToggle.addEventListener('click', openSideMenu);
-    closeBtn.addEventListener('click', closeSideMenu);
-    overlay.addEventListener('click', closeSideMenu);
-
-    document.querySelectorAll('.side-menu-nav a').forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const page = link.getAttribute('data-page');
-            if (page === 'main') showMainPage();
-            else showInfoPage(page);
-            closeSideMenu();
-        });
-    });
-
-    document.querySelectorAll('.main-nav-link').forEach(anchor => {
-        anchor.addEventListener('click', (e) => {
-            e.preventDefault();
-            const targetId = anchor.getAttribute('href').substring(1);
-            if (mainPageDiv.style.display === 'none') {
-                showMainPage();
-                setTimeout(() => {
+        // Обработчики для основных ссылок навигации (прокрутка к секциям на главной)
+        document.querySelectorAll('.main-nav-link').forEach(anchor => {
+            anchor.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetId = anchor.getAttribute('href').substring(1);
+                if (mainPageDiv.style.display === 'none') {
+                    showMainPage();
+                    setTimeout(() => {
+                        const targetEl = document.getElementById(targetId);
+                        if (targetEl) targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }, 100);
+                } else {
                     const targetEl = document.getElementById(targetId);
                     if (targetEl) targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                }, 100);
-            } else {
-                const targetEl = document.getElementById(targetId);
-                if (targetEl) targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
+                }
+            });
         });
-    });
 
-    showMainPage();
-    allInfoPages.forEach(page => page.style.display = 'none');
-    infoContainer.style.display = 'none';
-    mainPageDiv.style.display = 'block';
+        // Инициализация: показать главную страницу
+        showMainPage();
+        allInfoPages.forEach(page => page.style.display = 'none');
+        infoContainer.style.display = 'none';
+        mainPageDiv.style.display = 'block';
+    })();
 </script>
 </body>
 </html>
