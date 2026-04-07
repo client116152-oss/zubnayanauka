@@ -44,7 +44,6 @@
             padding: 0 24px;
         }
 
-        /* NAVBAR (основное меню) */
         .navbar {
             background: rgba(255,255,255,0.98);
             backdrop-filter: blur(8px);
@@ -57,11 +56,9 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            flex-wrap: wrap;
             padding: 16px 24px;
             max-width: 1400px;
             margin: 0 auto;
-            gap: 16px;
         }
         .logo img {
             max-height: 52px;
@@ -70,12 +67,8 @@
         }
         .nav-links {
             display: flex;
-            flex-wrap: wrap;
-            gap: 1.5rem;
+            gap: 2rem;
             list-style: none;
-            margin: 0;
-            padding: 0;
-            align-items: center;
         }
         .nav-links a {
             text-decoration: none;
@@ -83,139 +76,42 @@
             color: var(--text-dark);
             transition: 0.2s;
             font-size: 1rem;
-            white-space: nowrap;
         }
         .nav-links a:hover {
             color: var(--gold);
         }
-        /* Гамбургер-кнопка (три полоски) */
-        .hamburger-btn {
+        .menu-btn {
+            display: none;
+            font-size: 1.8rem;
             background: none;
             border: none;
-            font-size: 1.8rem;
             cursor: pointer;
             color: var(--dark-charcoal);
-            padding: 0 8px;
-            transition: 0.2s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
-        .hamburger-btn:hover {
-            color: var(--gold);
-        }
-        /* Адаптив: на маленьких экранах основные ссылки могут переноситься, кнопка остается */
-        @media (max-width: 860px) {
+        @media (max-width: 820px) {
             .nav-links {
-                gap: 1rem;
-                flex-wrap: wrap;
-                justify-content: center;
+                position: fixed;
+                top: 72px;
+                left: -100%;
+                width: 80%;
+                height: calc(100vh - 72px);
+                background: white;
+                flex-direction: column;
+                padding: 2rem;
+                gap: 1.8rem;
+                box-shadow: var(--shadow-md);
+                transition: 0.3s ease;
+                z-index: 99;
+                border-right: 1px solid var(--gray-mid);
             }
-            .nav-container {
-                justify-content: space-between;
+            .nav-links.active {
+                left: 0;
             }
-        }
-        @media (max-width: 680px) {
-            .nav-links a {
-                font-size: 0.85rem;
-                white-space: normal;
+            .menu-btn {
+                display: block;
             }
         }
 
-        /* БОКОВОЕ МЕНЮ (справа) */
-        .side-menu-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.4);
-            backdrop-filter: blur(3px);
-            z-index: 200;
-            opacity: 0;
-            visibility: hidden;
-            transition: 0.3s ease;
-        }
-        .side-menu-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-        .side-menu {
-            position: fixed;
-            top: 0;
-            right: -380px;
-            width: min(380px, 85%);
-            height: 100%;
-            background: var(--pure-white);
-            box-shadow: -5px 0 25px rgba(0,0,0,0.1);
-            z-index: 201;
-            transition: right 0.3s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            display: flex;
-            flex-direction: column;
-            padding: 28px 20px 32px;
-            overflow-y: auto;
-            border-left: 1px solid var(--border-gold);
-        }
-        .side-menu.active {
-            right: 0;
-        }
-        .side-menu-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-bottom: 24px;
-            margin-bottom: 20px;
-            border-bottom: 2px solid var(--gold-light);
-        }
-        .side-menu-header h3 {
-            font-size: 1.6rem;
-            font-weight: 600;
-            color: var(--dark-charcoal);
-        }
-        .close-side-menu {
-            background: none;
-            border: none;
-            font-size: 1.8rem;
-            cursor: pointer;
-            color: var(--text-muted);
-            transition: 0.2s;
-        }
-        .close-side-menu:hover {
-            color: var(--gold-dark);
-        }
-        .side-menu-nav {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-        .side-menu-nav a {
-            padding: 12px 18px;
-            font-weight: 500;
-            color: var(--slate);
-            text-decoration: none;
-            border-radius: 28px;
-            transition: 0.2s;
-            font-size: 1.05rem;
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            background: #FEFAF2;
-            margin: 4px 0;
-        }
-        .side-menu-nav a i {
-            width: 28px;
-            color: var(--gold);
-            font-size: 1.2rem;
-        }
-        .side-menu-nav a:hover {
-            background: var(--gold);
-            color: white;
-        }
-        .side-menu-nav a:hover i {
-            color: white;
-        }
-
-        /* остальные стили (сохранены из оригинала, дополнены) */
         .btn-primary {
             background: var(--gold);
             color: white;
@@ -250,6 +146,7 @@
             background: var(--gold);
             color: white;
         }
+
         .hero {
             background: linear-gradient(135deg, #FFFCF5 0%, #FFFFFF 100%);
             padding: 60px 0 80px;
@@ -311,6 +208,7 @@
         @media (max-width: 768px) {
             .hero-content h1 { font-size: 2.2rem; }
         }
+
         section {
             padding: 80px 0;
         }
@@ -328,6 +226,7 @@
             margin: 0 auto 48px auto;
             font-size: 1.1rem;
         }
+
         .about-grid {
             display: flex;
             gap: 50px;
@@ -373,6 +272,32 @@
             object-fit: cover;
             box-shadow: var(--shadow-sm);
         }
+
+        @media (max-width: 768px) {
+            .about-grid {
+                flex-direction: column;
+                text-align: left;
+            }
+            .about-text {
+                text-align: left;
+            }
+            .about-text h3 {
+                text-align: center;
+            }
+            .about-text p {
+                text-align: justify;
+            }
+            .features-list li {
+                justify-content: flex-start;
+                gap: 8px;
+                text-align: left;
+            }
+            .clinic-image {
+                margin-top: 30px;
+                order: 2;
+            }
+        }
+
         .why-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -393,6 +318,11 @@
             color: var(--gold);
             margin-bottom: 20px;
         }
+        .why-card h4 {
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+        }
+
         .doctor-card {
             background: var(--pure-white);
             border-radius: 40px;
@@ -415,6 +345,7 @@
             max-width: 220px;
             border-radius: 28px;
             object-fit: cover;
+            box-shadow: var(--shadow-sm);
         }
         .doctor-info {
             flex: 2;
@@ -424,18 +355,66 @@
             font-weight: 700;
             color: var(--dark-charcoal);
         }
+        .doctor-title {
+            color: var(--gold-dark);
+            font-weight: 600;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        .doctor-detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px,1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+        .detail-item {
+            background: #FCF9F2;
+            border-radius: 20px;
+            padding: 12px 16px;
+        }
+        .detail-item i {
+            width: 28px;
+            color: var(--gold);
+            margin-right: 10px;
+        }
+        .doctor-badge {
+            background: var(--gold);
+            color: white;
+            padding: 6px 16px;
+            border-radius: 40px;
+            display: inline-block;
+            font-size: 0.8rem;
+            margin-top: 12px;
+        }
+
         .services-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
             gap: 30px;
+            margin-top: 20px;
         }
         .service-card {
             background: white;
             border-radius: 28px;
             padding: 28px 20px;
             box-shadow: var(--shadow-sm);
+            transition: all 0.25s;
             text-align: center;
             border: 1px solid #F2EFE8;
+        }
+        .service-card:hover {
+            transform: translateY(-6px);
+            box-shadow: var(--shadow-md);
+            border-color: rgba(201,160,61,0.3);
+        }
+        .service-icon {
+            font-size: 2.8rem;
+            color: var(--gold);
+            margin-bottom: 20px;
+        }
+        .service-card h4 {
+            font-size: 1.4rem;
+            margin-bottom: 12px;
         }
         .price-tag {
             font-weight: 800;
@@ -443,6 +422,28 @@
             margin-top: 12px;
             font-size: 1.2rem;
         }
+
+        .tech-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            justify-content: center;
+            margin-top: 30px;
+        }
+        .tech-item {
+            background: #FEFCF8;
+            border-radius: 32px;
+            padding: 20px 28px;
+            text-align: center;
+            width: 200px;
+            border: 1px solid #F0E8DA;
+        }
+        .tech-item i {
+            font-size: 2.5rem;
+            color: var(--gold);
+            margin-bottom: 12px;
+        }
+
         .reviews-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
@@ -454,7 +455,35 @@
             padding: 28px;
             box-shadow: var(--shadow-sm);
             border-left: 5px solid var(--gold);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
+        .review-text {
+            margin: 15px 0;
+            color: #2d3e4e;
+            line-height: 1.5;
+            flex: 1;
+        }
+        .review-author {
+            font-weight: 700;
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .review-author img {
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            object-fit: cover;
+            background: #E9ECEF;
+        }
+        .stars i {
+            color: var(--gold);
+            letter-spacing: 2px;
+        }
+
         .contact-wrapper {
             display: flex;
             flex-wrap: wrap;
@@ -464,64 +493,82 @@
             padding: 40px;
             border: 1px solid #F0E8DA;
         }
+        .contact-info {
+            flex: 1;
+        }
+        .contact-info p {
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .contact-info i {
+            width: 32px;
+            color: var(--gold);
+            font-size: 1.3rem;
+        }
+        .contact-info a {
+            color: var(--text-dark);
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+        .contact-info a:hover {
+            color: var(--gold);
+        }
+        .map-container {
+            flex: 1;
+            border-radius: 32px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            background: #fff;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
         .map-container iframe {
             width: 100%;
+            height: 100%;
             min-height: 320px;
+            border: 0;
+            display: block;
             border-radius: 28px;
         }
+        .route-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            background: var(--gold);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 40px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: 0.2s;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .route-btn:hover {
+            background: var(--gold-dark);
+            transform: translateY(-2px);
+        }
+        @media (max-width: 768px) {
+            .map-container iframe {
+                min-height: 280px;
+            }
+        }
+
         footer {
             background: var(--dark-charcoal);
             color: #D4DCE4;
             padding: 32px 0;
             text-align: center;
         }
-        /* Стили для новых информационных секций (боковое меню) */
-        .info-block {
-            background: #FEFCF8;
-            border-radius: 32px;
-            padding: 32px;
-            margin-bottom: 32px;
-            border: 1px solid #F0E8DA;
-        }
-        .info-block h3 {
-            font-size: 1.6rem;
-            margin-bottom: 20px;
-            color: var(--dark-charcoal);
-            border-left: 5px solid var(--gold);
-            padding-left: 20px;
-        }
-        .info-block h4 {
-            font-size: 1.2rem;
-            margin: 20px 0 12px 0;
-            color: var(--gold-dark);
-        }
-        .info-block p, .info-block li {
-            color: var(--text-muted);
-            line-height: 1.5;
-        }
-        .qr-placeholder {
-            background: #E9ECEF;
-            padding: 20px;
-            text-align: center;
-            border-radius: 24px;
-            display: inline-block;
-            margin-top: 10px;
-        }
-        .staff-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(260px,1fr));
-            gap: 20px;
-            margin-top: 20px;
-        }
-        .staff-card {
-            background: white;
-            border-radius: 24px;
-            padding: 20px;
-            box-shadow: var(--shadow-sm);
-        }
-        @media (max-width: 768px) {
+        @media (max-width: 680px) {
             .container { padding: 0 20px; }
             section { padding: 60px 0; }
+            .contact-wrapper { flex-direction: column; }
         }
         a {
             text-decoration: none;
@@ -538,36 +585,16 @@
         <div class="logo">
             <img src="images/logo.png" alt="Логотип Зубная наука">
         </div>
-        <ul class="nav-links" id="mainNavLinks">
+        <button class="menu-btn" id="menuToggle"><i class="fas fa-bars"></i></button>
+        <ul class="nav-links" id="navLinks">
             <li><a href="#about">О клинике</a></li>
             <li><a href="#doctor">Главный врач</a></li>
             <li><a href="#services">Услуги</a></li>
             <li><a href="#reviews">Отзывы</a></li>
             <li><a href="#contacts">Контакты</a></li>
         </ul>
-        <button class="hamburger-btn" id="sideMenuToggleBtn" aria-label="Открыть меню"><i class="fas fa-bars"></i></button>
     </div>
 </nav>
-
-<!-- Боковое меню (новые разделы) -->
-<div class="side-menu-overlay" id="sideMenuOverlay"></div>
-<div class="side-menu" id="sideMenu">
-    <div class="side-menu-header">
-        <h3><i class="fas fa-gavel"></i> Информация</h3>
-        <button class="close-side-menu" id="closeSideMenuBtn"><i class="fas fa-times"></i></button>
-    </div>
-    <div class="side-menu-nav">
-        <a href="#svedeniya"><i class="fas fa-building"></i> Сведения об организации</a>
-        <a href="#licenses"><i class="fas fa-certificate"></i> Лицензии и сертификаты</a>
-        <a href="#smo"><i class="fas fa-hand-holding-usd"></i> Данные о СМО</a>
-        <a href="#medical-help"><i class="fas fa-notes-medical"></i> Виды и условия помощи</a>
-        <a href="#work-rules"><i class="fas fa-file-alt"></i> Правила работы</a>
-        <a href="#employees"><i class="fas fa-users"></i> Сведения о работниках</a>
-        <a href="#drugs"><i class="fas fa-pills"></i> О лекарственных препаратах</a>
-        <a href="#reviews"><i class="fas fa-star"></i> Отзывы пациентов</a>
-        <a href="#privacy"><i class="fas fa-shield-alt"></i> Политика обработки ПД</a>
-    </div>
-</div>
 
 <main>
     <section class="hero">
@@ -593,85 +620,178 @@
         <div class="container">
             <div class="section-title">О клинике «Зубная наука»</div>
             <div class="section-sub">Современная стоматология, основанная на принципах доказательной медицины</div>
-            <div class="about-grid"><div class="about-text"><h3>Эстетика, наука, забота</h3><p>Мы - новая стоматологическая клиника с современным подходом к лечению. Работаем по принципам доказательной медицины, используя только те методы и препараты, эффективность которых доказана мировой наукой.</p><ul class="features-list"><li><i class="fas fa-microscope"></i> Лечение под микроскопом</li><li><i class="fas fa-gem"></i> Материалы премиум-класса</li><li><i class="fas fa-clock"></i> Протоколы без боли</li><li><i class="fas fa-award"></i> Гарантия до 7 лет</li></ul></div><div class="clinic-image"><img src="images/clinic-interior.jpg" alt="Интерьер клиники"></div></div>
+            <div class="about-grid">
+                <div class="about-text">
+                    <h3>Эстетика, наука, забота</h3>
+                    <p>Мы - новая стоматологическая клиника с современным подходом к лечению. Работаем по принципам доказательной медицины, используя только те методы и препараты, эффективность которых доказана мировой наукой. Мы постарались отразить данный подход даже в названии.</p>
+                    <ul class="features-list">
+                        <li><i class="fas fa-microscope"></i> Лечение под микроскопом</li>
+                        <li><i class="fas fa-gem"></i> Материалы премиум-класса (Ivoclar, 3M)</li>
+                        <li><i class="fas fa-clock"></i> Протоколы лечения без боли и стресса</li>
+                        <li><i class="fas fa-award"></i> Гарантия на все работы до 7 лет</li>
+                        <li><i class="fas fa-chart-line"></i> Цифровая диагностика и 3D-планирование</li>
+                    </ul>
+                </div>
+                <div class="clinic-image">
+                    <img src="images/clinic-interior.jpg" alt="Интерьер клиники">
+                </div>
+            </div>
         </div>
     </section>
 
-    <section id="doctor"><div class="container"><div class="section-title">Основатель и главный стоматолог</div><div class="doctor-card"><div class="doctor-photo"><img src="images/doctor.jpg" alt="Доктор Шайдуллин"><div class="doctor-badge">Владелец клиники</div></div><div class="doctor-info"><h3>Шайдуллин Ильдар Рашидович</h3><div class="doctor-title"><i class="fas fa-stethoscope"></i> Врач-стоматолог, к.м.н.</div><p>Стаж более 14 лет. Кандидат медицинских наук, член Европейской ассоциации стоматологов.</p><p><i class="fas fa-star" style="color: var(--gold);"></i> <strong>Рейтинг на Prodoctorov: 5,0 ★</strong> <a href="https://prodoctorov.ru/kazan/vrach/105127-shaydullin/" target="_blank" style="color: var(--gold);">Посмотреть отзывы →</a></p></div></div></div></section>
+    <section style="background: #FDFBF7;">
+        <div class="container">
+            <div class="section-title">Почему выбирают нас</div>
+            <div class="section-sub">Наши принципы — ваша уверенность и здоровье</div>
+            <div class="why-grid">
+                <div class="why-card"><i class="fas fa-flask"></i><h4>Доказательный подход</h4><p>Только методики с подтверждённой эффективностью.</p></div>
+                <div class="why-card"><i class="fas fa-microchip"></i><h4>Цифровые технологии</h4><p>3D-томография, внутриротовые сканеры.</p></div>
+                <div class="why-card"><i class="fas fa-hand-holding-heart"></i><h4>Безболезненно</h4><p>Компьютерная анестезия, седация.</p></div>
+                <div class="why-card"><i class="fas fa-calendar-check"></i><h4>Прозрачные цены</h4><p>Фиксированная стоимость до лечения.</p></div>
+            </div>
+        </div>
+    </section>
 
-    <section id="services" style="background:#FEFCF9;"><div class="container"><div class="section-title">Услуги и стоимость</div><div class="services-grid"><div class="service-card"><div class="service-icon"><i class="fas fa-teeth-open"></i></div><h4>Консультация + КТ</h4><div class="price-tag">1 500 ₽</div></div><div class="service-card"><div class="service-icon"><i class="fas fa-fill-drip"></i></div><h4>Реставрация</h4><div class="price-tag">от 4 500 ₽</div></div><div class="service-card"><div class="service-icon"><i class="fas fa-smile"></i></div><h4>Отбеливание ZOOM 4</h4><div class="price-tag">16 500 ₽</div></div><div class="service-card"><div class="service-icon"><i class="fas fa-gem"></i></div><h4>Керамические виниры</h4><div class="price-tag">от 28 000 ₽</div></div></div></div></section>
+    <section id="doctor">
+        <div class="container">
+            <div class="section-title">Основатель и главный стоматолог</div>
+            <div class="section-sub">Кандидат медицинских наук, член Европейской ассоциации стоматологов</div>
+            <div class="doctor-card">
+                <div class="doctor-photo">
+                    <img src="images/doctor.jpg" alt="Доктор Шайдуллин">
+                    <div class="doctor-badge">Владелец клиники</div>
+                </div>
+                <div class="doctor-info">
+                    <h3>Шайдуллин Ильдар Рашидович</h3>
+                    <div class="doctor-title"><i class="fas fa-stethoscope"></i> Врач-стоматолог, главный врач, к.м.н.</div>
+                    <p>Стаж более 14 лет. Кандидат медицинских наук, постоянный участник международных конгрессов по эстетической стоматологии. Проводит лечение самых сложных случаев, восстанавливает зубы с прогнозом на десятилетия.</p>
+                    <div class="doctor-detail-grid">
+                        <div class="detail-item"><i class="fas fa-graduation-cap"></i> КГМУ, интернатура, аспирантура</div>
+                        <div class="detail-item"><i class="fas fa-certificate"></i> Сертификаты: цифровая стоматология, эндодонтия, имплантология</div>
+                        <div class="detail-item"><i class="fas fa-star-of-life"></i> Член EDA (Европейская стоматологическая ассоциация)</div>
+                    </div>
+                    <p><i class="fas fa-star" style="color: var(--gold);"></i> <strong>Рейтинг на Prodoctorov: 5,0 ★</strong> — более 80 отзывов. <a href="https://prodoctorov.ru/kazan/vrach/105127-shaydullin/" target="_blank" style="color: var(--gold); font-weight: 500;">Посмотреть профиль и отзывы →</a></p>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    <section id="reviews" style="background:#FDFBF7;"><div class="container"><div class="section-title">Пациенты о нас</div><div class="reviews-grid"><div class="review-card"><div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="review-text">«Доктор Шайдуллин — врач от Бога. Виниры — идеально.»</p><div class="review-author"><img src="images/review-avatar-1.jpg" alt=""><span><strong>Алина К.</strong><br>Виниры</span></div></div><div class="review-card"><div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="review-text">«Гигиена и отбеливание на высшем уровне. Советую!»</p><div class="review-author"><img src="images/review-avatar-2.jpg" alt=""><span><strong>Екатерина В.</strong><br>Гигиена</span></div></div></div><div style="text-align:center; margin-top:30px;"><a href="https://prodoctorov.ru/kazan/vrach/105127-shaydullin/" target="_blank" class="btn-outline">Все отзывы на Prodoctorov</a></div></div></section>
+    <section id="services" style="background: #FEFCF9;">
+        <div class="container">
+            <div class="section-title">Услуги и стоимость</div>
+            <div class="section-sub">Прозрачные цены, индивидуальные планы лечения</div>
+            <div class="services-grid">
+                <div class="service-card"><div class="service-icon"><i class="fas fa-teeth-open"></i></div><h4>Консультация + КТ</h4><p>Осмотр, 3D-диагностика, план лечения</p><div class="price-tag">1 500 ₽</div></div>
+                <div class="service-card"><div class="service-icon"><i class="fas fa-fill-drip"></i></div><h4>Эстетическая реставрация</h4><p>Лечение кариеса, восстановление зуба</p><div class="price-tag">от 4 500 ₽</div></div>
+                <div class="service-card"><div class="service-icon"><i class="fas fa-broom"></i></div><h4>Профессиональная гигиена</h4><p>AirFlow, ультразвук, полировка</p><div class="price-tag">4 200 ₽</div></div>
+                <div class="service-card"><div class="service-icon"><i class="fas fa-smile"></i></div><h4>Отбеливание ZOOM 4</h4><p>Щадящее, результат до 12 тонов</p><div class="price-tag">16 500 ₽</div></div>
+                <div class="service-card"><div class="service-icon"><i class="fas fa-gem"></i></div><h4>Керамические виниры</h4><p>Голливудская улыбка, эстетика max</p><div class="price-tag">от 28 000 ₽/ед.</div></div>
+                <div class="service-card"><div class="service-icon"><i class="fas fa-microscope"></i></div><h4>Эндодонтия под микроскопом</h4><p>Спасение сложных зубов</p><div class="price-tag">от 7 500 ₽</div></div>
+                <div class="service-card"><div class="service-icon"><i class="fas fa-teeth"></i></div><h4>Имплантация</h4><p>Под ключ, Nobel Biocare, Straumann</p><div class="price-tag">от 45 000 ₽</div></div>
+                <div class="service-card"><div class="service-icon"><i class="fas fa-tooth"></i></div><h4>Ортодонтия</h4><p>Элайнеры, брекеты (взрослые/дети)</p><div class="price-tag">от 35 000 ₽</div></div>
+            </div>
+        </div>
+    </section>
 
-    <section id="contacts"><div class="container"><div class="section-title">Контакты</div><div class="contact-wrapper"><div class="contact-info"><h3>«Зубная наука»</h3><p><i class="fas fa-map-marker-alt"></i> г. Казань, пр. Яраткан, 3 (БЦ «Яраткан», 1 этаж)</p><p><i class="fas fa-phone-alt"></i> <a href="tel:+78432662223">+7 (843) 266-22-23</a></p><p><i class="fas fa-envelope"></i> welcome@zubnayanauka.ru</p><p><i class="fas fa-clock"></i> Пн–Пт: 08:00 – 20:00 | Сб: 08:00 – 20:00</p></div><div class="map-container"><iframe src="https://yandex.ru/map-widget/v1/?ll=49.201052,55.762378&z=18&pt=49.201052,55.762378&l=map" frameborder="0" allowfullscreen="true"></iframe><a href="https://yandex.ru/maps/?rtext=~55.762378,49.201052&rtt=auto" target="_blank" class="route-btn btn-primary" style="text-align:center;">Построить маршрут</a></div></div></div></section>
+    <section>
+        <div class="container">
+            <div class="section-title">Технологии и оборудование</div>
+            <div class="section-sub">Мы работаем на оборудовании экспертного класса</div>
+            <div class="tech-grid">
+                <div class="tech-item"><i class="fas fa-microscope"></i><h4>Операционный микроскоп</h4><p>Точность до 25х</p></div>
+                <div class="tech-item"><i class="fas fa-cube"></i><h4>3D-томограф</h4><p>Низкая доза облучения</p></div>
+                <div class="tech-item"><i class="fas fa-laptop-medical"></i><h4>Цифровой сканер</h4><p>Слепки за 2 минуты</p></div>
+                <div class="tech-item"><i class="fas fa-tooth"></i><h4>CAD/CAM</h4><p>Реставрации за 1 день</p></div>
+            </div>
+        </div>
+    </section>
 
-    <!-- НОВЫЕ РАЗДЕЛЫ (для бокового меню) -->
-    <section id="svedeniya"><div class="container"><div class="info-block"><h3><i class="fas fa-building"></i> Сведения об организации</h3><p><strong>Учредители:</strong> Шайдуллин Ильдар Рашидович (100% доля). <br><strong>Органы управления:</strong> Генеральный директор — Шайдуллин И.Р. Структура: административно-медицинский совет, врачебная комиссия.</p><p><strong>Полное наименование:</strong> ООО «Зубная наука» <br> <strong>ОГРН:</strong> 1211600098765 <br> <strong>ИНН:</strong> 1655443321</p><p>Клиника осуществляет деятельность на основании Устава, лицензии. Вышестоящие органы: Министерство здравоохранения РТ.</p></div></div></section>
+    <section id="reviews" style="background: #FDFBF7;">
+        <div class="container">
+            <div class="section-title">Пациенты о нас</div>
+            <div class="section-sub">Реальные впечатления о клинике «Зубная наука» и докторе Шайдуллине</div>
+            <div class="reviews-grid">
+                <div class="review-card">
+                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="review-text">«Очень изысканная клиника, чувствуется уровень. Доктор Шайдуллин — врач от Бога. Поставил виниры, результат превзошёл ожидания.»</p>
+                    <div class="review-author">
+                        <img src="images/review-avatar-1.jpg" alt="Фото пациента">
+                        <span><strong>Алина К.</strong><br>Виниры</span>
+                    </div>
+                </div>
+                <div class="review-card">
+                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="review-text">«Делала гигиену и отбеливание. Очень бережно, без дискомфорта. Теперь вся семья ходит только в "Зубную науку".»</p>
+                    <div class="review-author">
+                        <img src="images/review-avatar-2.jpg" alt="Фото пациента">
+                        <span><strong>Екатерина В.</strong><br>Гигиена + отбеливание</span>
+                    </div>
+                </div>
+                <div class="review-card">
+                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
+                    <p class="review-text">«Попал с острой болью, спасли зуб, который другие хотели удалять. Лечение под микроскопом — это чудо!»</p>
+                    <div class="review-author">
+                        <img src="images/review-avatar-3.jpg" alt="Фото пациента">
+                        <span><strong>Марат Ф.</strong><br>Эндодонтия</span>
+                    </div>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 40px;">
+                <a href="https://prodoctorov.ru/kazan/vrach/105127-shaydullin/" target="_blank" class="btn-outline"><i class="fas fa-external-link-alt"></i> Все отзывы на Prodoctorov</a>
+            </div>
+        </div>
+    </section>
 
-    <section id="licenses"><div class="container"><div class="info-block"><h3><i class="fas fa-certificate"></i> Лицензии и сертификаты</h3><p><strong>Лицензия на осуществление медицинской деятельности</strong> № Л041-01187-16/00987 от 15.02.2022, выдана Министерством здравоохранения РФ. Действительна бессрочно.</p><div class="qr-placeholder"><i class="fas fa-qrcode" style="font-size: 3rem; color: var(--gold-dark);"></i><br>Скан лицензии с QR-кодом (ведёт в реестр Росздравнадзора)</div><p>Сертификаты соответствия: ISO 9001:2015, сертификаты на методы цифровой диагностики.</p></div></div></section>
-
-    <section id="smo"><div class="container"><div class="info-block"><h3><i class="fas fa-hand-holding-usd"></i> Данные о СМО (ОМС)</h3><p><strong>Страховые медицинские организации, с которыми заключены договоры:</strong></p><ul><li>АО «Страховая компания «СОГАЗ-Мед»</li><li>ООО «Капитал Медицинское Страхование»</li><li>АО «МАКС-М»</li><li>Филиал «ТФОМС РТ»</li></ul><p>Программа ОМС: первичная медико-санитарная помощь, стоматология взрослая и детская (терапия, хирургия в рамках базовой программы).</p></div></div></section>
-
-    <section id="medical-help"><div class="container"><div class="info-block"><h3><i class="fas fa-notes-medical"></i> Виды, порядок и условия оказания помощи</h3><p><strong>Виды помощи:</strong> первичная доврачебная, специализированная стоматологическая (терапия, хирургия, ортопедия, ортодонтия, имплантология).</p><p><strong>Объемы и условия:</strong> Плановое и экстренное лечение по предварительной записи. Показатели доступности: время ожидания приема не более 3-х дней, бесплатная парковка, возможность записи через портал Госуслуги. Качество оценивается по внутренним чек-листам и анкетированию пациентов (удовлетворенность >98%).</p></div></div></section>
-
-    <section id="work-rules"><div class="container"><div class="info-block"><h3><i class="fas fa-file-alt"></i> Правила работы</h3><p><strong>Выдержки из 323-ФЗ:</strong> Пациент имеет право на выбор врача, информированное добровольное согласие, получение платных услуг на добровольной основе. <br> <strong>Программа госгарантий:</strong> Бесплатное оказание экстренной помощи по ОМС.<br> <strong>Локальные правила:</strong> Правила внутреннего распорядка, график записи (по телефону, через сайт). <br> <strong>Правила платных услуг:</strong> Заключение договора до лечения, полная предварительная смета, выдача чека.</p></div></div></section>
-
-    <section id="employees"><div class="container"><div class="info-block"><h3><i class="fas fa-users"></i> Сведения о работниках клиники</h3><div class="staff-grid"><div class="staff-card"><i class="fas fa-user-md"></i> <strong>Шайдуллин И.Р.</strong><br>Главный врач, стоматолог-ортопед, к.м.н.<br>Аккредитация до 2027 г.<br>График: Пн-Сб 09:00-18:00</div><div class="staff-card"><i class="fas fa-tooth"></i> <strong>Галеева А.М.</strong><br>Врач-стоматолог-терапевт<br>Сертификат до 2026<br>График: Пн-Пт 08:30-19:30</div><div class="staff-card"><i class="fas fa-microscope"></i> <strong>Хасанов Р.Н.</strong><br>Стоматолог-хирург, имплантолог<br>Аккредитация 2028<br>График: Вт-Сб 10:00-17:00</div></div><p><strong>Открытые должности:</strong> Медицинская сестра, администратор ресепшн (резюме направлять на welcome@zubnayanauka.ru).</p></div></div></section>
-
-    <section id="drugs"><div class="container"><div class="info-block"><h3><i class="fas fa-pills"></i> О лекарственных препаратах</h3><p><strong>ЖНВЛП (жизненно необходимые):</strong> лидокаин, артикаин, амоксициллин, парацетамол и др.</p><p><strong>Перечни для федеральных/региональных льготников:</strong> Обеспечение по рецептам врача в рамках госпрограмм.</p><p><strong>Препараты по решению врачебной комиссии:</strong> антибиотики резерва, противовирусные (при тяжелых стоматитах).</p><p><strong>Бесплатно или со скидкой:</strong> лекарства для льготных категорий (ветераны, инвалиды) предоставляются по ОМС при стационарзамещающих технологиях.</p></div></div></section>
-
-    <section id="privacy"><div class="container"><div class="info-block"><h3><i class="fas fa-shield-alt"></i> Политика обработки персональных данных</h3><p>ООО «Зубная наука» обязуется соблюдать конфиденциальность персональных данных пациентов в соответствии с 152-ФЗ. Сбор данных осуществляется с письменного согласия. Данные используются исключительно для медицинского обслуживания, записи на прием, ведения документации. Пациент вправе отозвать согласие. Хранение – на защищенных серверах. Актуальная версия политики утверждена приказом № 42/П от 10.01.2024.</p></div></div></section>
+    <section id="contacts">
+        <div class="container">
+            <div class="section-title">Контакты</div>
+            <div class="section-sub">Ждём вас в нашей клинике в Казани</div>
+            <div class="contact-wrapper">
+                <div class="contact-info">
+                    <h3>«Зубная наука»</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> г. Казань, пр. Яраткан, 3 (бизнес-центр «Яраткан», 1 этаж)</p>
+                    <p><i class="fas fa-phone-alt"></i> <a href="tel:+78432662223">+7 (843) 266-22-23</a></p>
+                    <p><i class="fas fa-envelope"></i> <a href="mailto:welcome@zubnayanauka.ru">welcome@zubnayanauka.ru</a></p>
+                    <p><i class="fas fa-clock"></i> Пн–Пт: 08:00 – 20:00 | Сб: 08:00 – 20:00 | Вс: выходной</p>
+                    <p><i class="fas fa-parking"></i> Бесплатная парковка для пациентов</p>
+                    <p><i class="fas fa-wheelchair"></i> Доступная среда, пандус</p>
+                </div>
+                <div class="map-container">
+                    <iframe src="https://yandex.ru/map-widget/v1/?ll=49.201052,55.762378&z=18&pt=49.201052,55.762378&l=map" frameborder="0" allowfullscreen="true" style="position:relative;"></iframe>
+                    <a href="https://yandex.ru/maps/?rtext=~55.762378,49.201052&rtt=auto" target="_blank" class="route-btn">
+                        <i class="fas fa-directions"></i> Построить маршрут
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
 </main>
 
 <footer>
     <div class="container">
-        <div class="logo" style="justify-content: center; margin-bottom: 12px;"><img src="images/logo.png" alt="Логотип" style="max-height: 45px;"></div>
-        <p>© 2025 Стоматологическая клиника «Зубная наука». Лицензия № Л041-01187-16/00987. ОГРН 1211600098765 | ОГРНИП (для ИП) не применимо.</p>
-        <p>г. Казань, пр. Яраткан, 3 | ИНН 1655443321</p>
-        <div class="footer-links"><span>Создано с заботой о вашей улыбке</span></div>
+        <div class="logo" style="justify-content: center; margin-bottom: 12px;">
+            <img src="images/logo.png" alt="Логотип" style="max-height: 45px;">
+        </div>
+        <p>© 2025 Стоматологическая клиника «Зубная наука». Лицензия № Л041-01187-16/00987.</p>
+        <div class="footer-links">
+            <span>Создано с заботой о вашей улыбке</span>
+        </div>
     </div>
 </footer>
 
 <script>
-    // Боковое меню
-    const sideMenuToggleBtn = document.getElementById('sideMenuToggleBtn');
-    const sideMenu = document.getElementById('sideMenu');
-    const overlay = document.getElementById('sideMenuOverlay');
-    const closeSideMenuBtn = document.getElementById('closeSideMenuBtn');
-
-    function openSideMenu() {
-        sideMenu.classList.add('active');
-        overlay.classList.add('active');
-        document.body.style.overflow = 'hidden';
-    }
-    function closeSideMenu() {
-        sideMenu.classList.remove('active');
-        overlay.classList.remove('active');
-        document.body.style.overflow = '';
-    }
-    sideMenuToggleBtn.addEventListener('click', openSideMenu);
-    closeSideMenuBtn.addEventListener('click', closeSideMenu);
-    overlay.addEventListener('click', closeSideMenu);
-    // Закрывать при клике на ссылку внутри меню
-    document.querySelectorAll('.side-menu-nav a').forEach(link => {
-        link.addEventListener('click', (e) => {
-            closeSideMenu();
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
+    if(menuToggle) {
+        menuToggle.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
         });
-    });
-    // Плавное закрытие при переходе по якорям, чтобы не мешать
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            const targetId = this.getAttribute('href');
-            if(targetId === '#') return;
-            const targetEl = document.querySelector(targetId);
-            if(targetEl) {
-                e.preventDefault();
-                targetEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                if(sideMenu.classList.contains('active')) closeSideMenu();
-            }
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+            });
         });
-    });
+    }
 </script>
 </body>
 </html>
-```
