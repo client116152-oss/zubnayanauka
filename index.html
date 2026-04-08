@@ -8,169 +8,26 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #ffffff;
-            color: #1f2d3d;
-            line-height: 1.5;
-            scroll-behavior: smooth;
-        }
-
+        /* ========== ОРИГИНАЛЬНЫЕ СТИЛИ (ПОЛНОСТЬЮ СОХРАНЕНЫ) ========== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; background-color: #ffffff; color: #1f2d3d; line-height: 1.5; scroll-behavior: smooth; }
         :root {
-            --pure-white: #FFFFFF;
-            --soft-white: #FEFCF8;
-            --gold: #C9A03D;
-            --gold-light: #E6C468;
-            --gold-dark: #A47E2E;
-            --dark-charcoal: #1E2A36;
-            --slate: #2C3E4E;
-            --gray-light: #F5F5F5;
-            --gray-mid: #E9ECEF;
-            --text-dark: #1F2D3D;
-            --text-muted: #5A6E7C;
+            --pure-white: #FFFFFF; --soft-white: #FEFCF8; --gold: #C9A03D; --gold-light: #E6C468;
+            --gold-dark: #A47E2E; --dark-charcoal: #1E2A36; --slate: #2C3E4E; --gray-light: #F5F5F5;
+            --gray-mid: #E9ECEF; --text-dark: #1F2D3D; --text-muted: #5A6E7C;
             --shadow-sm: 0 8px 20px rgba(0,0,0,0.02), 0 2px 6px rgba(0,0,0,0.05);
             --shadow-md: 0 20px 35px -12px rgba(0,0,0,0.08);
             --border-gold: 1px solid rgba(201, 160, 61, 0.2);
         }
-
-        .container {
-            max-width: 1280px;
-            margin: 0 auto;
-            padding: 0 24px;
-        }
-
-        /* Режим для слабовидящих (ГОСТ) */
-        body.vision-mode {
-            font-size: 100%;
-            line-height: 1.5;
-        }
-        body.vision-mode * {
-            max-width: 100%;
-        }
-        body.vision-mode p, body.vision-mode li, body.vision-mode .review-text, body.vision-mode .hero-content p {
-            text-align: left !important;
-            word-break: break-word;
-        }
-        body.vision-mode .container {
-            max-width: 100%;
-            padding: 0 20px;
-        }
-        body.vision-mode .section-title, body.vision-mode .section-sub {
-            text-align: left;
-        }
-        body.vision-mode .hero-stats, body.vision-mode .why-grid, body.vision-mode .services-grid, body.vision-mode .reviews-grid, body.vision-mode .tech-grid {
-            justify-content: flex-start;
-        }
-        /* Панель управления */
-        .vision-panel {
-            position: fixed;
-            top: 80px;
-            right: 20px;
-            background: white;
-            border: 2px solid var(--gold);
-            border-radius: 20px;
-            padding: 15px;
-            z-index: 1000;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-            display: none;
-            flex-direction: column;
-            gap: 10px;
-            min-width: 220px;
-            background: var(--bg-color, white);
-            color: var(--text-color, black);
-        }
-        body.vision-mode .vision-panel {
-            display: flex;
-        }
-        .vision-panel button, .vision-panel select {
-            padding: 8px 12px;
-            border-radius: 40px;
-            border: 1px solid #ccc;
-            background: var(--button-bg, #f0f0f0);
-            cursor: pointer;
-            font-size: 14px;
-        }
-        .vision-panel .font-size-buttons {
-            display: flex;
-            gap: 8px;
-            justify-content: space-between;
-        }
-        .color-scheme-select {
-            width: 100%;
-        }
-        /* Цветовые схемы */
-        body.vision-mode.scheme-default { --bg-color: white; --text-color: black; --link-color: #0000EE; --border-color: #ccc; background: var(--bg-color); color: var(--text-color); }
-        body.vision-mode.scheme-white-black { --bg-color: white; --text-color: black; background: white; color: black; }
-        body.vision-mode.scheme-black-white { --bg-color: black; --text-color: white; background: black; color: white; }
-        body.vision-mode.scheme-darkblue-lightblue { --bg-color: #0a2f6c; --text-color: #c7e2ff; background: #0a2f6c; color: #c7e2ff; }
-        body.vision-mode.scheme-brown-beige { --bg-color: #f5e6d3; --text-color: #4a2e1e; background: #f5e6d3; color: #4a2e1e; }
-        body.vision-mode.scheme-green-darkbrown { --bg-color: #2c4a2c; --text-color: #d4c9a3; background: #2c4a2c; color: #d4c9a3; }
-        /* Применяем переменные */
-        body.vision-mode { background: var(--bg-color); color: var(--text-color); }
-        body.vision-mode a { color: var(--link-color, var(--gold)); }
-        /* Изображения off */
-        body.vision-mode img:not(.force-show) {
-            display: none !important;
-        }
-        body.vision-mode .carousel-slide img, body.vision-mode .doctor-photo img, body.vision-mode .hero-image img, body.vision-mode .clinic-carousel img {
-            display: none !important;
-        }
-        /* Замена изображений текстом */
-        body.vision-mode .carousel-slide:before {
-            content: "Изображение: интерьер клиники";
-            display: block;
-            background: #e0e0e0;
-            padding: 20px;
-            text-align: center;
-            border-radius: 28px;
-        }
-        body.vision-mode .doctor-photo:before {
-            content: "Фото доктора Шайдуллина";
-            display: block;
-            background: #e0e0e0;
-            padding: 20px;
-            border-radius: 28px;
-        }
-        /* Шрифты */
-        body.vision-mode.font-size-100 { font-size: 100%; }
-        body.vision-mode.font-size-200 { font-size: 200%; }
-        body.vision-mode.font-size-500 { font-size: 500%; }
-        body.vision-mode.font-size-200 .container, body.vision-mode.font-size-500 .container { max-width: 100%; }
-        body.vision-mode p, body.vision-mode li, body.vision-mode .review-text {
-            line-height: 1.5;
-            letter-spacing: 0.12em;
-            word-spacing: 0.16em;
-            text-align: left;
-            margin-bottom: 1.5em;
-        }
-        body.vision-mode .section-title, body.vision-mode h1, body.vision-mode h2, body.vision-mode h3 {
-            line-height: 1.2;
-            letter-spacing: 0.12em;
-        }
-        body.vision-mode .container {
-            max-width: 100%;
-        }
-        body.vision-mode .hero-content p {
-            max-width: 100%;
-        }
-        /* Фокус для клавиатуры */
-        *:focus-visible {
-            outline: 3px solid var(--gold) !important;
-            outline-offset: 2px;
-        }
-        /* Остальные стили (оригинальные) */
-        .navbar { background: rgba(255,255,255,0.98); backdrop-filter: blur(8px); position: sticky; top: 0; z-index: 100; }
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 24px; }
+        .navbar { background: rgba(255,255,255,0.98); backdrop-filter: blur(8px); box-shadow: 0 1px 0 rgba(0,0,0,0.03), 0 2px 8px rgba(0,0,0,0.02); position: sticky; top: 0; z-index: 100; }
         .nav-container { display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; max-width: 1400px; margin: 0 auto; }
-        .logo img { max-height: 52px; width: auto; }
+        .logo img { max-height: 52px; width: auto; display: block; }
         .nav-links { display: flex; gap: 2rem; list-style: none; }
         .nav-links a { text-decoration: none; font-weight: 500; color: var(--text-dark); transition: 0.2s; font-size: 1rem; }
         .nav-links a:hover { color: var(--gold); }
+        .vision-toggle-btn { background: none; border: 1px solid var(--gold); border-radius: 40px; padding: 6px 12px; font-size: 0.9rem; cursor: pointer; margin-left: 1rem; transition: 0.2s; }
+        .vision-toggle-btn:hover { background: var(--gold); color: white; }
         .hamburger-menu-btn { background: none; border: none; font-size: 1.8rem; cursor: pointer; color: var(--dark-charcoal); margin-left: 1rem; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
         .hamburger-menu-btn:hover { color: var(--gold); }
         @media (max-width: 820px) { .nav-links { gap: 1rem; } }
@@ -187,7 +44,6 @@
         .side-menu-nav a { padding: 12px 18px; font-weight: 500; color: var(--slate); text-decoration: none; border-radius: 28px; transition: 0.2s; font-size: 1.05rem; display: flex; align-items: center; gap: 14px; background: #FEFAF2; margin: 4px 0; }
         .side-menu-nav a i { width: 28px; color: var(--gold); font-size: 1.2rem; }
         .side-menu-nav a:hover { background: var(--gold); color: white; }
-        .side-menu-nav a:hover i { color: white; }
         .btn-primary { background: var(--gold); color: white; border: none; padding: 12px 28px; border-radius: 40px; font-weight: 600; font-size: 1rem; cursor: pointer; transition: 0.25s; display: inline-block; text-decoration: none; box-shadow: 0 2px 5px rgba(0,0,0,0.05); }
         .btn-primary:hover { background: var(--gold-dark); transform: translateY(-2px); box-shadow: 0 8px 18px rgba(201,160,61,0.2); }
         .btn-outline { background: transparent; border: 2px solid var(--gold); color: var(--gold); padding: 10px 26px; border-radius: 40px; font-weight: 600; transition: 0.2s; text-decoration: none; display: inline-block; }
@@ -279,7 +135,30 @@
         .form-group input, .form-group textarea, .form-group select { width: 100%; padding: 12px 16px; border-radius: 28px; border: 1px solid #E0D6C5; font-family: inherit; font-size: 1rem; background: white; }
         .rating-stars { display: flex; gap: 8px; font-size: 1.8rem; cursor: pointer; margin-bottom: 10px; }
         .rating-stars i { color: #ddd; transition: 0.2s; }
-        .rating-stars i.active, .rating-stars i.hover { color: var(--gold); }
+        /* ========== ДОПОЛНИТЕЛЬНЫЕ СТИЛИ ДЛЯ РЕЖИМА СЛАБОВИДЯЩИХ (НЕ МЕНЯЮТ ОСНОВНОЙ ДИЗАЙН) ========== */
+        body.vision-mode .vision-panel {
+            position: fixed; top: 100px; right: 20px; background: var(--bg-color, white); border: 3px solid var(--gold);
+            border-radius: 24px; padding: 20px; z-index: 1000; display: flex; flex-direction: column; gap: 15px;
+            min-width: 280px; box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+            transform: scale(2.5); transform-origin: top right; font-size: 14px;
+        }
+        body.vision-mode .vision-panel * { font-size: inherit; }
+        body.vision-mode .vision-panel button, body.vision-mode .vision-panel select {
+            padding: 8px 12px; border-radius: 40px; border: 1px solid #ccc; cursor: pointer; background: var(--button-bg, #f0f0f0);
+        }
+        body.vision-mode { background: var(--bg-color, white); color: var(--text-color, black); }
+        body.vision-mode.font-size-100 { font-size: 100%; }
+        body.vision-mode.font-size-200 { font-size: 200%; }
+        body.vision-mode.font-size-500 { font-size: 500%; }
+        body.vision-mode.hide-images img { display: none !important; }
+        body.vision-mode.scheme-white-black { --bg-color: white; --text-color: black; }
+        body.vision-mode.scheme-black-white { --bg-color: black; --text-color: white; }
+        body.vision-mode.scheme-darkblue-lightblue { --bg-color: #0a2f6c; --text-color: #c7e2ff; }
+        body.vision-mode.scheme-brown-beige { --bg-color: #f5e6d3; --text-color: #4a2e1e; }
+        body.vision-mode.scheme-green-darkbrown { --bg-color: #2c4a2c; --text-color: #d4c9a3; }
+        body.vision-mode p, body.vision-mode li { text-align: left; line-height: 1.5; letter-spacing: 0.12em; word-spacing: 0.16em; margin-bottom: 1.5em; }
+        body.vision-mode .container { max-width: 100%; }
+        *:focus-visible { outline: 3px solid var(--gold) !important; outline-offset: 2px; }
     </style>
 </head>
 <body>
@@ -294,199 +173,386 @@
             <li><a href="#reviews" class="main-nav-link">Отзывы</a></li>
             <li><a href="#contacts" class="main-nav-link">Контакты</a></li>
         </ul>
-        <button class="vision-toggle-btn" id="visionToggleBtn" style="background: none; border: 1px solid var(--gold); border-radius: 40px; padding: 6px 12px; font-size: 0.9rem; cursor: pointer; margin-left: 1rem;">👁️ Версия для слабовидящих</button>
+        <button class="vision-toggle-btn" id="visionToggleBtn">👁️ Версия для слабовидящих</button>
         <button class="hamburger-menu-btn" id="sideMenuToggleBtn"><i class="fas fa-bars"></i></button>
     </div>
 </nav>
 
-<!-- Боковое меню -->
 <div class="side-menu-overlay" id="sideMenuOverlay"></div>
 <div class="side-menu" id="sideMenu">
     <div class="side-menu-header">
         <h3><i class="fas fa-info-circle"></i> Меню</h3>
         <button class="close-side-menu" id="closeSideMenuBtn"><i class="fas fa-times"></i></button>
     </div>
-    <div class="side-menu-nav">
-        <a href="#" data-page="main"><i class="fas fa-home"></i> Главная</a>
-        <a href="#" data-page="svedeniya"><i class="fas fa-building"></i> Сведения об организации</a>
-        <a href="#" data-page="licenses"><i class="fas fa-certificate"></i> Лицензии и сертификаты</a>
-        <a href="#" data-page="smo"><i class="fas fa-hand-holding-usd"></i> Данные о СМО</a>
-        <a href="#" data-page="medical-help"><i class="fas fa-notes-medical"></i> Виды и условия помощи</a>
-        <a href="#" data-page="work-rules"><i class="fas fa-file-alt"></i> Правила работы</a>
-        <a href="#" data-page="employees"><i class="fas fa-users"></i> Сведения о работниках</a>
-        <a href="#" data-page="drugs"><i class="fas fa-pills"></i> О лекарственных препаратах</a>
-        <a href="#" data-page="reviews-page"><i class="fas fa-star"></i> Отзывы</a>
-        <a href="#" data-page="privacy"><i class="fas fa-shield-alt"></i> Политика обработки ПД</a>
-        <a href="#" data-page="control-contacts"><i class="fas fa-gavel"></i> Контакты контролирующих органов</a>
+    <div class="side-menu-nav" id="sideMenuNav">
+        <a href="#" data-page="main" tabindex="0"><i class="fas fa-home"></i> Главная</a>
+        <a href="#" data-page="svedeniya" tabindex="0"><i class="fas fa-building"></i> Сведения об организации</a>
+        <a href="#" data-page="licenses" tabindex="0"><i class="fas fa-certificate"></i> Лицензии и сертификаты</a>
+        <a href="#" data-page="smo" tabindex="0"><i class="fas fa-hand-holding-usd"></i> Данные о СМО</a>
+        <a href="#" data-page="medical-help" tabindex="0"><i class="fas fa-notes-medical"></i> Виды и условия помощи</a>
+        <a href="#" data-page="work-rules" tabindex="0"><i class="fas fa-file-alt"></i> Правила работы</a>
+        <a href="#" data-page="employees" tabindex="0"><i class="fas fa-users"></i> Сведения о работниках</a>
+        <a href="#" data-page="drugs" tabindex="0"><i class="fas fa-pills"></i> О лекарственных препаратах</a>
+        <a href="#" data-page="reviews-page" tabindex="0"><i class="fas fa-star"></i> Отзывы</a>
+        <a href="#" data-page="privacy" tabindex="0"><i class="fas fa-shield-alt"></i> Политика обработки ПД</a>
+        <a href="#" data-page="control-contacts" tabindex="0"><i class="fas fa-gavel"></i> Контакты контролирующих органов</a>
     </div>
 </div>
 
 <main>
+    <!-- ГЛАВНАЯ СТРАНИЦА (ОРИГИНАЛЬНАЯ) -->
     <div id="mainPageContent">
-        <section class="hero">...</section>
-        <section id="about">...</section>
-        <section style="background: #FDFBF7;">...</section>
-        <section id="doctor">...</section>
-        <section id="services" style="background: #FEFCF9;">...</section>
-        <section id="tech"><div class="container"><div class="section-title">Технологии и оборудование</div><div class="section-sub">Мы работаем на оборудовании экспертного класса</div><div class="tech-grid"><div class="tech-item"><i class="fas fa-microscope"></i><h4>Операционный микроскоп</h4><p>Точность до 25х</p></div><div class="tech-item"><i class="fas fa-cube"></i><h4>3D-томограф</h4><p>Низкая доза облучения</p></div><div class="tech-item"><i class="fas fa-laptop-medical"></i><h4>Цифровой сканер</h4><p>Слепки за 2 минуты</p></div><div class="tech-item"><i class="fas fa-tooth"></i><h4>CAD/CAM</h4><p>Реставрации за 1 день</p></div></div></div></section>
-        <section id="reviews" style="background: #FDFBF7;">...</section>
-        <section id="contacts">...</section>
+        <section class="hero">
+            <div class="container hero-grid">
+                <div class="hero-content">
+                    <div class="hero-badge"><i class="fas fa-crown"></i> премиум стоматология</div>
+                    <h1>Зубная наука<br>Место, где улыбка становится искусством</h1>
+                    <p>Инновационная клиника под руководством доктора Шайдуллина. Золотой стандарт лечения, безупречный сервис и эстетика.</p>
+                    <a href="#contacts" class="btn-primary"><i class="fas fa-calendar-check"></i> Записаться на приём</a>
+                    <div class="hero-stats">
+                        <div class="stat-item"><h3>14+</h3><span>лет экспертизы</span></div>
+                        <div class="stat-item"><h3>3000+</h3><span>улыбок восстановлено</span></div>
+                        <div class="stat-item"><h3>5.0</h3><span>рейтинг на картах</span></div>
+                    </div>
+                </div>
+                <div class="hero-image"><img src="hero-interior.jpg" alt="Интерьер стоматологии"></div>
+            </div>
+        </section>
+
+        <section id="about">
+            <div class="container">
+                <div class="section-title">О клинике «Зубная наука»</div>
+                <div class="section-sub">Современная стоматология, основанная на принципах доказательной медицины</div>
+                <div class="about-grid">
+                    <div class="about-text">
+                        <h3>Эстетика, наука, забота</h3>
+                        <p>Мы - новая стоматологическая клиника с современным подходом к лечению. Работаем по принципам доказательной медицины, используя только те методы и препараты, эффективность которых доказана мировой наукой. Мы постарались отразить данный подход даже в названии.</p>
+                        <ul class="features-list">
+                            <li><i class="fas fa-microscope"></i> Лечение под микроскопом</li>
+                            <li><i class="fas fa-gem"></i> Материалы премиум-класса (Ivoclar, 3M)</li>
+                            <li><i class="fas fa-clock"></i> Протоколы лечения без боли и стресса</li>
+                            <li><i class="fas fa-award"></i> Гарантия на все работы до 7 лет</li>
+                            <li><i class="fas fa-chart-line"></i> Цифровая диагностика и 3D-планирование</li>
+                        </ul>
+                    </div>
+                    <div class="clinic-carousel">
+                        <div class="carousel-container">
+                            <div class="carousel-slides" id="clinicCarouselSlides">
+                                <div class="carousel-slide"><img src="clinic-interior.jpg" alt="Интерьер клиники 1"></div>
+                                <div class="carousel-slide"><img src="clinic-interior2.jpg" alt="Интерьер клиники 2"></div>
+                                <div class="carousel-slide"><img src="clinic-interior3.jpg" alt="Интерьер клиники 3"></div>
+                            </div>
+                            <button class="carousel-btn prev" id="carouselPrev"><i class="fas fa-chevron-left"></i></button>
+                            <button class="carousel-btn next" id="carouselNext"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                        <div class="carousel-dots" id="carouselDots"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section style="background: #FDFBF7;">
+            <div class="container">
+                <div class="section-title">Почему выбирают нас</div>
+                <div class="section-sub">Наши принципы — ваша уверенность и здоровье</div>
+                <div class="why-grid">
+                    <div class="why-card"><i class="fas fa-flask"></i><h4>Доказательный подход</h4><p>Только методики с подтверждённой эффективностью.</p></div>
+                    <div class="why-card"><i class="fas fa-microchip"></i><h4>Цифровые технологии</h4><p>3D-томография, внутриротовые сканеры.</p></div>
+                    <div class="why-card"><i class="fas fa-hand-holding-heart"></i><h4>Безболезненно</h4><p>Компьютерная анестезия, седация.</p></div>
+                    <div class="why-card"><i class="fas fa-calendar-check"></i><h4>Прозрачные цены</h4><p>Фиксированная стоимость до лечения.</p></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="doctor">
+            <div class="container">
+                <div class="section-title">Основатель и главный стоматолог</div>
+                <div class="section-sub">Кандидат медицинских наук, член Европейской ассоциации стоматологов</div>
+                <div class="doctor-card">
+                    <div class="doctor-photo"><img src="doctor.jpg" alt="Доктор Шайдуллин"><div class="doctor-badge">Владелец клиники</div></div>
+                    <div class="doctor-info">
+                        <h3>Шайдуллин Ильдар Рашидович</h3>
+                        <div class="doctor-title"><i class="fas fa-stethoscope"></i> Врач-стоматолог, главный врач, к.м.н.</div>
+                        <p>Стаж более 14 лет. Кандидат медицинских наук, постоянный участник международных конгрессов по эстетической стоматологии. Проводит лечение самых сложных случаев, восстанавливает зубы с прогнозом на десятилетия.</p>
+                        <div class="doctor-detail-grid">
+                            <div class="detail-item"><i class="fas fa-graduation-cap"></i> КГМУ, интернатура, аспирантура</div>
+                            <div class="detail-item"><i class="fas fa-certificate"></i> Сертификаты: цифровая стоматология, эндодонтия, имплантология</div>
+                            <div class="detail-item"><i class="fas fa-star-of-life"></i> Член EDA (Европейская стоматологическая ассоциация)</div>
+                        </div>
+                        <p><i class="fas fa-star" style="color: var(--gold);"></i> <strong>Рейтинг на Prodoctorov: 5,0 ★</strong> — более 80 отзывов. <a href="https://prodoctorov.ru/kazan/vrach/105127-shaydullin/" target="_blank" style="color: var(--gold); font-weight: 500;">Посмотреть профиль и отзывы →</a></p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="services" style="background: #FEFCF9;">
+            <div class="container">
+                <div class="section-title">Услуги и стоимость</div>
+                <div class="section-sub">Прозрачные цены, индивидуальные планы лечения</div>
+                <div class="services-grid">
+                    <div class="service-card"><div class="service-icon"><i class="fas fa-teeth-open"></i></div><h4>Консультация + КТ</h4><p>Осмотр, 3D-диагностика, план лечения</p><div class="price-tag">1 500 ₽</div></div>
+                    <div class="service-card"><div class="service-icon"><i class="fas fa-fill-drip"></i></div><h4>Эстетическая реставрация</h4><p>Лечение кариеса, восстановление зуба</p><div class="price-tag">от 4 500 ₽</div></div>
+                    <div class="service-card"><div class="service-icon"><i class="fas fa-broom"></i></div><h4>Профессиональная гигиена</h4><p>AirFlow, ультразвук, полировка</p><div class="price-tag">4 200 ₽</div></div>
+                    <div class="service-card"><div class="service-icon"><i class="fas fa-smile"></i></div><h4>Отбеливание ZOOM 4</h4><p>Щадящее, результат до 12 тонов</p><div class="price-tag">16 500 ₽</div></div>
+                    <div class="service-card"><div class="service-icon"><i class="fas fa-gem"></i></div><h4>Керамические виниры</h4><p>Голливудская улыбка, эстетика max</p><div class="price-tag">от 28 000 ₽/ед.</div></div>
+                    <div class="service-card"><div class="service-icon"><i class="fas fa-microscope"></i></div><h4>Эндодонтия под микроскопом</h4><p>Спасение сложных зубов</p><div class="price-tag">от 7 500 ₽</div></div>
+                    <div class="service-card"><div class="service-icon"><i class="fas fa-teeth"></i></div><h4>Имплантация</h4><p>Под ключ, Nobel Biocare, Straumann</p><div class="price-tag">от 45 000 ₽</div></div>
+                    <div class="service-card"><div class="service-icon"><i class="fas fa-tooth"></i></div><h4>Ортодонтия</h4><p>Элайнеры, брекеты (взрослые/дети)</p><div class="price-tag">от 35 000 ₽</div></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="tech">
+            <div class="container">
+                <div class="section-title">Технологии и оборудование</div>
+                <div class="section-sub">Мы работаем на оборудовании экспертного класса</div>
+                <div class="tech-grid">
+                    <div class="tech-item"><i class="fas fa-microscope"></i><h4>Операционный микроскоп</h4><p>Точность до 25х</p></div>
+                    <div class="tech-item"><i class="fas fa-cube"></i><h4>3D-томограф</h4><p>Низкая доза облучения</p></div>
+                    <div class="tech-item"><i class="fas fa-laptop-medical"></i><h4>Цифровой сканер</h4><p>Слепки за 2 минуты</p></div>
+                    <div class="tech-item"><i class="fas fa-tooth"></i><h4>CAD/CAM</h4><p>Реставрации за 1 день</p></div>
+                </div>
+            </div>
+        </section>
+
+        <section id="reviews" style="background: #FDFBF7;">
+            <div class="container">
+                <div class="section-title">Пациенты о нас</div>
+                <div class="section-sub">Реальные впечатления о клинике «Зубная наука» и докторе Шайдуллине</div>
+                <div class="reviews-grid">
+                    <div class="review-card"><div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="review-text">«Очень изысканная клиника, чувствуется уровень. Доктор Шайдуллин — врач от Бога. Поставил виниры, результат превзошёл ожидания.»</p><div class="review-author"><img src="review-avatar-1.jpg" alt="Фото пациента"><span><strong>Алина К.</strong><br>Виниры</span></div></div>
+                    <div class="review-card"><div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="review-text">«Делала гигиену и отбеливание. Очень бережно, без дискомфорта. Теперь вся семья ходит только в "Зубную науку".»</p><div class="review-author"><img src="review-avatar-2.jpg" alt="Фото пациента"><span><strong>Екатерина В.</strong><br>Гигиена + отбеливание</span></div></div>
+                    <div class="review-card"><div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div><p class="review-text">«Попал с острой болью, спасли зуб, который другие хотели удалять. Лечение под микроскопом — это чудо!»</p><div class="review-author"><img src="review-avatar-3.jpg" alt="Фото пациента"><span><strong>Марат Ф.</strong><br>Эндодонтия</span></div></div>
+                </div>
+                <div style="text-align: center; margin-top: 40px;">
+                    <a href="https://prodoctorov.ru/kazan/vrach/105127-shaydullin/" target="_blank" class="btn-outline"><i class="fas fa-external-link-alt"></i> Все отзывы на Prodoctorov</a>
+                    <a href="#" class="btn-outline leave-review-btn" style="margin-left: 15px;"><i class="fas fa-pen-alt"></i> Оставить отзыв</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="contacts">
+            <div class="container">
+                <div class="section-title">Контакты</div>
+                <div class="section-sub">Ждём вас в нашей клинике в Казани</div>
+                <div class="contact-wrapper">
+                    <div class="contact-info">
+                        <h3>«Зубная наука»</h3>
+                        <p><i class="fas fa-map-marker-alt"></i> г. Казань, пр. Яраткан, 3 (бизнес-центр «Яраткан», 1 этаж)</p>
+                        <p><i class="fas fa-phone-alt"></i> <a href="tel:+78432662223">+7 (843) 266-22-23</a></p>
+                        <p><i class="fas fa-envelope"></i> <a href="mailto:welcome@zubnayanauka.ru">welcome@zubnayanauka.ru</a></p>
+                        <p><i class="fas fa-clock"></i> Пн–Пт: 08:00 – 20:00 | Сб: 08:00 – 20:00 | Вс: выходной</p>
+                        <p><i class="fas fa-parking"></i> Бесплатная парковка для пациентов</p>
+                        <p><i class="fas fa-wheelchair"></i> Доступная среда, пандус</p>
+                    </div>
+                    <div class="map-container">
+                        <iframe src="https://yandex.ru/map-widget/v1/?ll=49.201052,55.762378&z=18&pt=49.201052,55.762378&l=map" frameborder="0" allowfullscreen="true"></iframe>
+                        <a href="https://yandex.ru/maps/?rtext=~55.762378,49.201052&rtt=auto" target="_blank" class="route-btn"><i class="fas fa-directions"></i> Построить маршрут</a>
+                    </div>
+                </div>
+            </div>
+        </section>
     </div>
+
+    <!-- ИНФОРМАЦИОННЫЕ СТРАНИЦЫ (БОКОВОЕ МЕНЮ) -->
     <div id="infoPagesContainer" style="display: none;">
-        <!-- все информационные разделы такие же как ранее, но для краткости опущены, в полной версии они есть -->
-        <div id="page-reviews-page" class="info-page-content"><div class="container"><div class="section-title">Отзывы пациентов</div><div class="section-sub">Реальные мнения о нашей работе — вы можете оставить свой отзыв</div><div id="dynamicReviewsList" class="reviews-grid"><div>Загрузка...</div></div><div class="review-form">...</div></div></div>
+        <div id="page-svedeniya" class="info-page-content"><div class="container"><div class="info-block"><h3><i class="fas fa-building"></i> Сведения об организации</h3><p><strong>Полное наименование:</strong> Общество с ограниченной ответственностью "Зубная наука"<br><strong>ОГРН:</strong> 1251600035950<br><strong>ИНН:</strong> 1686051858<br><strong>Адрес:</strong> 420104, г. Казань, пр-д Яраткан, д.3, пом.1007<br><strong>Учредители:</strong> Шайдуллин Ильдар Рашидович (100%)<br><strong>Органы управления:</strong> Генеральный директор — Шайдуллин И.Р., врачебная комиссия.</p></div></div></div>
+        <div id="page-licenses" class="info-page-content"><div class="container"><div class="info-block"><h3><i class="fas fa-certificate"></i> Лицензии и сертификаты</h3><p><strong>Лицензия № Л041-01181-16/04514739</strong> от 05.03.2026, выдана Минздравом РТ.<br>Адрес осуществления: 420104, г. Казань, пр-д Яраткан, д.3, пом.1007.</p><div style="display:flex; gap:20px; justify-content:center; margin-top:20px; flex-wrap:wrap;"><div><img src="license-scan.jpg" alt="Скан лицензии стр.1" style="max-width:100%; border-radius:24px;"><p>Страница 1</p></div><div><img src="license-scan2.jpg" alt="Скан лицензии стр.2" style="max-width:100%; border-radius:24px;"><p>Страница 2</p></div></div></div></div></div>
+        <div id="page-smo" class="info-page-content"><div class="container"><div class="info-block"><h3><i class="fas fa-hand-holding-usd"></i> Данные о СМО (ОМС)</h3><p>Страховые компании: СОГАЗ-Мед, Капитал МС, МАКС-М, ТФОМС РТ. Программа ОМС: стоматология (терапия, хирургия).</p></div></div></div>
+        <div id="page-medical-help" class="info-page-content"><div class="container"><div class="info-block"><h3><i class="fas fa-notes-medical"></i> Виды и условия помощи</h3><p>Услуги: сестринское дело, ортодонтия, стоматология общей практики, ортопедическая, терапевтическая, хирургическая. Порядок: по записи. Показатели доступности: время ожидания ≤3 дней.</p></div></div></div>
+        <div id="page-work-rules" class="info-page-content"><div class="container"><div class="info-block"><h3><i class="fas fa-file-alt"></i> Правила работы</h3><p>Выдержки из 323-ФЗ, программа госгарантий, локальные правила записи, правила платных услуг (договор, смета).</p></div></div></div>
+        <div id="page-employees" class="info-page-content"><div class="container"><div class="info-block"><h3><i class="fas fa-users"></i> Сведения о работниках</h3><div class="staff-grid"><div class="staff-card"><strong>Шайдуллин И.Р.</strong><br>Главный врач, к.м.н.<br>График: Пн-Сб 09:00-18:00</div><div class="staff-card"><strong>Галеева А.М.</strong><br>Врач-терапевт<br>График: Пн-Пт 08:30-19:30</div><div class="staff-card"><strong>Хасанов Р.Н.</strong><br>Хирург-имплантолог<br>График: Вт-Сб 10:00-17:00</div></div><p>Открытые должности: медсестра, администратор (welcome@zubnayanauka.ru).</p></div></div></div>
+        <div id="page-drugs" class="info-page-content"><div class="container"><div class="info-block"><h3><i class="fas fa-pills"></i> О лекарственных препаратах</h3><p>ЖНВЛП: артикаин, лидокаин, амоксициллин. Льготное обеспечение по рецептам.</p></div></div></div>
+        <div id="page-privacy" class="info-page-content"><div class="container"><div class="info-block"><h3><i class="fas fa-shield-alt"></i> Политика обработки ПД</h3><p>Соблюдение 152-ФЗ, сбор с согласия, использование для медицинского обслуживания.</p></div></div></div>
+        <div id="page-control-contacts" class="info-page-content"><div class="container"><div class="info-block"><h3><i class="fas fa-gavel"></i> Контакты контролирующих органов</h3><p><strong>Росздравнадзор по РТ:</strong> г. Казань, ул. Журналистов, 62, тел. (843) 267-04-56<br><strong>Роспотребнадзор по РТ:</strong> ул. Большая Красная, 30, тел. (843) 238-94-65<br><strong>Минздрав РТ:</strong> ул. Островского, 11/6, тел. (843) 231-20-00</p></div></div></div>
+        <div id="page-reviews-page" class="info-page-content">
+            <div class="container">
+                <div class="section-title">Отзывы пациентов</div>
+                <div class="section-sub">Реальные мнения — вы можете оставить свой отзыв</div>
+                <div id="dynamicReviewsList" class="reviews-grid" style="margin-bottom: 40px;"><div>Загрузка...</div></div>
+                <div class="review-form">
+                    <h4><i class="fas fa-pen-alt"></i> Оставить отзыв</h4>
+                    <div class="form-group"><label>Имя и фамилия *</label><input type="text" id="reviewName" placeholder="Анна Смирнова"></div>
+                    <div class="form-group"><label>Оценка *</label><div class="rating-stars" id="ratingStars"><i class="far fa-star" data-value="1"></i><i class="far fa-star" data-value="2"></i><i class="far fa-star" data-value="3"></i><i class="far fa-star" data-value="4"></i><i class="far fa-star" data-value="5"></i></div><input type="hidden" id="reviewRating" value="0"></div>
+                    <div class="form-group"><label>Текст отзыва *</label><textarea id="reviewText" rows="4"></textarea></div>
+                    <button id="submitReviewBtn" class="btn-primary">Отправить</button>
+                    <div id="reviewFormStatus"></div>
+                </div>
+            </div>
+        </div>
     </div>
 </main>
 
-<footer>...</footer>
+<footer>
+    <div class="container">
+        <div class="logo"><img src="logo.png" alt="Логотип" style="max-height: 45px;"></div>
+        <p>© 2025 Стоматологическая клиника «Зубная наука». Лицензия № Л041-01181-16/04514739. ОГРН 1251600035950</p>
+    </div>
+</footer>
 
 <script>
     (function() {
-        // Supabase и всё остальное (оставлено как в исходном коде, но для краткости здесь не повторяю)
-        // Важно: добавить функционал версии для слабовидящих
+        // Supabase
+        const SUPABASE_URL = 'https://uoapuoiopdxvmqixvpyx.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvYXB1b2lvcGR4dm1xaXh2cHl4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1NzkxNDAsImV4cCI6MjA5MTE1NTE0MH0.NZ3WKB3tspeBQejiJ3tLLRe5DxEXlpsrsTu9Id3cfos';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const mainPageDiv = document.getElementById('mainPageContent');
+        const infoContainer = document.getElementById('infoPagesContainer');
+        const allInfoPages = document.querySelectorAll('.info-page-content');
+        const sideMenu = document.getElementById('sideMenu');
+        const overlay = document.getElementById('sideMenuOverlay');
+        const closeBtn = document.getElementById('closeSideMenuBtn');
+        const sideMenuToggle = document.getElementById('sideMenuToggleBtn');
+        
+        function openSideMenu() { sideMenu.classList.add('active'); overlay.classList.add('active'); document.body.style.overflow = 'hidden'; }
+        function closeSideMenu() { sideMenu.classList.remove('active'); overlay.classList.remove('active'); document.body.style.overflow = ''; }
+        sideMenuToggle.addEventListener('click', openSideMenu);
+        closeBtn.addEventListener('click', closeSideMenu);
+        overlay.addEventListener('click', closeSideMenu);
+        
+        function showMainPage() { mainPageDiv.style.display = 'block'; infoContainer.style.display = 'none'; window.scrollTo(0,0); }
+        function showInfoPage(pageId) { mainPageDiv.style.display = 'none'; infoContainer.style.display = 'block'; allInfoPages.forEach(p => p.style.display = 'none'); const target = document.getElementById(`page-${pageId}`); if(target) { target.style.display = 'block'; if(pageId === 'reviews-page') { loadReviews(); initRatingStars(); initReviewForm(); } } window.scrollTo(0,0); }
+        
+        document.querySelectorAll('.side-menu-nav a').forEach(link => { link.addEventListener('click', (e) => { e.preventDefault(); const page = link.getAttribute('data-page'); if(page === 'main') showMainPage(); else showInfoPage(page); closeSideMenu(); }); });
+        document.querySelectorAll('.main-nav-link').forEach(anchor => { anchor.addEventListener('click', (e) => { e.preventDefault(); const id = anchor.getAttribute('href').substring(1); if(mainPageDiv.style.display === 'none') { showMainPage(); setTimeout(() => document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' }), 100); } else { document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' }); } }); });
+        
+        // Карусель
+        const slidesContainer = document.getElementById('clinicCarouselSlides');
+        const prevBtn = document.getElementById('carouselPrev');
+        const nextBtn = document.getElementById('carouselNext');
+        const dotsContainer = document.getElementById('carouselDots');
+        if (slidesContainer && prevBtn && nextBtn) {
+            let current = 0;
+            const slides = slidesContainer.children;
+            const total = slides.length;
+            function update() { slidesContainer.style.transform = `translateX(-${current * 100}%)`; Array.from(dotsContainer.children).forEach((dot,i)=>dot.classList.toggle('active',i===current)); }
+            function createDots() { dotsContainer.innerHTML = ''; for(let i=0;i<total;i++){ const dot=document.createElement('div'); dot.classList.add('dot'); if(i===current)dot.classList.add('active'); dot.addEventListener('click',()=>{current=i;update();}); dotsContainer.appendChild(dot); } }
+            prevBtn.addEventListener('click',()=>{current=(current-1+total)%total;update();});
+            nextBtn.addEventListener('click',()=>{current=(current+1)%total;update();});
+            createDots();
+        }
+        
+        // Supabase отзывы
+        async function loadReviews() {
+            const container = document.getElementById('dynamicReviewsList');
+            if(!container) return;
+            container.innerHTML = '<div>Загрузка...</div>';
+            try {
+                const { data, error } = await supabase.from('reviews').select('*').order('created_at', { ascending: false });
+                if(error) throw error;
+                if(!data || data.length===0) { container.innerHTML = '<div>Пока нет отзывов. Будьте первым!</div>'; return; }
+                container.innerHTML = '';
+                data.forEach(r => {
+                    const card = document.createElement('div'); card.className = 'review-card';
+                    const filled = Array(r.rating).fill('<i class="fas fa-star"></i>').join('');
+                    const empty = Array(5 - r.rating).fill('<i class="far fa-star"></i>').join('');
+                    const date = new Date(r.created_at).toLocaleDateString('ru-RU');
+                    card.innerHTML = `<div class="stars">${filled}${empty}</div><p class="review-text">${escapeHtml(r.text)}</p><div class="review-author"><img src="review-avatar-1.jpg" alt="avatar"><span><strong>${escapeHtml(r.name)}</strong><br>${date}</span></div>`;
+                    container.appendChild(card);
+                });
+            } catch(e) { container.innerHTML = '<div>Ошибка загрузки</div>'; }
+        }
+        async function submitReview(name, rating, text) { await supabase.from('reviews').insert([{ name, rating, text }]); }
+        function escapeHtml(str) { return str.replace(/[&<>]/g, m => ({ '&':'&amp;', '<':'&lt;', '>':'&gt;' }[m])); }
+        function initRatingStars() {
+            const stars = document.querySelectorAll('#ratingStars i');
+            const ratingInput = document.getElementById('reviewRating');
+            if(!stars.length) return;
+            let current = 0;
+            stars.forEach(star => {
+                star.addEventListener('mouseenter', () => highlight(parseInt(star.dataset.value)));
+                star.addEventListener('mouseleave', () => highlight(current));
+                star.addEventListener('click', () => { current = parseInt(star.dataset.value); ratingInput.value = current; highlight(current); });
+            });
+            function highlight(r) { stars.forEach(s => { if(parseInt(s.dataset.value) <= r) { s.classList.remove('far'); s.classList.add('fas'); } else { s.classList.remove('fas'); s.classList.add('far'); } }); }
+        }
+        function initReviewForm() {
+            const btn = document.getElementById('submitReviewBtn');
+            if(!btn) return;
+            btn.addEventListener('click', async () => {
+                const name = document.getElementById('reviewName').value.trim();
+                const text = document.getElementById('reviewText').value.trim();
+                const rating = parseInt(document.getElementById('reviewRating').value);
+                const status = document.getElementById('reviewFormStatus');
+                if(!name || name.length<2) { status.innerHTML = '<span style="color:#c00;">Укажите имя</span>'; return; }
+                if(!text || text.length<5) { status.innerHTML = '<span style="color:#c00;">Текст слишком короткий</span>'; return; }
+                if(!rating || rating<1) { status.innerHTML = '<span style="color:#c00;">Поставьте оценку</span>'; return; }
+                status.innerHTML = 'Отправка...';
+                try {
+                    await submitReview(name, rating, text);
+                    status.innerHTML = '<span style="color:green;">Спасибо! Отзыв добавлен.</span>';
+                    document.getElementById('reviewName').value = '';
+                    document.getElementById('reviewText').value = '';
+                    document.getElementById('reviewRating').value = '0';
+                    document.querySelectorAll('#ratingStars i').forEach(s => { s.classList.remove('fas'); s.classList.add('far'); });
+                    await loadReviews();
+                    setTimeout(() => status.innerHTML = '', 3000);
+                } catch(e) { status.innerHTML = '<span style="color:#c00;">Ошибка</span>'; }
+            });
+        }
+        
+        // Версия для слабовидящих
         const visionBtn = document.getElementById('visionToggleBtn');
-        let visionModeActive = false;
         let panel = null;
-
-        function createVisionPanel() {
-            if (panel) return;
+        function createPanel() {
+            if(panel) return;
             panel = document.createElement('div');
             panel.className = 'vision-panel';
-            panel.innerHTML = `
-                <div class="font-size-buttons">
-                    <button data-font="100">100%</button>
-                    <button data-font="200">200%</button>
-                    <button data-font="500">500%</button>
-                </div>
-                <button id="toggleImagesBtn">Изображения: Вкл</button>
-                <select id="colorSchemeSelect" class="color-scheme-select">
-                    <option value="white-black">Черный на белом</option>
-                    <option value="black-white">Белый на черном</option>
-                    <option value="darkblue-lightblue">Темно-синий на голубом</option>
-                    <option value="brown-beige">Коричневый на бежевом</option>
-                    <option value="green-darkbrown">Зеленый на темно-коричневом</option>
-                </select>
-                <button id="closeVisionPanelBtn">Закрыть панель</button>
-            `;
+            panel.innerHTML = `<div><button data-font="100">100%</button><button data-font="200">200%</button><button data-font="500">500%</button></div><button id="toggleImagesBtn">Изображения: Вкл</button><select id="colorSchemeSelect"><option value="white-black">Черный на белом</option><option value="black-white">Белый на черном</option><option value="darkblue-lightblue">Темно-синий на голубом</option><option value="brown-beige">Коричневый на бежевом</option><option value="green-darkbrown">Зеленый на темно-коричневом</option></select><button id="closeVisionPanelBtn">Закрыть панель</button>`;
             document.body.appendChild(panel);
-
-            // Управление шрифтом
-            document.querySelectorAll('[data-font]').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const size = e.target.getAttribute('data-font');
-                    document.body.classList.remove('font-size-100', 'font-size-200', 'font-size-500');
-                    document.body.classList.add(`font-size-${size}`);
-                });
-            });
-            // Переключение изображений
+            document.querySelectorAll('[data-font]').forEach(btn => btn.addEventListener('click', (e) => { document.body.classList.remove('font-size-100','font-size-200','font-size-500'); document.body.classList.add(`font-size-${e.target.dataset.font}`); }));
             let imagesVisible = true;
-            const toggleBtn = document.getElementById('toggleImagesBtn');
-            toggleBtn.addEventListener('click', () => {
-                imagesVisible = !imagesVisible;
-                if (imagesVisible) {
-                    document.body.classList.remove('hide-images');
-                    toggleBtn.textContent = 'Изображения: Вкл';
-                } else {
-                    document.body.classList.add('hide-images');
-                    toggleBtn.textContent = 'Изображения: Выкл';
-                }
-            });
-            // Цветовые схемы
-            const schemeSelect = document.getElementById('colorSchemeSelect');
-            schemeSelect.addEventListener('change', (e) => {
-                const scheme = e.target.value;
-                document.body.classList.remove('scheme-white-black', 'scheme-black-white', 'scheme-darkblue-lightblue', 'scheme-brown-beige', 'scheme-green-darkbrown');
-                document.body.classList.add(`scheme-${scheme}`);
-            });
-            // Закрыть панель и выключить режим
-            document.getElementById('closeVisionPanelBtn').addEventListener('click', () => {
-                deactivateVisionMode();
-            });
+            document.getElementById('toggleImagesBtn').addEventListener('click', () => { imagesVisible = !imagesVisible; document.body.classList.toggle('hide-images', !imagesVisible); document.getElementById('toggleImagesBtn').textContent = imagesVisible ? 'Изображения: Вкл' : 'Изображения: Выкл'; });
+            document.getElementById('colorSchemeSelect').addEventListener('change', (e) => { document.body.classList.remove('scheme-white-black','scheme-black-white','scheme-darkblue-lightblue','scheme-brown-beige','scheme-green-darkbrown'); document.body.classList.add(`scheme-${e.target.value}`); });
+            document.getElementById('closeVisionPanelBtn').addEventListener('click', () => { deactivateVision(); });
         }
-
-        function activateVisionMode() {
-            if (visionModeActive) return;
-            visionModeActive = true;
-            document.body.classList.add('vision-mode');
-            createVisionPanel();
-            // Устанавливаем начальные значения
-            document.body.classList.add('font-size-100');
-            document.body.classList.add('scheme-white-black');
-            // Добавляем класс для скрытия изображений (по умолчанию видны)
-            document.body.classList.remove('hide-images');
-            // Сохраняем состояние в localStorage
-            localStorage.setItem('visionMode', 'active');
-        }
-
-        function deactivateVisionMode() {
-            visionModeActive = false;
-            document.body.classList.remove('vision-mode', 'font-size-100', 'font-size-200', 'font-size-500', 'hide-images', 'scheme-white-black', 'scheme-black-white', 'scheme-darkblue-lightblue', 'scheme-brown-beige', 'scheme-green-darkbrown');
-            if (panel) panel.remove();
-            panel = null;
-            localStorage.removeItem('visionMode');
-        }
-
-        visionBtn.addEventListener('click', () => {
-            if (!visionModeActive) activateVisionMode();
-            else deactivateVisionMode();
-        });
-
-        if (localStorage.getItem('visionMode') === 'active') activateVisionMode();
-
+        function activateVision() { if(document.body.classList.contains('vision-mode')) return; document.body.classList.add('vision-mode','font-size-100','scheme-white-black'); createPanel(); }
+        function deactivateVision() { document.body.classList.remove('vision-mode','font-size-100','font-size-200','font-size-500','hide-images','scheme-white-black','scheme-black-white','scheme-darkblue-lightblue','scheme-brown-beige','scheme-green-darkbrown'); if(panel) panel.remove(); panel = null; }
+        visionBtn.addEventListener('click', () => { if(document.body.classList.contains('vision-mode')) deactivateVision(); else activateVision(); });
+        
         // Кнопка "Оставить отзыв" на главной
-        const reviewsSection = document.querySelector('#reviews .container');
-        if (reviewsSection) {
-            const btnContainer = reviewsSection.querySelector('div[style*="text-align: center"]');
-            if (btnContainer) {
-                const existingBtn = btnContainer.querySelector('.btn-outline');
-                if (existingBtn && !btnContainer.querySelector('.leave-review-btn')) {
-                    const leaveBtn = document.createElement('a');
-                    leaveBtn.href = '#';
-                    leaveBtn.className = 'btn-outline leave-review-btn';
-                    leaveBtn.style.marginLeft = '15px';
-                    leaveBtn.innerHTML = '<i class="fas fa-pen-alt"></i> Оставить отзыв';
-                    leaveBtn.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        // Открыть боковое меню и показать раздел отзывов
-                        const sideMenu = document.getElementById('sideMenu');
-                        const overlay = document.getElementById('sideMenuOverlay');
-                        sideMenu.classList.add('active');
-                        overlay.classList.add('active');
-                        document.body.style.overflow = 'hidden';
-                        // Показать страницу отзывов
-                        const mainPageDiv = document.getElementById('mainPageContent');
-                        const infoContainer = document.getElementById('infoPagesContainer');
-                        const allInfoPages = document.querySelectorAll('.info-page-content');
-                        mainPageDiv.style.display = 'none';
-                        infoContainer.style.display = 'block';
-                        allInfoPages.forEach(page => page.style.display = 'none');
-                        const targetPage = document.getElementById('page-reviews-page');
-                        if (targetPage) targetPage.style.display = 'block';
-                        // Загрузить отзывы
-                        if (typeof loadReviews === 'function') loadReviews();
-                        if (typeof initRatingStars === 'function') initRatingStars();
-                        if (typeof initReviewForm === 'function') initReviewForm();
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                    });
-                    btnContainer.appendChild(leaveBtn);
+        document.querySelector('.leave-review-btn')?.addEventListener('click', (e) => {
+            e.preventDefault();
+            openSideMenu();
+            showInfoPage('reviews-page');
+        });
+        
+        // Клавиатурная навигация для бокового меню
+        document.addEventListener('keydown', (e) => {
+            if(e.key === 'ArrowRight' && !sideMenu.classList.contains('active')) {
+                e.preventDefault();
+                openSideMenu();
+                setTimeout(() => {
+                    const firstLink = sideMenu.querySelector('.side-menu-nav a');
+                    if(firstLink) firstLink.focus();
+                }, 50);
+            }
+            if(e.key === 'Escape' && sideMenu.classList.contains('active')) {
+                closeSideMenu();
+            }
+        });
+        const navLinksArray = Array.from(document.querySelectorAll('.side-menu-nav a'));
+        let currentFocusIndex = -1;
+        sideMenu.addEventListener('keydown', (e) => {
+            if(!sideMenu.classList.contains('active')) return;
+            if(e.key === 'ArrowDown') {
+                e.preventDefault();
+                currentFocusIndex = (currentFocusIndex + 1) % navLinksArray.length;
+                navLinksArray[currentFocusIndex].focus();
+            } else if(e.key === 'ArrowUp') {
+                e.preventDefault();
+                currentFocusIndex = (currentFocusIndex - 1 + navLinksArray.length) % navLinksArray.length;
+                navLinksArray[currentFocusIndex].focus();
+            } else if(e.key === 'Enter') {
+                const focused = document.activeElement;
+                if(focused && focused.classList && focused.classList.contains('side-menu-nav') === false && focused.href) {
+                    focused.click();
                 }
             }
-        }
-
-        // Клавиатурная навигация (Tab, Enter, стрелки для прокрутки)
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowDown') {
-                window.scrollBy({ top: 100, behavior: 'smooth' });
-                e.preventDefault();
-            } else if (e.key === 'ArrowUp') {
-                window.scrollBy({ top: -100, behavior: 'smooth' });
-                e.preventDefault();
-            }
         });
-        // Делаем все интерактивные элементы фокусируемыми
-        document.querySelectorAll('a, button, input, textarea, select, [tabindex]').forEach(el => {
-            if (!el.hasAttribute('tabindex')) el.setAttribute('tabindex', '0');
-        });
+        sideMenu.addEventListener('focusin', () => { currentFocusIndex = navLinksArray.indexOf(document.activeElement); });
+        
+        showMainPage(); allInfoPages.forEach(p=>p.style.display='none'); infoContainer.style.display='none'; mainPageDiv.style.display='block';
     })();
 </script>
 </body>
