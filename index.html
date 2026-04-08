@@ -347,82 +347,85 @@
             flex-shrink: 0;
         }
         .clinic-carousel {
-            flex: 1;
-            background: var(--soft-white);
-            border-radius: 40px;
-            padding: 20px;
-            text-align: center;
-            border: var(--border-gold);
-            position: relative;
-        }
-        .carousel-container {
-            position: relative;
-            width: 100%;
-            overflow: hidden;
-            border-radius: 28px;
-        }
-        .carousel-slides {
-            display: flex;
-            transition: transform 0.5s ease-in-out;
-        }
-        .carousel-slide {
-            flex: 0 0 100%;
-            width: 100%;
-        }
-        .carousel-slide img {
-            width: 100%;
-            max-width: 400px;
-            border-radius: 28px;
-            object-fit: cover;
-            box-shadow: var(--shadow-sm);
-            margin: 0 auto;
-            display: block;
-        }
-        .carousel-btn {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(0,0,0,0.5);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            cursor: pointer;
-            font-size: 1.2rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: 0.2s;
-            z-index: 10;
-        }
-        .carousel-btn:hover {
-            background: var(--gold);
-        }
-        .carousel-btn.prev {
-            left: 10px;
-        }
-        .carousel-btn.next {
-            right: 10px;
-        }
-        .carousel-dots {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 15px;
-        }
-        .dot {
-            width: 10px;
-            height: 10px;
-            background: #ccc;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: 0.2s;
-        }
-        .dot.active {
-            background: var(--gold);
-            transform: scale(1.2);
-        }
+    flex: 1;
+    background: var(--soft-white);
+    border-radius: 40px;
+    padding: 20px;
+    text-align: center;
+    border: var(--border-gold);
+    position: relative;
+}
+.carousel-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 28px;
+    /* Сделаем контейнер прямоугольным (например, соотношение сторон 4:3) */
+    aspect-ratio: 4 / 3;
+    background: #f0f0f0;
+}
+.carousel-slides {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    height: 100%;
+}
+.carousel-slide {
+    flex: 0 0 100%;
+    height: 100%;
+}
+.carousel-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Изображение заполнит весь контейнер, не искажаясь и без смещения */
+    border-radius: 28px;
+    box-shadow: var(--shadow-sm);
+    display: block;
+}
+.carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.5);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+    z-index: 10;
+}
+.carousel-btn:hover {
+    background: var(--gold);
+}
+.carousel-btn.prev {
+    left: 10px;
+}
+.carousel-btn.next {
+    right: 10px;
+}
+.carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+}
+.dot {
+    width: 10px;
+    height: 10px;
+    background: #ccc;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.dot.active {
+    background: var(--gold);
+    transform: scale(1.2);
+}
         @media (max-width: 768px) {
             .about-grid {
                 flex-direction: column;
