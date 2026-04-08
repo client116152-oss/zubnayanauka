@@ -200,7 +200,7 @@
             color: white;
         }
 
-        /* Оригинальные стили (из первого файла) */
+        /* Оригинальные стили */
         .btn-primary {
             background: var(--gold);
             color: white;
@@ -346,7 +346,6 @@
             width: 28px;
             flex-shrink: 0;
         }
-        /* Карусель для клиники */
         .clinic-carousel {
             flex: 1;
             background: var(--soft-white);
@@ -732,7 +731,6 @@
             height: auto;
         }
 
-        /* Дополнительные стили для информационных блоков */
         .info-block {
             background: #FEFCF8;
             border-radius: 32px;
@@ -808,12 +806,13 @@
 <nav class="navbar">
     <div class="nav-container">
         <div class="logo">
-            <img src="images/logo.png" alt="Логотип Зубная наука">
+            <img src="logo.png" alt="Логотип Зубная наука">
         </div>
         <ul class="nav-links">
             <li><a href="#about" class="main-nav-link">О клинике</a></li>
             <li><a href="#doctor" class="main-nav-link">Главный врач</a></li>
             <li><a href="#services" class="main-nav-link">Услуги</a></li>
+            <li><a href="#tech" class="main-nav-link">Технологии</a></li>
             <li><a href="#reviews" class="main-nav-link">Отзывы</a></li>
             <li><a href="#contacts" class="main-nav-link">Контакты</a></li>
         </ul>
@@ -837,14 +836,14 @@
         <a href="#" data-page="work-rules"><i class="fas fa-file-alt"></i> Правила работы</a>
         <a href="#" data-page="employees"><i class="fas fa-users"></i> Сведения о работниках</a>
         <a href="#" data-page="drugs"><i class="fas fa-pills"></i> О лекарственных препаратах</a>
-        <a href="#" data-page="reviews-page"><i class="fas fa-star"></i> Отзывы (Supabase)</a>
+        <a href="#" data-page="reviews-page"><i class="fas fa-star"></i> Отзывы</a>
         <a href="#" data-page="privacy"><i class="fas fa-shield-alt"></i> Политика обработки ПД</a>
         <a href="#" data-page="control-contacts"><i class="fas fa-gavel"></i> Контакты контролирующих органов</a>
     </div>
 </div>
 
 <main>
-    <!-- ГЛАВНАЯ СТРАНИЦА (оригинальный дизайн) -->
+    <!-- ГЛАВНАЯ СТРАНИЦА -->
     <div id="mainPageContent">
         <section class="hero">
             <div class="container hero-grid">
@@ -860,7 +859,7 @@
                     </div>
                 </div>
                 <div class="hero-image">
-                    <img src="images/hero-interior.jpg" alt="Интерьер стоматологии">
+                    <img src="hero-interior.jpg" alt="Интерьер стоматологии">
                 </div>
             </div>
         </section>
@@ -884,9 +883,9 @@
                     <div class="clinic-carousel">
                         <div class="carousel-container">
                             <div class="carousel-slides" id="clinicCarouselSlides">
-                                <div class="carousel-slide"><img src="images/clinic-interior.jpg" alt="Интерьер клиники 1"></div>
-                                <div class="carousel-slide"><img src="images/clinic-interior2.jpg" alt="Интерьер клиники 2"></div>
-                                <div class="carousel-slide"><img src="images/clinic-interior3.jpg" alt="Интерьер клиники 3"></div>
+                                <div class="carousel-slide"><img src="clinic-interior.jpg" alt="Интерьер клиники 1"></div>
+                                <div class="carousel-slide"><img src="clinic-interior2.jpg" alt="Интерьер клиники 2"></div>
+                                <div class="carousel-slide"><img src="clinic-interior3.jpg" alt="Интерьер клиники 3"></div>
                             </div>
                             <button class="carousel-btn prev" id="carouselPrev"><i class="fas fa-chevron-left"></i></button>
                             <button class="carousel-btn next" id="carouselNext"><i class="fas fa-chevron-right"></i></button>
@@ -916,7 +915,7 @@
                 <div class="section-sub">Кандидат медицинских наук, член Европейской ассоциации стоматологов</div>
                 <div class="doctor-card">
                     <div class="doctor-photo">
-                        <img src="images/doctor.jpg" alt="Доктор Шайдуллин">
+                        <img src="doctor.jpg" alt="Доктор Шайдуллин">
                         <div class="doctor-badge">Владелец клиники</div>
                     </div>
                     <div class="doctor-info">
@@ -951,7 +950,7 @@
             </div>
         </section>
 
-        <section>
+        <section id="tech">
             <div class="container">
                 <div class="section-title">Технологии и оборудование</div>
                 <div class="section-sub">Мы работаем на оборудовании экспертного класса</div>
@@ -973,7 +972,7 @@
                         <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
                         <p class="review-text">«Очень изысканная клиника, чувствуется уровень. Доктор Шайдуллин — врач от Бога. Поставил виниры, результат превзошёл ожидания.»</p>
                         <div class="review-author">
-                            <img src="images/review-avatar-1.jpg" alt="Фото пациента">
+                            <img src="review-avatar-1.jpg" alt="Фото пациента">
                             <span><strong>Алина К.</strong><br>Виниры</span>
                         </div>
                     </div>
@@ -981,7 +980,7 @@
                         <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
                         <p class="review-text">«Делала гигиену и отбеливание. Очень бережно, без дискомфорта. Теперь вся семья ходит только в "Зубную науку".»</p>
                         <div class="review-author">
-                            <img src="images/review-avatar-2.jpg" alt="Фото пациента">
+                            <img src="review-avatar-2.jpg" alt="Фото пациента">
                             <span><strong>Екатерина В.</strong><br>Гигиена + отбеливание</span>
                         </div>
                     </div>
@@ -989,7 +988,7 @@
                         <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
                         <p class="review-text">«Попал с острой болью, спасли зуб, который другие хотели удалять. Лечение под микроскопом — это чудо!»</p>
                         <div class="review-author">
-                            <img src="images/review-avatar-3.jpg" alt="Фото пациента">
+                            <img src="review-avatar-3.jpg" alt="Фото пациента">
                             <span><strong>Марат Ф.</strong><br>Эндодонтия</span>
                         </div>
                     </div>
@@ -1095,7 +1094,7 @@
 <footer>
     <div class="container">
         <div class="logo" style="justify-content: center; margin-bottom: 12px;">
-            <img src="images/logo.png" alt="Логотип" style="max-height: 45px;">
+            <img src="logo.png" alt="Логотип" style="max-height: 45px;">
         </div>
         <p>© 2025 Стоматологическая клиника «Зубная наука». Лицензия № Л041-01181-16/04514739 от 05.03.2026. ОГРН 1251600035950 | ИНН 1686051858</p>
         <div class="footer-links">
@@ -1106,7 +1105,6 @@
 
 <script>
     (function() {
-        // Supabase инициализация
         const SUPABASE_URL = 'https://uoapuoiopdxvmqixvpyx.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvYXB1b2lvcGR4dm1xaXh2cHl4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1NzkxNDAsImV4cCI6MjA5MTE1NTE0MH0.NZ3WKB3tspeBQejiJ3tLLRe5DxEXlpsrsTu9Id3cfos';
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -1160,7 +1158,7 @@
                     const filledStars = Array(review.rating).fill('<i class="fas fa-star"></i>').join(''); 
                     const emptyStars = Array(5 - review.rating).fill('<i class="far fa-star"></i>').join(''); 
                     const date = new Date(review.created_at).toLocaleDateString('ru-RU'); 
-                    card.innerHTML = `<div class="stars">${filledStars}${emptyStars}</div><p class="review-text">${escapeHtml(review.text)}</p><div class="review-author"><img src="images/review-avatar-1.jpg" alt="avatar" onerror="this.src='https://via.placeholder.com/48'"><span><strong>${escapeHtml(review.name)}</strong><br>${date}</span></div>`; 
+                    card.innerHTML = `<div class="stars">${filledStars}${emptyStars}</div><p class="review-text">${escapeHtml(review.text)}</p><div class="review-author"><img src="review-avatar-1.jpg" alt="avatar" onerror="this.src='https://via.placeholder.com/48'"><span><strong>${escapeHtml(review.name)}</strong><br>${date}</span></div>`; 
                     container.appendChild(card); 
                 }); 
             } catch(err) { 
@@ -1293,7 +1291,7 @@
         infoContainer.style.display = 'none'; 
         mainPageDiv.style.display = 'block';
 
-        // Карусель для клиники
+        // Карусель
         const slidesContainer = document.getElementById('clinicCarouselSlides');
         const prevBtn = document.getElementById('carouselPrev');
         const nextBtn = document.getElementById('carouselNext');
@@ -1302,7 +1300,6 @@
             let currentIndex = 0;
             const slides = slidesContainer.children;
             const totalSlides = slides.length;
-            
             function updateCarousel() {
                 slidesContainer.style.transform = `translateX(-${currentIndex * 100}%)`;
                 const dots = dotsContainer.querySelectorAll('.dot');
@@ -1311,7 +1308,6 @@
                     else dot.classList.remove('active');
                 });
             }
-            
             function createDots() {
                 dotsContainer.innerHTML = '';
                 for (let i = 0; i < totalSlides; i++) {
@@ -1325,17 +1321,14 @@
                     dotsContainer.appendChild(dot);
                 }
             }
-            
             prevBtn.addEventListener('click', () => {
                 currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
                 updateCarousel();
             });
-            
             nextBtn.addEventListener('click', () => {
                 currentIndex = (currentIndex + 1) % totalSlides;
                 updateCarousel();
             });
-            
             createDots();
         }
     })();
