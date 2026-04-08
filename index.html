@@ -107,7 +107,7 @@
             }
         }
 
-        /* Боковое меню (справа) */
+        /* Боковое меню */
         .side-menu-overlay {
             position: fixed;
             top: 0;
@@ -346,22 +346,84 @@
             width: 28px;
             flex-shrink: 0;
         }
-        .clinic-image {
+        /* Карусель для клиники */
+        .clinic-carousel {
             flex: 1;
             background: var(--soft-white);
             border-radius: 40px;
             padding: 20px;
             text-align: center;
             border: var(--border-gold);
+            position: relative;
         }
-        .clinic-image img {
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            border-radius: 28px;
+        }
+        .carousel-slides {
+            display: flex;
+            transition: transform 0.5s ease-in-out;
+        }
+        .carousel-slide {
+            flex: 0 0 100%;
+            width: 100%;
+        }
+        .carousel-slide img {
             width: 100%;
             max-width: 400px;
             border-radius: 28px;
             object-fit: cover;
             box-shadow: var(--shadow-sm);
+            margin: 0 auto;
+            display: block;
         }
-
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.5);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            cursor: pointer;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: 0.2s;
+            z-index: 10;
+        }
+        .carousel-btn:hover {
+            background: var(--gold);
+        }
+        .carousel-btn.prev {
+            left: 10px;
+        }
+        .carousel-btn.next {
+            right: 10px;
+        }
+        .carousel-dots {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .dot {
+            width: 10px;
+            height: 10px;
+            background: #ccc;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .dot.active {
+            background: var(--gold);
+            transform: scale(1.2);
+        }
         @media (max-width: 768px) {
             .about-grid {
                 flex-direction: column;
@@ -381,9 +443,12 @@
                 gap: 8px;
                 text-align: left;
             }
-            .clinic-image {
+            .clinic-carousel {
                 margin-top: 30px;
                 order: 2;
+            }
+            .carousel-slide img {
+                max-width: 100%;
             }
         }
 
@@ -667,7 +732,7 @@
             height: auto;
         }
 
-        /* Дополнительные стили для информационных блоков (боковое меню) */
+        /* Дополнительные стили для информационных блоков */
         .info-block {
             background: #FEFCF8;
             border-radius: 32px;
@@ -772,8 +837,9 @@
         <a href="#" data-page="work-rules"><i class="fas fa-file-alt"></i> Правила работы</a>
         <a href="#" data-page="employees"><i class="fas fa-users"></i> Сведения о работниках</a>
         <a href="#" data-page="drugs"><i class="fas fa-pills"></i> О лекарственных препаратах</a>
-        <a href="#" data-page="reviews-page"><i class="fas fa-star"></i> Отзывы</a>
+        <a href="#" data-page="reviews-page"><i class="fas fa-star"></i> Отзывы (Supabase)</a>
         <a href="#" data-page="privacy"><i class="fas fa-shield-alt"></i> Политика обработки ПД</a>
+        <a href="#" data-page="control-contacts"><i class="fas fa-gavel"></i> Контакты контролирующих органов</a>
     </div>
 </div>
 
@@ -815,8 +881,17 @@
                             <li><i class="fas fa-chart-line"></i> Цифровая диагностика и 3D-планирование</li>
                         </ul>
                     </div>
-                    <div class="clinic-image">
-                        <img src="images/clinic-interior.jpg" alt="Интерьер клиники">
+                    <div class="clinic-carousel">
+                        <div class="carousel-container">
+                            <div class="carousel-slides" id="clinicCarouselSlides">
+                                <div class="carousel-slide"><img src="images/clinic-interior.jpg" alt="Интерьер клиники 1"></div>
+                                <div class="carousel-slide"><img src="images/clinic-interior2.jpg" alt="Интерьер клиники 2"></div>
+                                <div class="carousel-slide"><img src="images/clinic-interior3.jpg" alt="Интерьер клиники 3"></div>
+                            </div>
+                            <button class="carousel-btn prev" id="carouselPrev"><i class="fas fa-chevron-left"></i></button>
+                            <button class="carousel-btn next" id="carouselNext"><i class="fas fa-chevron-right"></i></button>
+                        </div>
+                        <div class="carousel-dots" id="carouselDots"></div>
                     </div>
                 </div>
             </div>
@@ -954,17 +1029,18 @@
     <div id="infoPagesContainer" style="display: none;">
         <div id="page-svedeniya" class="info-page-content"><div class="container"><div class="info-block"><h3><i class="fas fa-building"></i> Сведения об организации</h3><p><strong>Полное наименование:</strong> Общество с ограниченной ответственностью "Зубная наука"<br><strong>Сокращённое наименование:</strong> ООО "Зубная наука"<br><strong>Организационно-правовая форма:</strong> Общество с ограниченной ответственностью<br><strong>ОГРН:</strong> 1251600035950<br><strong>ИНН:</strong> 1686051858<br><strong>Юридический адрес:</strong> 420104, Россия, Республика Татарстан, г. Казань, пр-д ЯРАТКАН, Д. 3, ПОМЕЩ. 1007<br><strong>Учредители:</strong> Шайдуллин Ильдар Рашидович (100% доли)<br><strong>Структура и органы управления:</strong> Генеральный директор — Шайдуллин И.Р., врачебная комиссия, медицинский совет.</p></div></div></div>
 
-        <div id="page-licenses" class="info-page-content"><div class="container"><div class="info-block"><h3><i class="fas fa-certificate"></i> Лицензии и сертификаты</h3><p><strong>Статус лицензии:</strong> действует<br><strong>Регистрационный номер лицензии:</strong> Л041-01181-16/04514739<br><strong>Дата предоставления лицензии:</strong> 05.03.2026<br><strong>Лицензирующий орган:</strong> Министерство здравоохранения Республики Татарстан<br><strong>Лицензируемый вид деятельности:</strong> Медицинская деятельность (за исключением указанной деятельности, осуществляемой медицинскими организациями и другими организациями, входящими в частную систему здравоохранения, на территории инновационного центра «Сколково»)<br><strong>Адрес места осуществления:</strong> 420104, Республика Татарстан, г Казань, пр-д Яраткан, д. 3, пом. 1007.</p><div style="display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; margin-top: 20px;">
-    <div style="flex: 1; min-width: 250px; text-align: center;">
-        <img src="license-scan.jpg" alt="Скан лицензии (страница 1)" style="max-width:100%; border-radius:24px; box-shadow: var(--shadow-sm);">
-        <p style="margin-top:12px; font-size:0.9rem; color:var(--text-muted);">Страница 1 – выписка от 05.03.2026</p>
-    </div>
-    <div style="flex: 1; min-width: 250px; text-align: center;">
-        <img src="license-scan2.jpg" alt="Скан лицензии (страница 2)" style="max-width:100%; border-radius:24px; box-shadow: var(--shadow-sm);">
-        <p style="margin-top:12px; font-size:0.9rem; color:var(--text-muted);">Страница 2 – продолжение выписки</p>
-    </div>
-</div>
-</div></div></div>
+        <div id="page-licenses" class="info-page-content"><div class="container"><div class="info-block"><h3><i class="fas fa-certificate"></i> Лицензии и сертификаты</h3><p><strong>Статус лицензии:</strong> действует<br><strong>Регистрационный номер лицензии:</strong> Л041-01181-16/04514739<br><strong>Дата предоставления лицензии:</strong> 05.03.2026<br><strong>Лицензирующий орган:</strong> Министерство здравоохранения Республики Татарстан<br><strong>Лицензируемый вид деятельности:</strong> Медицинская деятельность (за исключением указанной деятельности, осуществляемой медицинскими организациями и другими организациями, входящими в частную систему здравоохранения, на территории инновационного центра «Сколково»)<br><strong>Адрес места осуществления:</strong> 420104, Республика Татарстан, г Казань, пр-д Яраткан, д. 3, пом. 1007.</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 30px; justify-content: center; margin-top: 20px;">
+                <div style="flex: 1; min-width: 250px; text-align: center;">
+                    <img src="images/license-scan.jpg" alt="Скан лицензии (страница 1)" style="max-width:100%; border-radius:24px; box-shadow: var(--shadow-sm);">
+                    <p style="margin-top:12px; font-size:0.9rem; color:var(--text-muted);">Страница 1 – выписка от 05.03.2026</p>
+                </div>
+                <div style="flex: 1; min-width: 250px; text-align: center;">
+                    <img src="images/license-scan2.jpg" alt="Скан лицензии (страница 2)" style="max-width:100%; border-radius:24px; box-shadow: var(--shadow-sm);">
+                    <p style="margin-top:12px; font-size:0.9rem; color:var(--text-muted);">Страница 2 – продолжение выписки</p>
+                </div>
+            </div>
+        </div></div></div>
 
         <div id="page-smo" class="info-page-content"><div class="container"><div class="info-block"><h3><i class="fas fa-hand-holding-usd"></i> Данные о СМО (ОМС)</h3><p><strong>Страховые медицинские организации, с которыми заключены договоры ОМС:</strong></p><ul><li>АО «Страховая компания «СОГАЗ-Мед»</li><li>ООО «Капитал Медицинское Страхование»</li><li>АО «МАКС-М»</li><li>Филиал «ТФОМС РТ»</li></ul><p>Программа ОМС: первичная медико-санитарная помощь, стоматология взрослая (терапия, хирургия в рамках базовой программы).</p></div></div></div>
 
@@ -977,6 +1053,26 @@
         <div id="page-drugs" class="info-page-content"><div class="container"><div class="info-block"><h3><i class="fas fa-pills"></i> О лекарственных препаратах</h3><p><strong>ЖНВЛП (жизненно необходимые важнейшие лекарственные препараты):</strong> лидокаин, артикаин, амоксициллин, парацетамол, ибупрофен и др.</p><p><strong>Перечни для федеральных и региональных льготников:</strong> обеспечение по рецептам врача в рамках государственных программ.</p><p><strong>Препараты, отпускаемые по решению врачебной комиссии:</strong> антибиотики резерва, противовирусные средства (при тяжелых стоматитах, одонтогенных инфекциях).</p><p><strong>Препараты, отпускаемые бесплатно или со скидкой:</strong> для льготных категорий граждан (ветераны, инвалиды, дети-сироты) в рамках ОМС при стационарзамещающих технологиях.</p></div></div></div>
 
         <div id="page-privacy" class="info-page-content"><div class="container"><div class="info-block"><h3><i class="fas fa-shield-alt"></i> Политика обработки персональных данных</h3><p>ООО «Зубная наука» обязуется соблюдать конфиденциальность персональных данных пациентов в соответствии с Федеральным законом № 152-ФЗ. Сбор данных осуществляется с письменного согласия. Данные используются исключительно для медицинского обслуживания, записи на прием, ведения документации. Пациент вправе отозвать согласие. Хранение – на защищенных серверах. Актуальная версия политики утверждена приказом № 42/П от 10.01.2024.</p></div></div></div>
+
+        <div id="page-control-contacts" class="info-page-content"><div class="container"><div class="info-block"><h3><i class="fas fa-gavel"></i> Контакты контролирующих органов</h3>
+            <p><strong>Территориальный орган Росздравнадзора по Республике Татарстан</strong><br>
+            Адрес: 420029, г. Казань, ул. Журналистов, д. 62<br>
+            Телефон: (843) 267-04-56<br>
+            Официальный сайт: <a href="https://16reg.roszdravnadzor.gov.ru" target="_blank" style="color: var(--gold);">16reg.roszdravnadzor.gov.ru</a><br>
+            E-mail: info@tatarstan.roszdravnadzor.ru</p>
+            <hr style="margin: 20px 0; border-color: #E0D6C5;">
+            <p><strong>Управление Роспотребнадзора по Республике Татарстан</strong><br>
+            Адрес: 420111, г. Казань, ул. Большая Красная, д. 30<br>
+            Телефон горячей линии: (843) 238-94-65<br>
+            Официальный сайт: <a href="https://16.rospotrebnadzor.ru" target="_blank" style="color: var(--gold);">16.rospotrebnadzor.ru</a><br>
+            E-mail: kanc@tatarstan.rospotrebnadzor.ru</p>
+            <hr style="margin: 20px 0; border-color: #E0D6C5;">
+            <p><strong>Министерство здравоохранения Республики Татарстан</strong><br>
+            Адрес: 420012, г. Казань, ул. Островского, д. 11/6<br>
+            Телефон: (843) 231-20-00<br>
+            Официальный сайт: <a href="https://minzdrav.tatarstan.ru" target="_blank" style="color: var(--gold);">minzdrav.tatarstan.ru</a><br>
+            E-mail: minzdrav@tatar.ru</p>
+        </div></div></div></div>
 
         <div id="page-reviews-page" class="info-page-content">
             <div class="container">
@@ -1010,7 +1106,7 @@
 
 <script>
     (function() {
-        // Supabase
+        // Supabase инициализация
         const SUPABASE_URL = 'https://uoapuoiopdxvmqixvpyx.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvYXB1b2lvcGR4dm1xaXh2cHl4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1NzkxNDAsImV4cCI6MjA5MTE1NTE0MH0.NZ3WKB3tspeBQejiJ3tLLRe5DxEXlpsrsTu9Id3cfos';
         const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -1196,6 +1292,52 @@
         allInfoPages.forEach(page => page.style.display = 'none'); 
         infoContainer.style.display = 'none'; 
         mainPageDiv.style.display = 'block';
+
+        // Карусель для клиники
+        const slidesContainer = document.getElementById('clinicCarouselSlides');
+        const prevBtn = document.getElementById('carouselPrev');
+        const nextBtn = document.getElementById('carouselNext');
+        const dotsContainer = document.getElementById('carouselDots');
+        if (slidesContainer && prevBtn && nextBtn && dotsContainer) {
+            let currentIndex = 0;
+            const slides = slidesContainer.children;
+            const totalSlides = slides.length;
+            
+            function updateCarousel() {
+                slidesContainer.style.transform = `translateX(-${currentIndex * 100}%)`;
+                const dots = dotsContainer.querySelectorAll('.dot');
+                dots.forEach((dot, idx) => {
+                    if (idx === currentIndex) dot.classList.add('active');
+                    else dot.classList.remove('active');
+                });
+            }
+            
+            function createDots() {
+                dotsContainer.innerHTML = '';
+                for (let i = 0; i < totalSlides; i++) {
+                    const dot = document.createElement('div');
+                    dot.classList.add('dot');
+                    if (i === currentIndex) dot.classList.add('active');
+                    dot.addEventListener('click', () => {
+                        currentIndex = i;
+                        updateCarousel();
+                    });
+                    dotsContainer.appendChild(dot);
+                }
+            }
+            
+            prevBtn.addEventListener('click', () => {
+                currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+                updateCarousel();
+            });
+            
+            nextBtn.addEventListener('click', () => {
+                currentIndex = (currentIndex + 1) % totalSlides;
+                updateCarousel();
+            });
+            
+            createDots();
+        }
     })();
 </script>
 </body>
