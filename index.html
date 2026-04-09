@@ -803,7 +803,7 @@
         .rating-stars i.active, .rating-stars i.hover {
             color: var(--gold);
         }
-/* ========== РЕЖИМ ДЛЯ СЛАБОВИДЯЩИХ (ГОСТ) — УМЕНЬШЕННАЯ ПАНЕЛЬ ========== */
+        /* ========== РЕЖИМ ДЛЯ СЛАБОВИДЯЩИХ (ГОСТ) — ПОЛНОСТЬЮ ПЕРЕОПРЕДЕЛЁННЫЙ ========== */
 .vision-toggle-btn {
     background: none;
     border: 1px solid var(--gold);
@@ -819,12 +819,13 @@
     color: white;
 }
 
+/* Основные переменные */
 body.vision-mode {
     background: var(--bg-color, white) !important;
     color: var(--text-color, black) !important;
 }
 
-/* Панель управления (исправленная — без scale) */
+/* Панель управления — компактная, без масштабирования */
 body.vision-mode .vision-panel {
     position: fixed;
     top: 100px;
@@ -868,7 +869,7 @@ body.vision-mode.hide-images img {
     display: none !important;
 }
 
-/* Цветовые схемы (полное переопределение) */
+/* Цветовые схемы (фон, текст, карточки, границы) */
 body.vision-mode.scheme-white-black {
     --bg-color: white;
     --text-color: black;
@@ -900,7 +901,7 @@ body.vision-mode.scheme-green-darkbrown {
     --border-color: #5a7a5a;
 }
 
-/* Применяем переменные ко всем элементам */
+/* ПЕРЕОПРЕДЕЛЕНИЕ ФОНА ДЛЯ ВСЕХ СЕКЦИЙ, ВКЛЮЧАЯ HERO */
 body.vision-mode,
 body.vision-mode .navbar,
 body.vision-mode .hero,
@@ -915,40 +916,57 @@ body.vision-mode .review-form,
 body.vision-mode .staff-card,
 body.vision-mode .side-menu,
 body.vision-mode .side-menu-nav a,
-body.vision-mode .vision-panel {
+body.vision-mode .vision-panel,
+body.vision-mode .clinic-carousel,
+body.vision-mode .tech-item,
+body.vision-mode .doctor-photo,
+body.vision-mode .detail-item,
+body.vision-mode footer {
     background-color: var(--bg-color, white) !important;
     color: var(--text-color, black) !important;
 }
 
-body.vision-mode .clinic-carousel,
-body.vision-mode .tech-item,
-body.vision-mode .why-card,
-body.vision-mode .service-card,
-body.vision-mode .review-card,
-body.vision-mode .doctor-photo,
-body.vision-mode .detail-item,
-body.vision-mode .staff-card,
-body.vision-mode .info-block,
-body.vision-mode .review-form,
-body.vision-mode .contact-wrapper {
-    background-color: var(--card-bg, var(--bg-color)) !important;
-}
-
+/* Фон карточек (чтобы отличался от общего фона, если нужно) */
 body.vision-mode .why-card,
 body.vision-mode .service-card,
 body.vision-mode .review-card,
 body.vision-mode .doctor-card,
 body.vision-mode .contact-wrapper,
 body.vision-mode .info-block,
-body.vision-mode .review-form {
+body.vision-mode .review-form,
+body.vision-mode .staff-card,
+body.vision-mode .clinic-carousel,
+body.vision-mode .tech-item,
+body.vision-mode .doctor-photo,
+body.vision-mode .detail-item {
+    background-color: var(--card-bg, var(--bg-color)) !important;
+}
+
+/* Убираем градиент у hero и устанавливаем сплошной фон */
+body.vision-mode .hero {
+    background: var(--bg-color) !important;
+}
+
+/* Границы и тени */
+body.vision-mode .why-card,
+body.vision-mode .service-card,
+body.vision-mode .review-card,
+body.vision-mode .doctor-card,
+body.vision-mode .contact-wrapper,
+body.vision-mode .info-block,
+body.vision-mode .review-form,
+body.vision-mode .navbar {
     border: 1px solid var(--border-color, #ccc) !important;
     box-shadow: none !important;
 }
-
 body.vision-mode .review-card {
     border-left: 5px solid var(--gold) !important;
 }
+body.vision-mode .hero-stats .stat-item h3 {
+    color: var(--gold) !important;
+}
 
+/* Кнопки */
 body.vision-mode .btn-primary,
 body.vision-mode .btn-outline {
     background-color: var(--bg-color) !important;
@@ -961,20 +979,62 @@ body.vision-mode .btn-outline:hover {
     color: var(--bg-color) !important;
 }
 
+/* Ссылки */
 body.vision-mode a:not(.btn-primary):not(.btn-outline) {
     color: var(--gold) !important;
     text-decoration: underline !important;
 }
 
-body.vision-mode footer {
+/* Текстовые элементы: заголовки, параграфы, подписи, футер */
+body.vision-mode h1,
+body.vision-mode h2,
+body.vision-mode h3,
+body.vision-mode h4,
+body.vision-mode p,
+body.vision-mode li,
+body.vision-mode span,
+body.vision-mode .section-title,
+body.vision-mode .section-sub,
+body.vision-mode .hero-content p,
+body.vision-mode .review-text,
+body.vision-mode .review-author span,
+body.vision-mode .price-tag,
+body.vision-mode .tech-item p,
+body.vision-mode .tech-item h4,
+body.vision-mode .doctor-info p,
+body.vision-mode .detail-item,
+body.vision-mode .contact-info p,
+body.vision-mode .contact-info a,
+body.vision-mode footer p,
+body.vision-mode footer span,
+body.vision-mode .info-block p,
+body.vision-mode .info-block li,
+body.vision-mode .staff-card,
+body.vision-mode .form-group label,
+body.vision-mode .review-form h4,
+body.vision-mode .carousel-dots .dot,
+body.vision-mode .carousel-btn i,
+body.vision-mode .hero-badge {
+    color: var(--text-color, black) !important;
+}
+
+/* Подписи к изображениям (под каруселью, под лицензиями) */
+body.vision-mode .clinic-carousel p,
+body.vision-mode .carousel-slide p,
+body.vision-mode .info-block p[style*="margin-top"],
+body.vision-mode .info-block div[style*="text-align: center"] p {
+    color: var(--text-color, black) !important;
+}
+
+/* Футер — все элементы */
+body.vision-mode footer,
+body.vision-mode footer .footer-links span {
     background-color: var(--bg-color) !important;
     color: var(--text-color) !important;
     border-top: 1px solid var(--border-color);
 }
 
-body.vision-mode .navbar {
-    border-bottom: 1px solid var(--border-color);
-}
+/* Навигация */
 body.vision-mode .nav-links a {
     color: var(--text-color) !important;
 }
@@ -982,24 +1042,18 @@ body.vision-mode .nav-links a:hover {
     color: var(--gold) !important;
 }
 
-body.vision-mode .hero-stats .stat-item h3 {
-    color: var(--gold) !important;
-}
-
-/* Требования ГОСТ */
+/* Требования ГОСТ к тексту */
 body.vision-mode p,
 body.vision-mode li,
 body.vision-mode .review-text,
-body.vision-mode .hero-content p {
+body.vision-mode .hero-content p,
+body.vision-mode .section-title,
+body.vision-mode .section-sub {
     text-align: left !important;
     line-height: 1.5 !important;
     letter-spacing: 0.12em !important;
     word-spacing: 0.16em !important;
     margin-bottom: 1.5em !important;
-}
-body.vision-mode .section-title,
-body.vision-mode .section-sub {
-    text-align: left !important;
 }
 body.vision-mode .container {
     max-width: 100% !important;
