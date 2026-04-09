@@ -81,6 +81,7 @@
         .nav-links a:hover {
             color: var(--gold);
         }
+        <button class="vision-toggle-btn" id="visionToggleBtn">Версия для слабовидящих</button>
         .hamburger-menu-btn {
             background: none;
             border: none;
@@ -803,6 +804,118 @@
         .rating-stars i.active, .rating-stars i.hover {
             color: var(--gold);
         }
+        /* ========== РЕЖИМ ДЛЯ СЛАБОВИДЯЩИХ (ГОСТ) ========== */
+.vision-toggle-btn {
+    background: none;
+    border: 1px solid var(--gold);
+    border-radius: 40px;
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    margin-left: 1rem;
+    transition: 0.2s;
+}
+.vision-toggle-btn:hover {
+    background: var(--gold);
+    color: white;
+}
+
+body.vision-mode {
+    background: var(--bg-color, white);
+    color: var(--text-color, black);
+}
+/* Панель управления */
+body.vision-mode .vision-panel {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    background: var(--bg-color, white);
+    border: 3px solid var(--gold);
+    border-radius: 24px;
+    padding: 20px;
+    z-index: 1000;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    min-width: 280px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.3);
+    transform: scale(2.5);
+    transform-origin: top right;
+    font-size: 14px;
+}
+body.vision-mode .vision-panel * {
+    font-size: inherit;
+}
+body.vision-mode .vision-panel button,
+body.vision-mode .vision-panel select {
+    padding: 8px 12px;
+    border-radius: 40px;
+    border: 1px solid #ccc;
+    cursor: pointer;
+    background: var(--button-bg, #f0f0f0);
+}
+/* Размеры шрифта */
+body.vision-mode.font-size-100 { font-size: 100%; }
+body.vision-mode.font-size-200 { font-size: 200%; }
+body.vision-mode.font-size-500 { font-size: 500%; }
+/* Скрытие изображений */
+body.vision-mode.hide-images img {
+    display: none !important;
+}
+/* Цветовые схемы */
+body.vision-mode.scheme-white-black {
+    --bg-color: white;
+    --text-color: black;
+    background: white;
+    color: black;
+}
+body.vision-mode.scheme-black-white {
+    --bg-color: black;
+    --text-color: white;
+    background: black;
+    color: white;
+}
+body.vision-mode.scheme-darkblue-lightblue {
+    --bg-color: #0a2f6c;
+    --text-color: #c7e2ff;
+    background: #0a2f6c;
+    color: #c7e2ff;
+}
+body.vision-mode.scheme-brown-beige {
+    --bg-color: #f5e6d3;
+    --text-color: #4a2e1e;
+    background: #f5e6d3;
+    color: #4a2e1e;
+}
+body.vision-mode.scheme-green-darkbrown {
+    --bg-color: #2c4a2c;
+    --text-color: #d4c9a3;
+    background: #2c4a2c;
+    color: #d4c9a3;
+}
+/* Требования ГОСТ */
+body.vision-mode p,
+body.vision-mode li,
+body.vision-mode .review-text,
+body.vision-mode .hero-content p {
+    text-align: left !important;
+    line-height: 1.5;
+    letter-spacing: 0.12em;
+    word-spacing: 0.16em;
+    margin-bottom: 1.5em;
+}
+body.vision-mode .section-title,
+body.vision-mode .section-sub {
+    text-align: left;
+}
+body.vision-mode .container {
+    max-width: 100%;
+}
+/* Фокус для клавиатуры */
+*:focus-visible {
+    outline: 3px solid var(--gold) !important;
+    outline-offset: 2px;
+}
     </style>
 </head>
 <body>
