@@ -803,7 +803,7 @@
         .rating-stars i.active, .rating-stars i.hover {
             color: var(--gold);
         }
-        /* ========== РЕЖИМ ДЛЯ СЛАБОВИДЯЩИХ (ГОСТ) — ПОЛНОСТЬЮ ПЕРЕОПРЕДЕЛЁННЫЙ ========== */
+/* ========== РЕЖИМ ДЛЯ СЛАБОВИДЯЩИХ (ГОСТ) — ПОЛНОСТЬЮ ПЕРЕОПРЕДЕЛЁННЫЙ ========== */
 .vision-toggle-btn {
     background: none;
     border: 1px solid var(--gold);
@@ -825,7 +825,7 @@ body.vision-mode {
     color: var(--text-color, black) !important;
 }
 
-/* Панель управления — компактная, без масштабирования */
+/* Панель управления — компактная */
 body.vision-mode .vision-panel {
     position: fixed;
     top: 100px;
@@ -869,7 +869,7 @@ body.vision-mode.hide-images img {
     display: none !important;
 }
 
-/* Цветовые схемы (фон, текст, карточки, границы) */
+/* Цветовые схемы (правильные сочетания) */
 body.vision-mode.scheme-white-black {
     --bg-color: white;
     --text-color: black;
@@ -883,10 +883,10 @@ body.vision-mode.scheme-black-white {
     --border-color: #444;
 }
 body.vision-mode.scheme-darkblue-lightblue {
-    --bg-color: #0a2f6c;
-    --text-color: #c7e2ff;
-    --card-bg: #123a7a;
-    --border-color: #2a5a9a;
+    --bg-color: #c7e2ff;      /* голубой фон */
+    --text-color: #0a2f6c;    /* тёмно-синий текст */
+    --card-bg: #d4e8ff;
+    --border-color: #8fb4d4;
 }
 body.vision-mode.scheme-brown-beige {
     --bg-color: #f5e6d3;
@@ -895,10 +895,10 @@ body.vision-mode.scheme-brown-beige {
     --border-color: #c4a882;
 }
 body.vision-mode.scheme-green-darkbrown {
-    --bg-color: #2c4a2c;
-    --text-color: #d4c9a3;
-    --card-bg: #3a5a3a;
-    --border-color: #5a7a5a;
+    --bg-color: #4a2e1e;      /* тёмно-коричневый фон */
+    --text-color: #b8d9b0;    /* светло-зелёный текст */
+    --card-bg: #5a3a2a;
+    --border-color: #7a5a4a;
 }
 
 /* ПЕРЕОПРЕДЕЛЕНИЕ ФОНА ДЛЯ ВСЕХ СЕКЦИЙ, ВКЛЮЧАЯ HERO */
@@ -1018,7 +1018,7 @@ body.vision-mode .hero-badge {
     color: var(--text-color, black) !important;
 }
 
-/* Подписи к изображениям (под каруселью, под лицензиями) */
+/* ПОДПИСИ К ИЗОБРАЖЕНИЯМ И МЕЛКИЙ ТЕКСТ */
 body.vision-mode .clinic-carousel p,
 body.vision-mode .carousel-slide p,
 body.vision-mode .info-block p[style*="margin-top"],
@@ -1034,11 +1034,35 @@ body.vision-mode footer .footer-links span {
     border-top: 1px solid var(--border-color);
 }
 
-/* Навигация */
+/* НАВИГАЦИЯ (О клинике, Главный врач и т.д.) */
 body.vision-mode .nav-links a {
     color: var(--text-color) !important;
 }
 body.vision-mode .nav-links a:hover {
+    color: var(--gold) !important;
+}
+
+/* БОКОВОЕ МЕНЮ — ВСЕ ССЫЛКИ */
+body.vision-mode .side-menu-nav a {
+    color: var(--text-color) !important;
+    background-color: var(--card-bg, var(--bg-color)) !important;
+}
+body.vision-mode .side-menu-nav a i {
+    color: var(--gold) !important;
+}
+body.vision-mode .side-menu-nav a:hover {
+    background-color: var(--gold) !important;
+    color: var(--bg-color) !important;
+}
+body.vision-mode .side-menu-nav a:hover i {
+    color: var(--bg-color) !important;
+}
+
+/* КНОПКА ЗАКРЫТИЯ БОКОВОГО МЕНЮ */
+body.vision-mode .close-side-menu {
+    color: var(--text-color) !important;
+}
+body.vision-mode .close-side-menu:hover {
     color: var(--gold) !important;
 }
 
