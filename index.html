@@ -1457,6 +1457,139 @@ if (openReviewsBtn) {
         showInfoPage('reviews-page'); // переключить на раздел отзывов
     });
 }
+// ========== ВЕРСИЯ ДЛЯ СЛАБОВИДЯЩИХ ==========
+const visionBtn = document.getElementById('visionToggleBtn');
+let visionPanel = null;
+
+function createVisionPanel() {
+    if (visionPanel) return;
+    visionPanel = document.createElement('div');
+    visionPanel.className = 'vision-panel';
+    visionPanel.innerHTML = `
+        <div class="font-size-buttons" style="display: flex; gap: 8px;">
+            <button data-font="100">100%</button>
+            <button data-font="200">200%</button>
+            <button data-font="500">500%</button>
+        </div>
+        <button id="toggleImagesBtn">Изображения: Вкл</button>
+        <select id="colorSchemeSelect">
+            <option value="white-black">Черный на белом</option>
+            <option value="black-white">Белый на черном</option>
+            <option value="darkblue-lightblue">Темно-синий на голубом</option>
+            <option value="brown-beige">Коричневый на бежевом</option>
+            <option value="green-darkbrown">Зеленый на темно-коричневом</option>
+        </select>
+        <button id="closeVisionPanelBtn">Закрыть панель</button>
+    `;
+    document.body.appendChild(visionPanel);
+
+    // Управление размером шрифта
+    document.querySelectorAll('[data-font]').forEach(btn => {
+        btn.addEventListener('click', (e) => {
+            const size = e.target.getAttribute('data-font');
+            document.body.classList.remove('font-size-100', 'font-size-200', 'font-size-500');
+            document.body.classList.add(`font-size-${size}`);
+        });
+    });
+
+    // Переключение изображений
+    let imagesVisible = true;
+    const toggleImagesBtn = document.getElementById('toggleImagesBtn');
+    toggleImagesBtn.addEventListener('click', () => {
+        imagesVisible = !imagesVisible;
+        document.body.classList.toggle('hide-images', !imagesVisible);
+        toggleImagesBtn.textContent = imagesVisible ? 'Изображения: Вкл' : 'Изображения: Выкл';
+    });
+
+    // Выбор цветовой схемы
+    const schemeSelect = document.getElementById('colorSchemeSelect');
+    schemeSelect.addEventListener('change', (e) => {
+        const scheme = e.target.value;
+        document.body.classList.remove(
+            'scheme-white-black', 'scheme-black-white', 'scheme-darkblue-lightblue',
+            'scheme-brown-beige', 'scheme-green-darkbrown'
+        );
+        document.body.classList.add(`scheme-${scheme}`);
+    });
+
+    // Закрыть панель и выключить режим
+    document.getElementById('closeVisionPanelBtn').addEventListener('click', () => {
+        deactivateVisionMode();
+    });
+}
+
+function activateVisionMode() {
+    if (document.body.classList.contains('vision-mode')) return;
+    document.body.classList.add('vision-mode', 'font-size-100', 'scheme-white-black');
+    createVisionPanel();
+    localStorage.setItem('visionMode', 'active');
+}
+
+function deactivateVisionMode() {
+    document.body.classList.remove(
+        'vision-mode', 'font-size-100', 'font-size-200', 'font-size-500',
+        'hide-images', 'scheme-white-black', 'scheme-black-white',
+        'scheme-darkblue-lightblue', 'scheme-brown-beige', 'scheme-green-darkbrown'
+    );
+    if (visionPanel) {
+        visionPanel.remove();
+        visionPanel = null;
+    }
+    localStorage.removeItem('visionMode');
+}
+
+// Обработчик кнопки
+if (visionBtn) {
+    visionBtn.addEventListener('click', () => {
+        if (document.body.classList.contains('vision-mode')) {
+            deactivateVisionMode();
+        } else {
+            activateVisionMode();
+        }
+    });
+}
+
+// При загрузке проверяем сохранённое состояние
+if (localStorage.getItem('visionMode') === 'active') {
+    activateVisionMode();
+}
+
+// Клавиатурная навигация для бокового меню (уже есть, но добавим поддержку для режима)
+// Убедимся, что панель не мешает клавиатуре
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'ArrowRight' && !sideMenu.classList.contains('active')) {
+        e.preventDefault();
+        openSideMenu();
+        setTimeout(() => {
+            const firstLink = sideMenu.querySelector('.side-menu-nav a');
+            if (firstLink) firstLink.focus();
+        }, 50);
+    }
+    if (e.key === 'Escape' && sideMenu.classList.contains('active')) {
+        closeSideMenu();
+    }
+});
+// Навигация внутри бокового меню (улучшенная)
+const navLinksArray = Array.from(document.querySelectorAll('.side-menu-nav a'));
+let currentFocusIndex = -1;
+sideMenu.addEventListener('keydown', (e) => {
+    if (!sideMenu.classList.contains('active')) return;
+    if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        currentFocusIndex = (currentFocusIndex + 1) % navLinksArray.length;
+        navLinksArray[currentFocusIndex].focus();
+    } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        currentFocusIndex = (currentFocusIndex - 1 + navLinksArray.length) % navLinksArray.length;
+        navLinksArray[currentFocusIndex].focus();
+    } else if (e.key === 'Enter') {
+        const focused = document.activeElement;
+        if (focused && focused.click) focused.click();
+    }
+});
+sideMenu.addEventListener('focusin', () => {
+    currentFocusIndex = navLinksArray.indexOf(document.activeElement);
+});
     })();
 </script>
 </body>
