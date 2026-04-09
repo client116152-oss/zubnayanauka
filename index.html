@@ -1335,6 +1335,15 @@
             });
             createDots();
         }
+        // Кнопка "Оставить отзыв" на главной странице
+const openReviewsBtn = document.getElementById('openReviewsSideMenuBtn');
+if (openReviewsBtn) {
+    openReviewsBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        openSideMenu();               // открыть боковое меню
+        showInfoPage('reviews-page'); // переключить на раздел отзывов
+    });
+}
     })();
 </script>
 </body>
