@@ -803,7 +803,7 @@
         .rating-stars i.active, .rating-stars i.hover {
             color: var(--gold);
         }
-        /* ========== РЕЖИМ ДЛЯ СЛАБОВИДЯЩИХ (ГОСТ) ========== */
+/* ========== РЕЖИМ ДЛЯ СЛАБОВИДЯЩИХ (ГОСТ) — УМЕНЬШЕННАЯ ПАНЕЛЬ ========== */
 .vision-toggle-btn {
     background: none;
     border: 1px solid var(--gold);
@@ -820,10 +820,11 @@
 }
 
 body.vision-mode {
-    background: var(--bg-color, white);
-    color: var(--text-color, black);
+    background: var(--bg-color, white) !important;
+    color: var(--text-color, black) !important;
 }
-/* Панель управления */
+
+/* Панель управления (исправленная — без scale) */
 body.vision-mode .vision-panel {
     position: fixed;
     top: 100px;
@@ -831,87 +832,179 @@ body.vision-mode .vision-panel {
     background: var(--bg-color, white);
     border: 3px solid var(--gold);
     border-radius: 24px;
-    padding: 20px;
+    padding: 15px 20px;
     z-index: 1000;
     display: flex;
     flex-direction: column;
-    gap: 15px;
-    min-width: 280px;
+    gap: 12px;
+    min-width: 260px;
+    max-width: 300px;
     box-shadow: 0 8px 25px rgba(0,0,0,0.3);
-    transform: scale(2.5);
-    transform-origin: top right;
-    font-size: 14px;
-}
-body.vision-mode .vision-panel * {
-    font-size: inherit;
+    font-size: 1.2rem;
 }
 body.vision-mode .vision-panel button,
 body.vision-mode .vision-panel select {
-    padding: 8px 12px;
+    padding: 10px 14px;
+    font-size: 1.1rem;
     border-radius: 40px;
-    border: 1px solid #ccc;
-    cursor: pointer;
     background: var(--button-bg, #f0f0f0);
+    color: var(--text-color, black);
+    border: 1px solid var(--border-color, #ccc);
+    cursor: pointer;
 }
+body.vision-mode .vision-panel .font-size-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
 /* Размеры шрифта */
 body.vision-mode.font-size-100 { font-size: 100%; }
 body.vision-mode.font-size-200 { font-size: 200%; }
 body.vision-mode.font-size-500 { font-size: 500%; }
+
 /* Скрытие изображений */
 body.vision-mode.hide-images img {
     display: none !important;
 }
-/* Цветовые схемы */
+
+/* Цветовые схемы (полное переопределение) */
 body.vision-mode.scheme-white-black {
     --bg-color: white;
     --text-color: black;
-    background: white;
-    color: black;
+    --card-bg: white;
+    --border-color: #ccc;
 }
 body.vision-mode.scheme-black-white {
     --bg-color: black;
     --text-color: white;
-    background: black;
-    color: white;
+    --card-bg: #1a1a1a;
+    --border-color: #444;
 }
 body.vision-mode.scheme-darkblue-lightblue {
     --bg-color: #0a2f6c;
     --text-color: #c7e2ff;
-    background: #0a2f6c;
-    color: #c7e2ff;
+    --card-bg: #123a7a;
+    --border-color: #2a5a9a;
 }
 body.vision-mode.scheme-brown-beige {
     --bg-color: #f5e6d3;
     --text-color: #4a2e1e;
-    background: #f5e6d3;
-    color: #4a2e1e;
+    --card-bg: #fdf5e6;
+    --border-color: #c4a882;
 }
 body.vision-mode.scheme-green-darkbrown {
     --bg-color: #2c4a2c;
     --text-color: #d4c9a3;
-    background: #2c4a2c;
-    color: #d4c9a3;
+    --card-bg: #3a5a3a;
+    --border-color: #5a7a5a;
 }
+
+/* Применяем переменные ко всем элементам */
+body.vision-mode,
+body.vision-mode .navbar,
+body.vision-mode .hero,
+body.vision-mode section,
+body.vision-mode .why-card,
+body.vision-mode .service-card,
+body.vision-mode .review-card,
+body.vision-mode .doctor-card,
+body.vision-mode .contact-wrapper,
+body.vision-mode .info-block,
+body.vision-mode .review-form,
+body.vision-mode .staff-card,
+body.vision-mode .side-menu,
+body.vision-mode .side-menu-nav a,
+body.vision-mode .vision-panel {
+    background-color: var(--bg-color, white) !important;
+    color: var(--text-color, black) !important;
+}
+
+body.vision-mode .clinic-carousel,
+body.vision-mode .tech-item,
+body.vision-mode .why-card,
+body.vision-mode .service-card,
+body.vision-mode .review-card,
+body.vision-mode .doctor-photo,
+body.vision-mode .detail-item,
+body.vision-mode .staff-card,
+body.vision-mode .info-block,
+body.vision-mode .review-form,
+body.vision-mode .contact-wrapper {
+    background-color: var(--card-bg, var(--bg-color)) !important;
+}
+
+body.vision-mode .why-card,
+body.vision-mode .service-card,
+body.vision-mode .review-card,
+body.vision-mode .doctor-card,
+body.vision-mode .contact-wrapper,
+body.vision-mode .info-block,
+body.vision-mode .review-form {
+    border: 1px solid var(--border-color, #ccc) !important;
+    box-shadow: none !important;
+}
+
+body.vision-mode .review-card {
+    border-left: 5px solid var(--gold) !important;
+}
+
+body.vision-mode .btn-primary,
+body.vision-mode .btn-outline {
+    background-color: var(--bg-color) !important;
+    color: var(--text-color) !important;
+    border: 2px solid var(--gold) !important;
+}
+body.vision-mode .btn-primary:hover,
+body.vision-mode .btn-outline:hover {
+    background-color: var(--gold) !important;
+    color: var(--bg-color) !important;
+}
+
+body.vision-mode a:not(.btn-primary):not(.btn-outline) {
+    color: var(--gold) !important;
+    text-decoration: underline !important;
+}
+
+body.vision-mode footer {
+    background-color: var(--bg-color) !important;
+    color: var(--text-color) !important;
+    border-top: 1px solid var(--border-color);
+}
+
+body.vision-mode .navbar {
+    border-bottom: 1px solid var(--border-color);
+}
+body.vision-mode .nav-links a {
+    color: var(--text-color) !important;
+}
+body.vision-mode .nav-links a:hover {
+    color: var(--gold) !important;
+}
+
+body.vision-mode .hero-stats .stat-item h3 {
+    color: var(--gold) !important;
+}
+
 /* Требования ГОСТ */
 body.vision-mode p,
 body.vision-mode li,
 body.vision-mode .review-text,
 body.vision-mode .hero-content p {
     text-align: left !important;
-    line-height: 1.5;
-    letter-spacing: 0.12em;
-    word-spacing: 0.16em;
-    margin-bottom: 1.5em;
+    line-height: 1.5 !important;
+    letter-spacing: 0.12em !important;
+    word-spacing: 0.16em !important;
+    margin-bottom: 1.5em !important;
 }
 body.vision-mode .section-title,
 body.vision-mode .section-sub {
-    text-align: left;
+    text-align: left !important;
 }
 body.vision-mode .container {
-    max-width: 100%;
+    max-width: 100% !important;
 }
-/* Фокус для клавиатуры */
-*:focus-visible {
+body.vision-mode *:focus-visible {
     outline: 3px solid var(--gold) !important;
     outline-offset: 2px;
 }
