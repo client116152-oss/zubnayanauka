@@ -1256,6 +1256,67 @@ body.vision-mode .tech-item {
     overflow-wrap: break-word;
     word-break: break-word;
 }
+/* Мобильная версия: перестройка навигации */
+@media (max-width: 820px) {
+    .nav-container {
+        display: grid;
+        grid-template-columns: 1fr auto; /* логотип и гамбургер */
+        grid-template-areas: 
+            "logo menu"
+            "row1 row1"
+            "row2 row2"
+            "vision vision";
+        gap: 12px 8px;
+        align-items: center;
+    }
+    .logo {
+        grid-area: logo;
+        justify-self: start;
+    }
+    .hamburger-menu-btn {
+        grid-area: menu;
+        justify-self: end;
+        margin-left: 0;
+    }
+    /* Ссылки навигации — разбиваем на две строки */
+    .nav-links {
+        display: contents; /* li станут прямыми детьми грида */
+    }
+    /* Первые три ссылки (О клинике, Главный врач, Услуги) — первая строка */
+    .nav-links li:nth-child(1) { grid-area: row1; justify-self: center; }
+    .nav-links li:nth-child(2) { grid-area: row1; justify-self: center; }
+    .nav-links li:nth-child(3) { grid-area: row1; justify-self: center; }
+    /* Следующие три ссылки (Технологии, Отзывы, Контакты) — вторая строка */
+    .nav-links li:nth-child(4) { grid-area: row2; justify-self: center; }
+    .nav-links li:nth-child(5) { grid-area: row2; justify-self: center; }
+    .nav-links li:nth-child(6) { grid-area: row2; justify-self: center; }
+    /* Сами ссылки внутри li — убираем лишние отступы */
+    .nav-links li {
+        text-align: center;
+        width: auto;
+    }
+    .nav-links a {
+        display: inline-block;
+        padding: 8px 12px;
+        font-size: 1rem;
+        white-space: nowrap;
+    }
+    /* Кнопка версии для слабовидящих — третья строка, по центру */
+    .vision-toggle-btn {
+        grid-area: vision;
+        justify-self: center;
+        margin: 5px auto 0;
+        width: auto;
+        display: inline-block;
+    }
+    /* Чтобы ссылки не переносились на мобильных, если места мало — можно уменьшить padding */
+    @media (max-width: 550px) {
+        .nav-links a {
+            padding: 6px 8px;
+            font-size: 0.9rem;
+        }
+    }
+}
     </style>
 </head>
 <body>
