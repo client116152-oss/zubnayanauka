@@ -1196,6 +1196,66 @@ body.vision-mode.font-size-200 .stat-item h3,
 body.vision-mode.font-size-500 .stat-item h3 {
     font-size: 1.8rem !important; /* фикс для крупного шрифта */
 }
+/* ========== МОБИЛЬНАЯ АДАПТАЦИЯ НАВИГАЦИИ ========== */
+@media (max-width: 860px) {
+    .nav-container {
+        flex-wrap: wrap;
+        gap: 12px;
+    }
+    .nav-links {
+        order: 2;
+        width: 100%;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 0.8rem;
+    }
+    .vision-toggle-btn {
+        order: 3;
+        margin-left: auto;
+    }
+    .hamburger-menu-btn {
+        order: 4;
+        margin-left: 0;
+    }
+    .logo {
+        order: 1;
+    }
+}
+@media (max-width: 680px) {
+    .nav-links {
+        gap: 0.5rem;
+    }
+    .nav-links a {
+        font-size: 0.8rem;
+        padding: 4px 8px;
+    }
+    .vision-toggle-btn {
+        font-size: 0.75rem;
+        padding: 4px 8px;
+    }
+}
+/* ========== ЗАПРЕТ МАСШТАБИРОВАНИЯ НАВИГАЦИИ И ПАНЕЛИ В РЕЖИМЕ СЛАБОВИДЯЩИХ ========== */
+body.vision-mode .navbar,
+body.vision-mode .vision-panel {
+    font-size: 1rem !important;
+}
+body.vision-mode.font-size-200 .navbar,
+body.vision-mode.font-size-200 .vision-panel {
+    font-size: 1rem !important;
+}
+body.vision-mode.font-size-500 .navbar,
+body.vision-mode.font-size-500 .vision-panel {
+    font-size: 1rem !important;
+}
+/* Фикс для карточек: предотвращаем вылезание текста */
+body.vision-mode .why-card,
+body.vision-mode .service-card,
+body.vision-mode .review-card,
+body.vision-mode .doctor-card,
+body.vision-mode .tech-item {
+    overflow-wrap: break-word;
+    word-break: break-word;
+}
     </style>
 </head>
 <body>
