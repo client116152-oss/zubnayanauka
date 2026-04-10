@@ -1131,6 +1131,70 @@ body.vision-mode .doctor-info p,
 body.vision-mode .detail-item {
     font-size: inherit !important;
 }
+/* ========== ФИКСЫ ДЛЯ МАСШТАБИРОВАНИЯ (ЧИТАЕМОСТЬ) ========== */
+/* Навигация — фиксированный размер, чтобы не растягивалась */
+body.vision-mode.font-size-200 .navbar,
+body.vision-mode.font-size-500 .navbar,
+body.vision-mode.font-size-200 .nav-links a,
+body.vision-mode.font-size-500 .nav-links a,
+body.vision-mode.font-size-200 .vision-toggle-btn,
+body.vision-mode.font-size-500 .vision-toggle-btn,
+body.vision-mode.font-size-200 .hamburger-menu-btn,
+body.vision-mode.font-size-500 .hamburger-menu-btn {
+    font-size: 1rem !important;
+}
+body.vision-mode.font-size-200 .logo img,
+body.vision-mode.font-size-500 .logo img {
+    max-height: 52px !important; /* фиксируем размер логотипа */
+}
+
+/* Панель управления — фиксированный размер, не масштабируется */
+body.vision-mode.font-size-200 .vision-panel,
+body.vision-mode.font-size-500 .vision-panel,
+body.vision-mode.font-size-200 .vision-panel *,
+body.vision-mode.font-size-500 .vision-panel * {
+    font-size: 1rem !important;
+}
+body.vision-mode.font-size-200 .vision-panel button,
+body.vision-mode.font-size-500 .vision-panel button,
+body.vision-mode.font-size-200 .vision-panel select,
+body.vision-mode.font-size-500 .vision-panel select {
+    font-size: 1rem !important;
+    padding: 8px 12px !important;
+}
+
+/* Карточки услуг, отзывов — перенос слов и прокрутка при необходимости */
+body.vision-mode .service-card,
+body.vision-mode .review-card,
+body.vision-mode .why-card,
+body.vision-mode .doctor-card,
+body.vision-mode .tech-item {
+    overflow-x: auto;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+body.vision-mode .service-card p,
+body.vision-mode .review-card p,
+body.vision-mode .why-card p,
+body.vision-mode .tech-item p {
+    word-break: break-word;
+    white-space: normal;
+}
+
+/* Контейнеры — разрешаем прокрутку при необходимости */
+body.vision-mode .container {
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+/* Герой-статистика — фикс для больших шрифтов */
+body.vision-mode.font-size-200 .hero-stats,
+body.vision-mode.font-size-500 .hero-stats {
+    flex-wrap: wrap;
+}
+body.vision-mode.font-size-200 .stat-item h3,
+body.vision-mode.font-size-500 .stat-item h3 {
+    font-size: 1.8rem !important; /* фикс для крупного шрифта */
 }
     </style>
 </head>
