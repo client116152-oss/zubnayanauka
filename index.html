@@ -1086,6 +1086,52 @@ body.vision-mode *:focus-visible {
     outline: 3px solid var(--gold) !important;
     outline-offset: 2px;
 }
+/* ========== ПРИНУДИТЕЛЬНОЕ МАСШТАБИРОВАНИЕ ВСЕХ ТЕКСТОВ ========== */
+body.vision-mode {
+    font-size: 100%; /* базовый размер, будет переопределён классами */
+}
+body.vision-mode.font-size-200 {
+    font-size: 200%;
+}
+body.vision-mode.font-size-500 {
+    font-size: 500%;
+}
+/* Заставляем все элементы наследовать размер шрифта от body */
+body.vision-mode * {
+    font-size: inherit !important;
+}
+/* Но для заголовков и крупных элементов оставляем относительное масштабирование */
+body.vision-mode h1,
+body.vision-mode .hero-content h1 {
+    font-size: 3rem !important;
+}
+body.vision-mode h2,
+body.vision-mode .section-title {
+    font-size: 2.2rem !important;
+}
+body.vision-mode h3 {
+    font-size: 1.7rem !important;
+}
+body.vision-mode h4 {
+    font-size: 1.4rem !important;
+}
+body.vision-mode .hero-content p {
+    font-size: 1.15rem !important;
+}
+body.vision-mode .btn-primary,
+body.vision-mode .btn-outline,
+body.vision-mode .nav-links a,
+body.vision-mode .side-menu-nav a,
+body.vision-mode .footer-links span,
+body.vision-mode .contact-info p,
+body.vision-mode .review-author span,
+body.vision-mode .price-tag,
+body.vision-mode .tech-item p,
+body.vision-mode .doctor-info p,
+body.vision-mode .detail-item {
+    font-size: inherit !important;
+}
+}
     </style>
 </head>
 <body>
