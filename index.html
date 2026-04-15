@@ -1416,6 +1416,86 @@ body.vision-mode .tech-item {
     background: var(--gold);
     transform: scale(1.2);
 }
+/* Стили для карусели прайс-листа */
+.price-carousel {
+    position: relative;
+    width: 100%;
+    margin: 20px auto;
+    max-width: 600px;
+}
+.price-carousel .carousel-container {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border-radius: 28px;
+    aspect-ratio: 4 / 3;
+    background: #f0f0f0;
+}
+.price-carousel .carousel-slides {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    height: 100%;
+}
+.price-carousel .carousel-slide {
+    flex: 0 0 100%;
+    height: 100%;
+    text-align: center;
+}
+.price-carousel .carousel-slide img {
+    width: auto;
+    height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+    border-radius: 28px;
+    box-shadow: var(--shadow-sm);
+    display: block;
+    margin: 0 auto;
+}
+.price-carousel .carousel-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.5);
+    color: white;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+    z-index: 10;
+}
+.price-carousel .carousel-btn:hover {
+    background: var(--gold);
+}
+.price-carousel .carousel-btn.prev {
+    left: 10px;
+}
+.price-carousel .carousel-btn.next {
+    right: 10px;
+}
+.price-carousel .carousel-dots {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 15px;
+}
+.price-carousel .dot {
+    width: 10px;
+    height: 10px;
+    background: #ccc;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.price-carousel .dot.active {
+    background: var(--gold);
+    transform: scale(1.2);
+}
     </style>
 </head>
 <body>
@@ -1826,6 +1906,19 @@ body.vision-mode .tech-item {
         <button class="carousel-btn next" id="contractCarouselNext"><i class="fas fa-chevron-right"></i></button>
     </div>
     <div class="carousel-dots" id="contractCarouselDots"></div>
+    <h3 style="margin-top: 40px;"><i class="fas fa-file-invoice-dollar"></i> Прайс-лист</h3>
+<div class="price-carousel" id="priceCarousel">
+    <div class="carousel-container">
+        <div class="carousel-slides" id="priceCarouselSlides">
+            <div class="carousel-slide"><img src="price-list-1.jpg" alt="Прайс-лист страница 1"></div>
+            <div class="carousel-slide"><img src="price-list-2.jpg" alt="Прайс-лист страница 2"></div>
+            <div class="carousel-slide"><img src="price-list-3.jpg" alt="Прайс-лист страница 3"></div>
+        </div>
+        <button class="carousel-btn prev" id="priceCarouselPrev"><i class="fas fa-chevron-left"></i></button>
+        <button class="carousel-btn next" id="priceCarouselNext"><i class="fas fa-chevron-right"></i></button>
+    </div>
+    <div class="carousel-dots" id="priceCarouselDots"></div>
+</div>
 </div>
 </div>
 </div>
@@ -2499,6 +2592,43 @@ if (contractSlidesContainer && contractPrev && contractNext && contractDotsConta
         updateContractCarousel();
     });
     createContractDots();
+}
+// Инициализация карусели для прайс-листа
+const priceSlidesContainer = document.getElementById('priceCarouselSlides');
+const pricePrev = document.getElementById('priceCarouselPrev');
+const priceNext = document.getElementById('priceCarouselNext');
+const priceDotsContainer = document.getElementById('priceCarouselDots');
+if (priceSlidesContainer && pricePrev && priceNext && priceDotsContainer) {
+    let priceIndex = 0;
+    const priceSlides = priceSlidesContainer.children;
+    const priceTotal = priceSlides.length;
+    function updatePriceCarousel() {
+        priceSlidesContainer.style.transform = `translateX(-${priceIndex * 100}%)`;
+        const dots = priceDotsContainer.querySelectorAll('.dot');
+        dots.forEach((dot, idx) => dot.classList.toggle('active', idx === priceIndex));
+    }
+    function createPriceDots() {
+        priceDotsContainer.innerHTML = '';
+        for (let i = 0; i < priceTotal; i++) {
+            const dot = document.createElement('div');
+            dot.classList.add('dot');
+            if (i === priceIndex) dot.classList.add('active');
+            dot.addEventListener('click', () => {
+                priceIndex = i;
+                updatePriceCarousel();
+            });
+            priceDotsContainer.appendChild(dot);
+        }
+    }
+    pricePrev.addEventListener('click', () => {
+        priceIndex = (priceIndex - 1 + priceTotal) % priceTotal;
+        updatePriceCarousel();
+    });
+    priceNext.addEventListener('click', () => {
+        priceIndex = (priceIndex + 1) % priceTotal;
+        updatePriceCarousel();
+    });
+    createPriceDots();
 }
     })();
 </script>
