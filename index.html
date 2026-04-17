@@ -3374,174 +3374,176 @@ if (priceSlidesContainer && pricePrev && priceNext && priceDotsContainer) {
                 return m;
             });
         }
-// === ЗАГРУЗКА ДАННЫХ ИЗ SUPABASE ПРИ СТАРТЕ СТРАНИЦЫ ===
-async function loadSiteDataFromSupabase() {
-    try {
-        // 1. Услуги
-        const { data: services } = await supabaseClient.from('services').select('*').order('sort_order', { ascending: true });
-        if (services && services.length) {
-            const container = document.querySelector('#services .services-grid');
-            if (container) {
-                container.innerHTML = '';
-                services.forEach(s => {
-                    const card = document.createElement('div');
-                    card.className = 'service-card';
-                    card.innerHTML = `<div class="service-icon"><i class="fas fa-tooth"></i></div><h4>${escapeHtml(s.title)}</h4><p>${escapeHtml(s.description)}</p><div class="price-tag">${escapeHtml(s.price)}</div>`;
-                    container.appendChild(card);
-                });
-            }
-        }
-
-        // 2. Контакты
-        const { data: contacts } = await supabaseClient.from('contacts').select('*').eq('id', 1).single();
-        if (contacts) {
-            const contactDiv = document.querySelector('#contacts .contact-info');
-            if (contactDiv) {
-                const ps = contactDiv.querySelectorAll('p');
-                if (ps[0]) ps[0].innerHTML = `<i class="fas fa-map-marker-alt"></i> ${escapeHtml(contacts.address)}`;
-                if (ps[1]) ps[1].innerHTML = `<i class="fas fa-phone-alt"></i> <a href="tel:${escapeHtml(contacts.phone)}">${escapeHtml(contacts.phone)}</a>`;
-                if (ps[2]) ps[2].innerHTML = `<i class="fas fa-envelope"></i> <a href="mailto:${escapeHtml(contacts.email)}">${escapeHtml(contacts.email)}</a>`;
-                if (ps[3]) ps[3].innerHTML = `<i class="fas fa-clock"></i> ${escapeHtml(contacts.hours)}`;
-            }
-        }
-
-        // 3. Сотрудники
-        const { data: employees } = await supabaseClient.from('employees').select('*').order('sort_order', { ascending: true });
-        if (employees && employees.length) {
-            const staffGrid = document.querySelector('#page-employees .staff-grid');
-            if (staffGrid) {
-                staffGrid.innerHTML = '';
-                employees.forEach(emp => {
-                    const card = document.createElement('div');
-                    card.className = 'staff-card';
-                    card.innerHTML = `<i class="fas fa-user-md"></i>
-                        <strong>${escapeHtml(emp.full_name)}</strong><br>
-                        <em>${escapeHtml(emp.position)}</em><br><br>
-                        <strong>Образование:</strong> ${escapeHtml(emp.education)}<br>
-                        <strong>Аккредитация:</strong><br>${escapeHtml(emp.accreditation).replace(/\n/g, '<br>')}<br>
-                        <strong>График приёма:</strong> ${escapeHtml(emp.schedule)}`;
-                    staffGrid.appendChild(card);
-                });
-            }
-        }
-
-        // 4. Открытые должности
-        const { data: openPos } = await supabaseClient.from('open_positions').select('text').eq('id', 1).single();
-        if (openPos) {
-            const openPosP = document.querySelector('#page-employees .info-block p:last-child');
-            if (openPosP) openPosP.innerHTML = `<strong>Открытые должности:</strong> ${escapeHtml(openPos.text)}`;
-        }
-
-        // 5. Лекарственные препараты
-        const { data: drugs } = await supabaseClient.from('drugs').select('content').eq('id', 1).single();
-        if (drugs) {
-            const drugsBlock = document.querySelector('#page-drugs .info-block');
-            if (drugsBlock) {
-                drugsBlock.innerHTML = `<h3><i class="fas fa-pills"></i> О лекарственных препаратах</h3><p>${escapeHtml(drugs.content).replace(/\n/g, '<br>')}</p>`;
-            }
-        }
-
-        // 6. Данные о СМО
-        const { data: smo } = await supabaseClient.from('smo').select('*').eq('id', 1).single();
-        if (smo) {
-            const smoBlock = document.querySelector('#page-smo .info-block');
-            if (smoBlock) {
-                const companiesHtml = smo.companies.split('\n').map(line => `<li>${escapeHtml(line)}</li>`).join('');
-                smoBlock.innerHTML = `<h3><i class="fas fa-hand-holding-usd"></i> Данные о СМО (ОМС)</h3>
-                    <p><strong>Страховые медицинские организации, с которыми заключены договоры ОМС:</strong></p>
-                    <ul>${companiesHtml}</ul>
-                    <p>${escapeHtml(smo.program).replace(/\n/g, '<br>')}</p>`;
-            }
-        }
-
-        // 7. Лицензии (карусель)
-        const { data: licenses } = await supabaseClient.from('licenses').select('*').order('sort_order', { ascending: true });
-        if (licenses && licenses.length) {
-            const carouselContainer = document.querySelector('#page-licenses .carousel-container');
-            if (carouselContainer) {
-                const slidesContainer = carouselContainer.querySelector('.carousel-slides');
-                if (slidesContainer) {
-                    slidesContainer.innerHTML = '';
-                    licenses.forEach(lic => {
-                        const slide = document.createElement('div');
-                        slide.className = 'carousel-slide';
-                        slide.innerHTML = `<img src="${lic.image_url}" alt="${lic.caption}"><p>${lic.caption}</p>`;
-                        slidesContainer.appendChild(slide);
-                    });
-                    const dots = carouselContainer.parentElement.querySelector('.carousel-dots');
-                    if (dots) dots.innerHTML = '';
-                }
-            }
-        }
-
-        // 8. Примеры работ (гигиена и лечение кариеса)
-        const { data: examples } = await supabaseClient.from('work_examples').select('*').order('sort_order', { ascending: true });
-        if (examples && examples.length) {
-            const hygieneExamples = examples.filter(ex => ex.category === 'hygiene');
-            const cariesExamples = examples.filter(ex => ex.category === 'caries');
-            const medicalHelpBlock = document.querySelector('#page-medical-help .info-block');
-            if (medicalHelpBlock) {
-                let hygieneDiv = null, cariesDiv = null;
-                const allDivs = medicalHelpBlock.querySelectorAll('div[style*="display: flex"]');
-                for (let i = 0; i < allDivs.length; i++) {
-                    const prev = allDivs[i].previousElementSibling;
-                    if (prev && prev.tagName === 'H4' && prev.innerText.includes('профессиональная гигиена')) {
-                        hygieneDiv = allDivs[i];
-                    }
-                    if (prev && prev.tagName === 'H4' && prev.innerText.includes('лечение кариеса')) {
-                        cariesDiv = allDivs[i];
+        // === ЗАГРУЗКА ДАННЫХ ИЗ SUPABASE ПРИ СТАРТЕ СТРАНИЦЫ ===
+        async function loadSiteDataFromSupabase() {
+            try {
+                // 1. Услуги
+                const { data: services } = await supabaseClient.from('services').select('*').order('sort_order', { ascending: true });
+                if (services && services.length) {
+                    const container = document.querySelector('#services .services-grid');
+                    if (container) {
+                        container.innerHTML = '';
+                        services.forEach(s => {
+                            const card = document.createElement('div');
+                            card.className = 'service-card';
+                            card.innerHTML = `<div class="service-icon"><i class="fas fa-tooth"></i></div><h4>${escapeHtml(s.title)}</h4><p>${escapeHtml(s.description)}</p><div class="price-tag">${escapeHtml(s.price)}</div>`;
+                            container.appendChild(card);
+                        });
                     }
                 }
-                if (hygieneDiv) {
-                    hygieneDiv.innerHTML = '';
-                    hygieneExamples.forEach(ex => {
-                        const imgDiv = document.createElement('div');
-                        imgDiv.style.flex = '1';
-                        imgDiv.style.minWidth = '250px';
-                        imgDiv.style.textAlign = 'center';
-                        imgDiv.innerHTML = `<img src="${ex.image_url}" alt="${ex.caption}" style="max-width:100%; border-radius:24px; box-shadow: var(--shadow-sm);"><p style="margin-top:12px; font-size:0.9rem; color:var(--text-muted);">${ex.caption}</p>`;
-                        hygieneDiv.appendChild(imgDiv);
-                    });
+
+                // 2. Контакты
+                const { data: contacts } = await supabaseClient.from('contacts').select('*').eq('id', 1).single();
+                if (contacts) {
+                    const contactDiv = document.querySelector('#contacts .contact-info');
+                    if (contactDiv) {
+                        const ps = contactDiv.querySelectorAll('p');
+                        if (ps[0]) ps[0].innerHTML = `<i class="fas fa-map-marker-alt"></i> ${escapeHtml(contacts.address)}`;
+                        if (ps[1]) ps[1].innerHTML = `<i class="fas fa-phone-alt"></i> <a href="tel:${escapeHtml(contacts.phone)}">${escapeHtml(contacts.phone)}</a>`;
+                        if (ps[2]) ps[2].innerHTML = `<i class="fas fa-envelope"></i> <a href="mailto:${escapeHtml(contacts.email)}">${escapeHtml(contacts.email)}</a>`;
+                        if (ps[3]) ps[3].innerHTML = `<i class="fas fa-clock"></i> ${escapeHtml(contacts.hours)}`;
+                    }
                 }
-                if (cariesDiv) {
-                    cariesDiv.innerHTML = '';
-                    cariesExamples.forEach(ex => {
-                        const imgDiv = document.createElement('div');
-                        imgDiv.style.flex = '1';
-                        imgDiv.style.minWidth = '200px';
-                        imgDiv.style.textAlign = 'center';
-                        imgDiv.innerHTML = `<div style="height: 200px; overflow: hidden; border-radius: 24px;"><img src="${ex.image_url}" alt="${ex.caption}" style="width:100%; height:100%; object-fit: cover; display: block;"></div><p style="margin-top:12px; font-size:0.9rem; color:var(--text-muted);">${ex.caption}</p>`;
-                        cariesDiv.appendChild(imgDiv);
-                    });
+
+                // 3. Сотрудники
+                const { data: employees } = await supabaseClient.from('employees').select('*').order('sort_order', { ascending: true });
+                if (employees && employees.length) {
+                    const staffGrid = document.querySelector('#page-employees .staff-grid');
+                    if (staffGrid) {
+                        staffGrid.innerHTML = '';
+                        employees.forEach(emp => {
+                            const card = document.createElement('div');
+                            card.className = 'staff-card';
+                            card.innerHTML = `<i class="fas fa-user-md"></i>
+                                <strong>${escapeHtml(emp.full_name)}</strong><br>
+                                <em>${escapeHtml(emp.position)}</em><br><br>
+                                <strong>Образование:</strong> ${escapeHtml(emp.education)}<br>
+                                <strong>Аккредитация:</strong><br>${escapeHtml(emp.accreditation).replace(/\n/g, '<br>')}<br>
+                                <strong>График приёма:</strong> ${escapeHtml(emp.schedule)}`;
+                            staffGrid.appendChild(card);
+                        });
+                    }
                 }
+
+                // 4. Открытые должности
+                const { data: openPos } = await supabaseClient.from('open_positions').select('text').eq('id', 1).single();
+                if (openPos) {
+                    const openPosP = document.querySelector('#page-employees .info-block p:last-child');
+                    if (openPosP) openPosP.innerHTML = `<strong>Открытые должности:</strong> ${escapeHtml(openPos.text)}`;
+                }
+
+                // 5. Лекарственные препараты
+                const { data: drugs } = await supabaseClient.from('drugs').select('content').eq('id', 1).single();
+                if (drugs) {
+                    const drugsBlock = document.querySelector('#page-drugs .info-block');
+                    if (drugsBlock) {
+                        drugsBlock.innerHTML = `<h3><i class="fas fa-pills"></i> О лекарственных препаратах</h3><p>${escapeHtml(drugs.content).replace(/\n/g, '<br>')}</p>`;
+                    }
+                }
+
+                // 6. Данные о СМО
+                const { data: smo } = await supabaseClient.from('smo').select('*').eq('id', 1).single();
+                if (smo) {
+                    const smoBlock = document.querySelector('#page-smo .info-block');
+                    if (smoBlock) {
+                        const companiesHtml = smo.companies.split('\n').map(line => `<li>${escapeHtml(line)}</li>`).join('');
+                        smoBlock.innerHTML = `<h3><i class="fas fa-hand-holding-usd"></i> Данные о СМО (ОМС)</h3>
+                            <p><strong>Страховые медицинские организации, с которыми заключены договоры ОМС:</strong></p>
+                            <ul>${companiesHtml}</ul>
+                            <p>${escapeHtml(smo.program).replace(/\n/g, '<br>')}</p>`;
+                    }
+                }
+
+                // 7. Лицензии (карусель)
+                const { data: licenses } = await supabaseClient.from('licenses').select('*').order('sort_order', { ascending: true });
+                if (licenses && licenses.length) {
+                    const carouselContainer = document.querySelector('#page-licenses .carousel-container');
+                    if (carouselContainer) {
+                        const slidesContainer = carouselContainer.querySelector('.carousel-slides');
+                        if (slidesContainer) {
+                            slidesContainer.innerHTML = '';
+                            licenses.forEach(lic => {
+                                const slide = document.createElement('div');
+                                slide.className = 'carousel-slide';
+                                slide.innerHTML = `<img src="${lic.image_url}" alt="${lic.caption}"><p>${lic.caption}</p>`;
+                                slidesContainer.appendChild(slide);
+                            });
+                            const dots = carouselContainer.parentElement.querySelector('.carousel-dots');
+                            if (dots) dots.innerHTML = '';
+                        }
+                    }
+                }
+
+                // 8. Примеры работ (гигиена и лечение кариеса)
+                const { data: examples } = await supabaseClient.from('work_examples').select('*').order('sort_order', { ascending: true });
+                if (examples && examples.length) {
+                    const hygieneExamples = examples.filter(ex => ex.category === 'hygiene');
+                    const cariesExamples = examples.filter(ex => ex.category === 'caries');
+                    const medicalHelpBlock = document.querySelector('#page-medical-help .info-block');
+                    if (medicalHelpBlock) {
+                        let hygieneDiv = null, cariesDiv = null;
+                        const allDivs = medicalHelpBlock.querySelectorAll('div[style*="display: flex"]');
+                        for (let i = 0; i < allDivs.length; i++) {
+                            const prev = allDivs[i].previousElementSibling;
+                            if (prev && prev.tagName === 'H4' && prev.innerText.includes('профессиональная гигиена')) {
+                                hygieneDiv = allDivs[i];
+                            }
+                            if (prev && prev.tagName === 'H4' && prev.innerText.includes('лечение кариеса')) {
+                                cariesDiv = allDivs[i];
+                            }
+                        }
+                        if (hygieneDiv) {
+                            hygieneDiv.innerHTML = '';
+                            hygieneExamples.forEach(ex => {
+                                const imgDiv = document.createElement('div');
+                                imgDiv.style.flex = '1';
+                                imgDiv.style.minWidth = '250px';
+                                imgDiv.style.textAlign = 'center';
+                                imgDiv.innerHTML = `<img src="${ex.image_url}" alt="${ex.caption}" style="max-width:100%; border-radius:24px; box-shadow: var(--shadow-sm);"><p style="margin-top:12px; font-size:0.9rem; color:var(--text-muted);">${ex.caption}</p>`;
+                                hygieneDiv.appendChild(imgDiv);
+                            });
+                        }
+                        if (cariesDiv) {
+                            cariesDiv.innerHTML = '';
+                            cariesExamples.forEach(ex => {
+                                const imgDiv = document.createElement('div');
+                                imgDiv.style.flex = '1';
+                                imgDiv.style.minWidth = '200px';
+                                imgDiv.style.textAlign = 'center';
+                                imgDiv.innerHTML = `<div style="height: 200px; overflow: hidden; border-radius: 24px;"><img src="${ex.image_url}" alt="${ex.caption}" style="width:100%; height:100%; object-fit: cover; display: block;"></div><p style="margin-top:12px; font-size:0.9rem; color:var(--text-muted);">${ex.caption}</p>`;
+                                cariesDiv.appendChild(imgDiv);
+                            });
+                        }
+                    }
+                }
+
+                // 9. Прайс-лист (карусель)
+                const { data: pricelist } = await supabaseClient.from('pricelist').select('*').order('sort_order', { ascending: true });
+                if (pricelist && pricelist.length) {
+                    const priceCarouselSlides = document.querySelector('#priceCarousel .carousel-slides');
+                    if (priceCarouselSlides) {
+                        priceCarouselSlides.innerHTML = '';
+                        pricelist.forEach(p => {
+                            const slide = document.createElement('div');
+                            slide.className = 'carousel-slide';
+                            slide.innerHTML = `<img src="${p.image_url}" alt="${p.caption}">`;
+                            priceCarouselSlides.appendChild(slide);
+                        });
+                        const dots = document.querySelector('#priceCarousel .carousel-dots');
+                        if (dots) dots.innerHTML = '';
+                    }
+                }
+            } catch (e) {
+                console.error('Ошибка загрузки данных из Supabase:', e);
             }
         }
 
-        // 9. Прайс-лист (карусель)
-        const { data: pricelist } = await supabaseClient.from('pricelist').select('*').order('sort_order', { ascending: true });
-        if (pricelist && pricelist.length) {
-            const priceCarouselSlides = document.querySelector('#priceCarousel .carousel-slides');
-            if (priceCarouselSlides) {
-                priceCarouselSlides.innerHTML = '';
-                pricelist.forEach(p => {
-                    const slide = document.createElement('div');
-                    slide.className = 'carousel-slide';
-                    slide.innerHTML = `<img src="${p.image_url}" alt="${p.caption}">`;
-                    priceCarouselSlides.appendChild(slide);
-                });
-                const dots = document.querySelector('#priceCarousel .carousel-dots');
-                if (dots) dots.innerHTML = '';
-            }
+        // Вызов после загрузки DOM
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', () => loadSiteDataFromSupabase());
+        } else {
+            loadSiteDataFromSupabase();
         }
-    } catch (e) {
-        console.error('Ошибка загрузки данных из Supabase:', e);
-    }
-}
-
-// Загружаем данные после полной загрузки DOM
-setTimeout(() => {
-    loadSiteDataFromSupabase();
-}, 300);
     })();
 </script>
 </body>
