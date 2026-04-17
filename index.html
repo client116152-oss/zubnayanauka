@@ -2638,5 +2638,743 @@ if (priceSlidesContainer && pricePrev && priceNext && priceDotsContainer) {
 }
     })();
 </script>
+<!-- Админ-панель -->
+<style>
+    .admin-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.8);
+        z-index: 10000;
+        display: none;
+        justify-content: center;
+        align-items: center;
+    }
+    .admin-modal.active {
+        display: flex;
+    }
+    .admin-panel {
+        background: white;
+        width: 90%;
+        max-width: 800px;
+        max-height: 90%;
+        overflow-y: auto;
+        border-radius: 28px;
+        padding: 30px;
+        position: relative;
+        font-family: 'Inter', sans-serif;
+    }
+    .admin-panel h2 {
+        margin-bottom: 20px;
+        color: var(--dark-charcoal);
+    }
+    .admin-panel .form-group {
+        margin-bottom: 20px;
+    }
+    .admin-panel label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 8px;
+    }
+    .admin-panel input, .admin-panel textarea, .admin-panel select {
+        width: 100%;
+        padding: 10px;
+        border-radius: 28px;
+        border: 1px solid #ccc;
+        font-family: inherit;
+    }
+    .admin-panel button {
+        background: var(--gold);
+        color: white;
+        border: none;
+        padding: 10px 20px;
+        border-radius: 40px;
+        cursor: pointer;
+        margin-top: 10px;
+    }
+    .admin-panel button:hover {
+        background: var(--gold-dark);
+    }
+    .admin-panel .close-btn {
+        position: absolute;
+        top: 15px;
+        right: 20px;
+        background: none;
+        font-size: 24px;
+        cursor: pointer;
+        color: #999;
+    }
+    .admin-panel .close-btn:hover {
+        color: black;
+    }
+    .admin-tabs {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-bottom: 20px;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 10px;
+    }
+    .admin-tab {
+        background: #f0f0f0;
+        padding: 8px 16px;
+        border-radius: 40px;
+        cursor: pointer;
+    }
+    .admin-tab.active {
+        background: var(--gold);
+        color: white;
+    }
+    .admin-tab-content {
+        display: none;
+    }
+    .admin-tab-content.active {
+        display: block;
+    }
+    .item-card {
+        border: 1px solid #ddd;
+        padding: 15px;
+        border-radius: 20px;
+        margin-bottom: 15px;
+    }
+    .remove-btn {
+        background: #e74c3c;
+        color: white;
+        border: none;
+        padding: 5px 10px;
+        border-radius: 20px;
+        cursor: pointer;
+        font-size: 12px;
+        margin-top: 10px;
+    }
+    .add-btn {
+        background: #27ae60;
+        margin-bottom: 15px;
+    }
+</style>
+
+<div id="adminModal" class="admin-modal">
+    <div class="admin-panel">
+        <span class="close-btn" id="closeAdminPanel">&times;</span>
+        <h2>Админ-панель</h2>
+        <div id="adminLogin" style="display: block;">
+            <div class="form-group">
+                <label>Введите пароль:</label>
+                <input type="password" id="adminPassword" placeholder="Пароль">
+            </div>
+            <button id="adminLoginBtn">Войти</button>
+            <div id="loginError" style="color:red; margin-top:10px;"></div>
+        </div>
+        <div id="adminContent" style="display: none;">
+            <div class="admin-tabs">
+                <div class="admin-tab" data-tab="services">Услуги</div>
+                <div class="admin-tab" data-tab="contacts">Контакты</div>
+                <div class="admin-tab" data-tab="licenses">Лицензии</div>
+                <div class="admin-tab" data-tab="examples">Примеры работ</div>
+                <div class="admin-tab" data-tab="pricelist">Прайс-лист</div>
+                <div class="admin-tab" data-tab="staff">Сотрудники</div>
+                <div class="admin-tab" data-tab="drugs">Препараты</div>
+                <div class="admin-tab" data-tab="smo">СМО</div>
+            </div>
+            <div id="servicesTab" class="admin-tab-content">
+                <h3>Редактирование услуг</h3>
+                <div id="servicesList"></div>
+                <button id="addServiceBtn" class="add-btn">+ Добавить услугу</button>
+                <button id="saveServicesBtn" class="save-btn">Сохранить изменения</button>
+            </div>
+            <div id="contactsTab" class="admin-tab-content">
+                <h3>Редактирование контактов</h3>
+                <div class="form-group"><label>Адрес</label><input type="text" id="contactAddress"></div>
+                <div class="form-group"><label>Телефон</label><input type="text" id="contactPhone"></div>
+                <div class="form-group"><label>Email</label><input type="text" id="contactEmail"></div>
+                <div class="form-group"><label>Часы работы</label><input type="text" id="contactHours"></div>
+                <button id="saveContactsBtn">Сохранить контакты</button>
+            </div>
+            <div id="licensesTab" class="admin-tab-content">
+                <h3>Лицензии и сертификаты</h3>
+                <div id="licensesList"></div>
+                <button id="addLicenseBtn" class="add-btn">+ Добавить лицензию</button>
+                <button id="saveLicensesBtn">Сохранить лицензии</button>
+            </div>
+            <div id="examplesTab" class="admin-tab-content">
+                <h3>Примеры работ</h3>
+                <div id="examplesList"></div>
+                <button id="addExampleBtn" class="add-btn">+ Добавить пример</button>
+                <button id="saveExamplesBtn">Сохранить примеры</button>
+            </div>
+            <div id="pricelistTab" class="admin-tab-content">
+                <h3>Прайс-лист (изображения)</h3>
+                <div id="pricelistList"></div>
+                <button id="addPriceBtn" class="add-btn">+ Добавить изображение</button>
+                <button id="savePricelistBtn">Сохранить прайс-лист</button>
+            </div>
+            <div id="staffTab" class="admin-tab-content">
+                <h3>Сотрудники</h3>
+                <div id="staffList"></div>
+                <button id="addStaffBtn" class="add-btn">+ Добавить сотрудника</button>
+                <button id="saveStaffBtn">Сохранить сотрудников</button>
+                <div class="form-group"><label>Открытые должности</label><textarea id="openPositions" rows="3"></textarea></div>
+            </div>
+            <div id="drugsTab" class="admin-tab-content">
+                <h3>О лекарственных препаратах</h3>
+                <div class="form-group"><label>Текст</label><textarea id="drugsText" rows="8"></textarea></div>
+                <button id="saveDrugsBtn">Сохранить</button>
+            </div>
+            <div id="smoTab" class="admin-tab-content">
+                <h3>Данные о СМО и программах ОМС</h3>
+                <div class="form-group">
+                    <label>Страховые медицинские организации (каждая с новой строки)</label>
+                    <textarea id="smoCompanies" rows="5"></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Программа ОМС</label>
+                    <textarea id="smoProgram" rows="5"></textarea>
+                </div>
+                <button id="saveSmoBtn">Сохранить</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    (function() {
+        const SUPABASE_URL = 'https://uoapuoiopdxvmqixvpyx.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvYXB1b2lvcGR4dm1xaXh2cHl4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1NzkxNDAsImV4cCI6MjA5MTE1NTE0MH0.NZ3WKB3tspeBQejiJ3tLLRe5DxEXlpsrsTu9Id3cfos';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        const ADMIN_PASSWORD = 'admin123';
+        let clickCount = 0, clickTimer = null;
+
+        const modal = document.getElementById('adminModal');
+        const closeBtn = document.getElementById('closeAdminPanel');
+        const loginBtn = document.getElementById('adminLoginBtn');
+        const passwordInput = document.getElementById('adminPassword');
+        const loginError = document.getElementById('loginError');
+        const adminContent = document.getElementById('adminContent');
+        const adminLoginDiv = document.getElementById('adminLogin');
+
+        let servicesData = [], licensesData = [], examplesData = [], pricelistData = [], employeesData = [], contactsData = {}, openPositionsData = '', drugsData = '', smoData = { companies: '', program: '' };
+
+        const logo = document.querySelector('.logo img');
+        if (logo) {
+            logo.addEventListener('click', () => {
+                clickCount++;
+                if (clickTimer) clearTimeout(clickTimer);
+                clickTimer = setTimeout(() => { clickCount = 0; }, 500);
+                if (clickCount === 3) {
+                    clickCount = 0;
+                    modal.classList.add('active');
+                }
+            });
+        }
+
+        closeBtn.addEventListener('click', () => modal.classList.remove('active'));
+        modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
+
+        loginBtn.addEventListener('click', async () => {
+            if (passwordInput.value === ADMIN_PASSWORD) {
+                adminLoginDiv.style.display = 'none';
+                adminContent.style.display = 'block';
+                await loadAllData();
+                initTabs();
+            } else {
+                loginError.innerText = 'Неверный пароль';
+            }
+        });
+
+        async function loadAllData() {
+            await loadServices();
+            await loadContacts();
+            await loadLicenses();
+            await loadWorkExamples();
+            await loadPricelist();
+            await loadEmployees();
+            await loadOpenPositions();
+            await loadDrugs();
+            await loadSmo();
+        }
+
+        // Услуги
+        async function loadServices() {
+            const { data, error } = await supabase.from('services').select('*').order('sort_order', { ascending: true });
+            if (error) console.error(error);
+            else { servicesData = data; renderServices(); }
+        }
+        function renderServices() {
+            const container = document.getElementById('servicesList');
+            container.innerHTML = '';
+            servicesData.forEach((s, idx) => {
+                const div = document.createElement('div');
+                div.className = 'item-card';
+                div.innerHTML = `
+                    <input type="text" placeholder="Название" value="${escapeHtml(s.title)}" data-field="title" data-id="${s.id}">
+                    <input type="text" placeholder="Описание" value="${escapeHtml(s.description)}" data-field="description" data-id="${s.id}">
+                    <input type="text" placeholder="Цена" value="${escapeHtml(s.price)}" data-field="price" data-id="${s.id}">
+                    <button class="remove-btn" data-id="${s.id}">Удалить</button>
+                `;
+                container.appendChild(div);
+            });
+            attachServiceEvents();
+        }
+        function attachServiceEvents() {
+            document.querySelectorAll('#servicesList input').forEach(input => {
+                input.removeEventListener('change', handleServiceChange);
+                input.addEventListener('change', handleServiceChange);
+            });
+            document.querySelectorAll('#servicesList .remove-btn').forEach(btn => {
+                btn.removeEventListener('click', handleServiceRemove);
+                btn.addEventListener('click', handleServiceRemove);
+            });
+        }
+        function handleServiceChange(e) {
+            const id = parseInt(e.target.getAttribute('data-id'));
+            const field = e.target.getAttribute('data-field');
+            const value = e.target.value;
+            const item = servicesData.find(s => s.id === id);
+            if (item) item[field] = value;
+        }
+        async function handleServiceRemove(e) {
+            const id = parseInt(e.target.getAttribute('data-id'));
+            if (confirm('Удалить услугу?')) {
+                await supabase.from('services').delete().eq('id', id);
+                await loadServices();
+            }
+        }
+        document.getElementById('addServiceBtn').addEventListener('click', async () => {
+            const newId = Date.now();
+            const newService = { id: newId, title: 'Новая услуга', description: 'Описание', price: '0 ₽', sort_order: servicesData.length };
+            await supabase.from('services').insert(newService);
+            await loadServices();
+        });
+        document.getElementById('saveServicesBtn').addEventListener('click', async () => {
+            for (const s of servicesData) {
+                await supabase.from('services').update({ title: s.title, description: s.description, price: s.price }).eq('id', s.id);
+            }
+            await updateMainPageServices();
+            alert('Услуги сохранены');
+        });
+
+        // Контакты
+        async function loadContacts() {
+            const { data, error } = await supabase.from('contacts').select('*').eq('id', 1).single();
+            if (error) console.error(error);
+            else { contactsData = data; renderContacts(); }
+        }
+        function renderContacts() {
+            document.getElementById('contactAddress').value = contactsData.address || '';
+            document.getElementById('contactPhone').value = contactsData.phone || '';
+            document.getElementById('contactEmail').value = contactsData.email || '';
+            document.getElementById('contactHours').value = contactsData.hours || '';
+        }
+        document.getElementById('saveContactsBtn').addEventListener('click', async () => {
+            const updates = {
+                address: document.getElementById('contactAddress').value,
+                phone: document.getElementById('contactPhone').value,
+                email: document.getElementById('contactEmail').value,
+                hours: document.getElementById('contactHours').value
+            };
+            await supabase.from('contacts').update(updates).eq('id', 1);
+            await updateMainPageContacts();
+            alert('Контакты сохранены');
+        });
+
+        // Лицензии
+        async function loadLicenses() {
+            const { data, error } = await supabase.from('licenses').select('*').order('sort_order', { ascending: true });
+            if (error) console.error(error);
+            else { licensesData = data; renderLicenses(); }
+        }
+        function renderLicenses() {
+            const container = document.getElementById('licensesList');
+            container.innerHTML = '';
+            licensesData.forEach((lic, idx) => {
+                const div = document.createElement('div');
+                div.className = 'item-card';
+                div.innerHTML = `
+                    <input type="text" placeholder="URL изображения" value="${escapeHtml(lic.image_url)}" data-field="image_url" data-id="${lic.id}">
+                    <input type="text" placeholder="Подпись" value="${escapeHtml(lic.caption)}" data-field="caption" data-id="${lic.id}">
+                    <button class="remove-btn" data-id="${lic.id}">Удалить</button>
+                `;
+                container.appendChild(div);
+            });
+            attachLicenseEvents();
+        }
+        function attachLicenseEvents() {
+            document.querySelectorAll('#licensesList input').forEach(input => {
+                input.removeEventListener('change', handleLicenseChange);
+                input.addEventListener('change', handleLicenseChange);
+            });
+            document.querySelectorAll('#licensesList .remove-btn').forEach(btn => {
+                btn.removeEventListener('click', handleLicenseRemove);
+                btn.addEventListener('click', handleLicenseRemove);
+            });
+        }
+        function handleLicenseChange(e) {
+            const id = parseInt(e.target.getAttribute('data-id'));
+            const field = e.target.getAttribute('data-field');
+            const value = e.target.value;
+            const item = licensesData.find(l => l.id === id);
+            if (item) item[field] = value;
+        }
+        async function handleLicenseRemove(e) {
+            const id = parseInt(e.target.getAttribute('data-id'));
+            if (confirm('Удалить лицензию?')) {
+                await supabase.from('licenses').delete().eq('id', id);
+                await loadLicenses();
+            }
+        }
+        document.getElementById('addLicenseBtn').addEventListener('click', async () => {
+            const newId = Date.now();
+            const newLicense = { id: newId, image_url: '', caption: 'Новый документ', sort_order: licensesData.length };
+            await supabase.from('licenses').insert(newLicense);
+            await loadLicenses();
+        });
+        document.getElementById('saveLicensesBtn').addEventListener('click', async () => {
+            for (const l of licensesData) {
+                await supabase.from('licenses').update({ image_url: l.image_url, caption: l.caption }).eq('id', l.id);
+            }
+            await updateMainPageLicenses();
+            alert('Лицензии сохранены');
+        });
+
+        // Примеры работ
+        async function loadWorkExamples() {
+            const { data, error } = await supabase.from('work_examples').select('*').order('sort_order', { ascending: true });
+            if (error) console.error(error);
+            else { examplesData = data; renderExamples(); }
+        }
+        function renderExamples() {
+            const container = document.getElementById('examplesList');
+            container.innerHTML = '';
+            examplesData.forEach((ex, idx) => {
+                const div = document.createElement('div');
+                div.className = 'item-card';
+                div.innerHTML = `
+                    <select data-field="category" data-id="${ex.id}">
+                        <option value="hygiene" ${ex.category === 'hygiene' ? 'selected' : ''}>Гигиена</option>
+                        <option value="caries" ${ex.category === 'caries' ? 'selected' : ''}>Лечение кариеса</option>
+                    </select>
+                    <input type="text" placeholder="URL изображения" value="${escapeHtml(ex.image_url)}" data-field="image_url" data-id="${ex.id}">
+                    <input type="text" placeholder="Подпись" value="${escapeHtml(ex.caption)}" data-field="caption" data-id="${ex.id}">
+                    <button class="remove-btn" data-id="${ex.id}">Удалить</button>
+                `;
+                container.appendChild(div);
+            });
+            attachExampleEvents();
+        }
+        function attachExampleEvents() {
+            document.querySelectorAll('#examplesList input, #examplesList select').forEach(el => {
+                el.removeEventListener('change', handleExampleChange);
+                el.addEventListener('change', handleExampleChange);
+            });
+            document.querySelectorAll('#examplesList .remove-btn').forEach(btn => {
+                btn.removeEventListener('click', handleExampleRemove);
+                btn.addEventListener('click', handleExampleRemove);
+            });
+        }
+        function handleExampleChange(e) {
+            const id = parseInt(e.target.getAttribute('data-id'));
+            const field = e.target.getAttribute('data-field');
+            const value = e.target.value;
+            const item = examplesData.find(ex => ex.id === id);
+            if (item) item[field] = value;
+        }
+        async function handleExampleRemove(e) {
+            const id = parseInt(e.target.getAttribute('data-id'));
+            if (confirm('Удалить пример?')) {
+                await supabase.from('work_examples').delete().eq('id', id);
+                await loadWorkExamples();
+            }
+        }
+        document.getElementById('addExampleBtn').addEventListener('click', async () => {
+            const newId = Date.now();
+            const newExample = { id: newId, category: 'hygiene', image_url: '', caption: 'Новый пример', sort_order: examplesData.length };
+            await supabase.from('work_examples').insert(newExample);
+            await loadWorkExamples();
+        });
+        document.getElementById('saveExamplesBtn').addEventListener('click', async () => {
+            for (const ex of examplesData) {
+                await supabase.from('work_examples').update({ category: ex.category, image_url: ex.image_url, caption: ex.caption }).eq('id', ex.id);
+            }
+            await updateMainPageExamples();
+            alert('Примеры работ сохранены');
+        });
+
+        // Прайс-лист
+        async function loadPricelist() {
+            const { data, error } = await supabase.from('pricelist').select('*').order('sort_order', { ascending: true });
+            if (error) console.error(error);
+            else { pricelistData = data; renderPricelist(); }
+        }
+        function renderPricelist() {
+            const container = document.getElementById('pricelistList');
+            container.innerHTML = '';
+            pricelistData.forEach((p, idx) => {
+                const div = document.createElement('div');
+                div.className = 'item-card';
+                div.innerHTML = `
+                    <input type="text" placeholder="URL изображения" value="${escapeHtml(p.image_url)}" data-field="image_url" data-id="${p.id}">
+                    <input type="text" placeholder="Подпись" value="${escapeHtml(p.caption)}" data-field="caption" data-id="${p.id}">
+                    <button class="remove-btn" data-id="${p.id}">Удалить</button>
+                `;
+                container.appendChild(div);
+            });
+            attachPricelistEvents();
+        }
+        function attachPricelistEvents() {
+            document.querySelectorAll('#pricelistList input').forEach(input => {
+                input.removeEventListener('change', handlePricelistChange);
+                input.addEventListener('change', handlePricelistChange);
+            });
+            document.querySelectorAll('#pricelistList .remove-btn').forEach(btn => {
+                btn.removeEventListener('click', handlePricelistRemove);
+                btn.addEventListener('click', handlePricelistRemove);
+            });
+        }
+        function handlePricelistChange(e) {
+            const id = parseInt(e.target.getAttribute('data-id'));
+            const field = e.target.getAttribute('data-field');
+            const value = e.target.value;
+            const item = pricelistData.find(p => p.id === id);
+            if (item) item[field] = value;
+        }
+        async function handlePricelistRemove(e) {
+            const id = parseInt(e.target.getAttribute('data-id'));
+            if (confirm('Удалить изображение из прайс-листа?')) {
+                await supabase.from('pricelist').delete().eq('id', id);
+                await loadPricelist();
+            }
+        }
+        document.getElementById('addPriceBtn').addEventListener('click', async () => {
+            const newId = Date.now();
+            const newItem = { id: newId, image_url: '', caption: 'Новый прайс-лист', sort_order: pricelistData.length };
+            await supabase.from('pricelist').insert(newItem);
+            await loadPricelist();
+        });
+        document.getElementById('savePricelistBtn').addEventListener('click', async () => {
+            for (const p of pricelistData) {
+                await supabase.from('pricelist').update({ image_url: p.image_url, caption: p.caption }).eq('id', p.id);
+            }
+            await updateMainPagePricelist();
+            alert('Прайс-лист сохранён');
+        });
+
+        // Сотрудники
+        async function loadEmployees() {
+            const { data, error } = await supabase.from('employees').select('*').order('sort_order', { ascending: true });
+            if (error) console.error(error);
+            else { employeesData = data; renderEmployees(); }
+        }
+        function renderEmployees() {
+            const container = document.getElementById('staffList');
+            container.innerHTML = '';
+            employeesData.forEach((emp, idx) => {
+                const div = document.createElement('div');
+                div.className = 'item-card';
+                div.innerHTML = `
+                    <input type="text" placeholder="ФИО" value="${escapeHtml(emp.full_name)}" data-field="full_name" data-id="${emp.id}">
+                    <input type="text" placeholder="Должность" value="${escapeHtml(emp.position)}" data-field="position" data-id="${emp.id}">
+                    <textarea placeholder="Образование" data-field="education" data-id="${emp.id}">${escapeHtml(emp.education || '')}</textarea>
+                    <textarea placeholder="Аккредитация" data-field="accreditation" data-id="${emp.id}">${escapeHtml(emp.accreditation || '')}</textarea>
+                    <input type="text" placeholder="График приёма" value="${escapeHtml(emp.schedule)}" data-field="schedule" data-id="${emp.id}">
+                    <button class="remove-btn" data-id="${emp.id}">Удалить</button>
+                `;
+                container.appendChild(div);
+            });
+            attachEmployeeEvents();
+        }
+        function attachEmployeeEvents() {
+            document.querySelectorAll('#staffList input, #staffList textarea').forEach(el => {
+                el.removeEventListener('change', handleEmployeeChange);
+                el.addEventListener('change', handleEmployeeChange);
+            });
+            document.querySelectorAll('#staffList .remove-btn').forEach(btn => {
+                btn.removeEventListener('click', handleEmployeeRemove);
+                btn.addEventListener('click', handleEmployeeRemove);
+            });
+        }
+        function handleEmployeeChange(e) {
+            const id = parseInt(e.target.getAttribute('data-id'));
+            const field = e.target.getAttribute('data-field');
+            const value = e.target.value;
+            const item = employeesData.find(emp => emp.id === id);
+            if (item) item[field] = value;
+        }
+        async function handleEmployeeRemove(e) {
+            const id = parseInt(e.target.getAttribute('data-id'));
+            if (confirm('Удалить сотрудника?')) {
+                await supabase.from('employees').delete().eq('id', id);
+                await loadEmployees();
+            }
+        }
+        document.getElementById('addStaffBtn').addEventListener('click', async () => {
+            const newId = Date.now();
+            const newEmp = { id: newId, full_name: 'Новый сотрудник', position: '', education: '', accreditation: '', schedule: 'Пн–Пт 08:00–20:00', sort_order: employeesData.length };
+            await supabase.from('employees').insert(newEmp);
+            await loadEmployees();
+        });
+        async function loadOpenPositions() {
+            const { data, error } = await supabase.from('open_positions').select('text').eq('id', 1).single();
+            if (error) console.error(error);
+            else { openPositionsData = data?.text || ''; document.getElementById('openPositions').value = openPositionsData; }
+        }
+        async function loadDrugs() {
+            const { data, error } = await supabase.from('drugs').select('content').eq('id', 1).single();
+            if (error) console.error(error);
+            else { drugsData = data?.content || ''; document.getElementById('drugsText').value = drugsData; }
+        }
+        async function loadSmo() {
+            const { data, error } = await supabase.from('smo').select('*').eq('id', 1).single();
+            if (error) console.error(error);
+            else { smoData = data; renderSmo(); }
+        }
+        function renderSmo() {
+            document.getElementById('smoCompanies').value = smoData.companies || '';
+            document.getElementById('smoProgram').value = smoData.program || '';
+        }
+        document.getElementById('saveStaffBtn').addEventListener('click', async () => {
+            for (const emp of employeesData) {
+                await supabase.from('employees').update({ full_name: emp.full_name, position: emp.position, education: emp.education, accreditation: emp.accreditation, schedule: emp.schedule }).eq('id', emp.id);
+            }
+            const openPosText = document.getElementById('openPositions').value;
+            await supabase.from('open_positions').update({ text: openPosText }).eq('id', 1);
+            await updateMainPageEmployees();
+            alert('Сотрудники сохранены');
+        });
+        document.getElementById('saveDrugsBtn').addEventListener('click', async () => {
+            const content = document.getElementById('drugsText').value;
+            await supabase.from('drugs').update({ content }).eq('id', 1);
+            await updateMainPageDrugs();
+            alert('Данные о препаратах сохранены');
+        });
+        document.getElementById('saveSmoBtn').addEventListener('click', async () => {
+            const companies = document.getElementById('smoCompanies').value;
+            const program = document.getElementById('smoProgram').value;
+            await supabase.from('smo').update({ companies, program }).eq('id', 1);
+            await updateMainPageSmo();
+            alert('Данные о СМО сохранены');
+        });
+
+        // Функции обновления главной страницы
+        async function updateMainPageServices() {
+            const container = document.querySelector('#services .services-grid');
+            if (container) {
+                container.innerHTML = '';
+                for (const s of servicesData) {
+                    const card = document.createElement('div');
+                    card.className = 'service-card';
+                    card.innerHTML = `<div class="service-icon"><i class="fas fa-tooth"></i></div><h4>${escapeHtml(s.title)}</h4><p>${escapeHtml(s.description)}</p><div class="price-tag">${escapeHtml(s.price)}</div>`;
+                    container.appendChild(card);
+                }
+            }
+        }
+        async function updateMainPageContacts() {
+            const contactDiv = document.querySelector('#contacts .contact-info');
+            if (contactDiv) {
+                const ps = contactDiv.querySelectorAll('p');
+                if (ps[0]) ps[0].innerHTML = `<i class="fas fa-map-marker-alt"></i> ${contactsData.address}`;
+                if (ps[1]) ps[1].innerHTML = `<i class="fas fa-phone-alt"></i> <a href="tel:${contactsData.phone}">${contactsData.phone}</a>`;
+                if (ps[2]) ps[2].innerHTML = `<i class="fas fa-envelope"></i> <a href="mailto:${contactsData.email}">${contactsData.email}</a>`;
+                if (ps[3]) ps[3].innerHTML = `<i class="fas fa-clock"></i> ${contactsData.hours}`;
+            }
+        }
+        async function updateMainPageLicenses() {
+            const carouselContainer = document.querySelector('#page-licenses .carousel-container');
+            if (carouselContainer) {
+                const slidesContainer = carouselContainer.querySelector('.carousel-slides');
+                if (slidesContainer) {
+                    slidesContainer.innerHTML = '';
+                    licensesData.forEach(lic => {
+                        const slide = document.createElement('div');
+                        slide.className = 'carousel-slide';
+                        slide.innerHTML = `<img src="${lic.image_url}" alt="${lic.caption}"><p>${lic.caption}</p>`;
+                        slidesContainer.appendChild(slide);
+                    });
+                    const dots = carouselContainer.parentElement.querySelector('.carousel-dots');
+                    if (dots) dots.innerHTML = '';
+                }
+            }
+        }
+        async function updateMainPageExamples() {
+            // Для простоты пока просто выведем сообщение, так как обновление сложное
+            alert('Примеры работ обновлены (требуется ручная перезагрузка страницы для полного отображения)');
+        }
+        async function updateMainPagePricelist() {
+            const priceCarousel = document.querySelector('#priceCarousel .carousel-slides');
+            if (priceCarousel) {
+                priceCarousel.innerHTML = '';
+                pricelistData.forEach(p => {
+                    const slide = document.createElement('div');
+                    slide.className = 'carousel-slide';
+                    slide.innerHTML = `<img src="${p.image_url}" alt="${p.caption}">`;
+                    priceCarousel.appendChild(slide);
+                });
+                const dots = document.querySelector('#priceCarousel .carousel-dots');
+                if (dots) dots.innerHTML = '';
+            }
+        }
+        async function updateMainPageEmployees() {
+            const staffGrid = document.querySelector('#page-employees .staff-grid');
+            if (staffGrid) {
+                staffGrid.innerHTML = '';
+                employeesData.forEach(emp => {
+                    const card = document.createElement('div');
+                    card.className = 'staff-card';
+                    card.innerHTML = `<i class="fas fa-user-md"></i>
+                        <strong>${escapeHtml(emp.full_name)}</strong><br>
+                        <em>${escapeHtml(emp.position)}</em><br><br>
+                        <strong>Образование:</strong> ${escapeHtml(emp.education)}<br>
+                        <strong>Аккредитация:</strong><br>${escapeHtml(emp.accreditation).replace(/\n/g, '<br>')}<br>
+                        <strong>График приёма:</strong> ${escapeHtml(emp.schedule)}`;
+                    staffGrid.appendChild(card);
+                });
+            }
+            const openPositionsP = document.querySelector('#page-employees .info-block p:last-child');
+            if (openPositionsP) openPositionsP.innerHTML = `<strong>Открытые должности:</strong> ${escapeHtml(openPositionsData)}`;
+        }
+        async function updateMainPageDrugs() {
+            const drugsBlock = document.querySelector('#page-drugs .info-block');
+            if (drugsBlock) {
+                drugsBlock.innerHTML = `<h3><i class="fas fa-pills"></i> О лекарственных препаратах</h3><p>${escapeHtml(drugsData).replace(/\n/g, '<br>')}</p>`;
+            }
+        }
+        async function updateMainPageSmo() {
+            const smoBlock = document.querySelector('#page-smo .info-block');
+            if (smoBlock) {
+                const companiesHtml = smoData.companies.split('\n').map(line => `<li>${escapeHtml(line)}</li>`).join('');
+                smoBlock.innerHTML = `<h3><i class="fas fa-hand-holding-usd"></i> Данные о СМО (ОМС)</h3>
+                    <p><strong>Страховые медицинские организации, с которыми заключены договоры ОМС:</strong></p>
+                    <ul>${companiesHtml}</ul>
+                    <p>${escapeHtml(smoData.program).replace(/\n/g, '<br>')}</p>`;
+            }
+        }
+
+        function initTabs() {
+            const tabs = document.querySelectorAll('.admin-tab');
+            const contents = document.querySelectorAll('.admin-tab-content');
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const target = tab.getAttribute('data-tab');
+                    tabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                    contents.forEach(c => c.classList.remove('active'));
+                    document.getElementById(target + 'Tab').classList.add('active');
+                });
+            });
+            if (tabs.length) tabs[0].click();
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return str.replace(/[&<>]/g, function(m) {
+                if (m === '&') return '&amp;';
+                if (m === '<') return '&lt;';
+                if (m === '>') return '&gt;';
+                return m;
+            });
+        }
+    })();
+</script>
 </body>
 </html>
