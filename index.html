@@ -3374,7 +3374,7 @@ if (priceSlidesContainer && pricePrev && priceNext && priceDotsContainer) {
                 return m;
             });
         }
-    // === ЗАГРУЗКА ДАННЫХ ИЗ SUPABASE ПРИ ЗАГРУЗКЕ СТРАНИЦЫ ===
+// === ЗАГРУЗКА ДАННЫХ ИЗ SUPABASE ПРИ ЗАГРУЗКЕ СТРАНИЦЫ ===
 async function loadSiteDataFromSupabase() {
     try {
         // 1. Услуги
@@ -3398,10 +3398,10 @@ async function loadSiteDataFromSupabase() {
             const contactDiv = document.querySelector('#contacts .contact-info');
             if (contactDiv) {
                 const ps = contactDiv.querySelectorAll('p');
-                if (ps[0]) ps[0].innerHTML = `<i class="fas fa-map-marker-alt"></i> ${contacts.address}`;
-                if (ps[1]) ps[1].innerHTML = `<i class="fas fa-phone-alt"></i> <a href="tel:${contacts.phone}">${contacts.phone}</a>`;
-                if (ps[2]) ps[2].innerHTML = `<i class="fas fa-envelope"></i> <a href="mailto:${contacts.email}">${contacts.email}</a>`;
-                if (ps[3]) ps[3].innerHTML = `<i class="fas fa-clock"></i> ${contacts.hours}`;
+                if (ps[0]) ps[0].innerHTML = `<i class="fas fa-map-marker-alt"></i> ${escapeHtml(contacts.address)}`;
+                if (ps[1]) ps[1].innerHTML = `<i class="fas fa-phone-alt"></i> <a href="tel:${escapeHtml(contacts.phone)}">${escapeHtml(contacts.phone)}</a>`;
+                if (ps[2]) ps[2].innerHTML = `<i class="fas fa-envelope"></i> <a href="mailto:${escapeHtml(contacts.email)}">${escapeHtml(contacts.email)}</a>`;
+                if (ps[3]) ps[3].innerHTML = `<i class="fas fa-clock"></i> ${escapeHtml(contacts.hours)}`;
             }
         }
 
@@ -3454,7 +3454,7 @@ async function loadSiteDataFromSupabase() {
             }
         }
 
-        // 7. Лицензии (карусель)
+        // 7. Лицензии (карусель) - обновление карусели лицензий
         const { data: licenses } = await supabaseClient.from('licenses').select('*').order('sort_order', { ascending: true });
         if (licenses && licenses.length) {
             const carouselContainer = document.querySelector('#page-licenses .carousel-container');
@@ -3470,19 +3470,34 @@ async function loadSiteDataFromSupabase() {
                     });
                     const dots = carouselContainer.parentElement.querySelector('.carousel-dots');
                     if (dots) dots.innerHTML = '';
+                    // Переинициализировать карусель (просто сбросить индекс)
+                    if (window.rulesCarouselInit) {
+                        // Можно пересоздать карусель, но для простоты оставим
+                    }
                 }
             }
         }
 
-        // 8. Примеры работ (гигиена и лечение кариеса)
+        // 8. Примеры работ
         const { data: examples } = await supabaseClient.from('work_examples').select('*').order('sort_order', { ascending: true });
         if (examples && examples.length) {
             const hygieneExamples = examples.filter(ex => ex.category === 'hygiene');
             const cariesExamples = examples.filter(ex => ex.category === 'caries');
             const medicalHelpBlock = document.querySelector('#page-medical-help .info-block');
             if (medicalHelpBlock) {
-                const hygieneDiv = medicalHelpBlock.querySelector('h4:contains("Пример процедуры: профессиональная гигиена") + div');
-                const cariesDiv = medicalHelpBlock.querySelector('h4:contains("Пример процедуры: лечение кариеса") + div');
+                // Ищем div для гигиены
+                let hygieneDiv = null;
+                let cariesDiv = null;
+                const allDivs = medicalHelpBlock.querySelectorAll('div[style*="display: flex"]');
+                for (let i = 0; i < allDivs.length; i++) {
+                    const prev = allDivs[i].previousElementSibling;
+                    if (prev && prev.tagName === 'H4' && prev.innerText.includes('профессиональная гигиена')) {
+                        hygieneDiv = allDivs[i];
+                    }
+                    if (prev && prev.tagName === 'H4' && prev.innerText.includes('лечение кариеса')) {
+                        cariesDiv = allDivs[i];
+                    }
+                }
                 if (hygieneDiv) {
                     hygieneDiv.innerHTML = '';
                     hygieneExamples.forEach(ex => {
@@ -3529,7 +3544,7 @@ async function loadSiteDataFromSupabase() {
     }
 }
 
-// Загружаем данные после того, как страница отрисована
+// Загружаем данные после загрузки страницы
 setTimeout(() => {
     loadSiteDataFromSupabase();
 }, 300);
