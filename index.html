@@ -1700,7 +1700,7 @@ body.vision-mode .tech-item {
                         <h3>«Зубная наука»</h3>
                         <p><i class="fas fa-map-marker-alt"></i> г. Казань, пр. Яраткан, 3 (бизнес-центр «Яраткан», 1 этаж)</p>
                         <p><i class="fas fa-phone-alt"></i> <a href="tel:+78432662223">+7 (843) 266-22-23</a></p>
-                        <p><i class="fas fa-envelope"></i> <a href="mailto:welcome@zubnayanauka.ru">zubnauka@mail.ru</a></p>
+                        <p><i class="fas fa-envelope"></i> <a href="mailto:zubnauka@mail.ru">zubnauka@mail.ru</a></p>
                         <p><i class="fas fa-clock"></i> Пн–Пт: 08:00 – 20:00 | Сб: 08:00 – 20:00 | Вс: выходной</p>
                         <p><i class="fas fa-parking"></i> Бесплатная парковка для пациентов</p>
                         <p><i class="fas fa-wheelchair"></i> Доступная среда, пандус</p>
@@ -1905,7 +1905,7 @@ body.vision-mode .tech-item {
                     <strong>Образование:</strong> КГМУ, диплом ВСГ/4878900 от 23.06.2010.<br>
                     <strong>Аккредитация:</strong><br>
                     • 7725 032737368 «Стоматология хирургическая» – действует до 25.03.2030.<br>
-                    <strong>График приёма:</strong> Пн–Пт 08:00–20:00, Сб 08:00–20:00, Вс – выходной.
+                    <strong>График приёма:</strong> Пт 08:00–20:00.
                 </div>
                 <!-- Ахметова Райля Равилевна -->
                 <div class="staff-card">
@@ -1918,7 +1918,7 @@ body.vision-mode .tech-item {
                     <strong>График приёма:</strong> Пн–Пт 08:00–20:00, Сб 08:00–20:00, Вс – выходной.
                 </div>
             </div>
-            <p><strong>Открытые должности:</strong> медицинская сестра, администратор ресепшн (резюме направлять на zubnayanauka@mail.ru).</p>
+            <p><strong>Открытые должности:</strong> медицинская сестра, администратор ресепшн (резюме направлять на zubnauka@mail.ru).</p>
         </div>
     </div>
 </div>
@@ -2893,7 +2893,11 @@ if (priceSlidesContainer && pricePrev && priceNext && priceDotsContainer) {
         <h2>Админ-панель</h2>
         <div id="adminLogin" style="display: block;">
             <div class="form-group">
-                <label>Введите пароль:</label>
+                <label>Email:</label>
+                <input type="email" id="adminEmail" placeholder="admin@example.com">
+            </div>
+            <div class="form-group">
+                <label>Пароль:</label>
                 <input type="password" id="adminPassword" placeholder="Пароль">
             </div>
             <button id="adminLoginBtn">Войти</button>
@@ -2975,12 +2979,12 @@ if (priceSlidesContainer && pricePrev && priceNext && priceDotsContainer) {
         const SUPABASE_URL = 'https://uoapuoiopdxvmqixvpyx.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvYXB1b2lvcGR4dm1xaXh2cHl4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1NzkxNDAsImV4cCI6MjA5MTE1NTE0MH0.NZ3WKB3tspeBQejiJ3tLLRe5DxEXlpsrsTu9Id3cfos';
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        const ADMIN_PASSWORD = 'admin123';
+        
         let clickCount = 0, clickTimer = null;
-
         const modal = document.getElementById('adminModal');
         const closeBtn = document.getElementById('closeAdminPanel');
         const loginBtn = document.getElementById('adminLoginBtn');
+        const emailInput = document.getElementById('adminEmail');
         const passwordInput = document.getElementById('adminPassword');
         const loginError = document.getElementById('loginError');
         const adminContent = document.getElementById('adminContent');
@@ -3004,14 +3008,31 @@ if (priceSlidesContainer && pricePrev && priceNext && priceDotsContainer) {
         closeBtn.addEventListener('click', () => modal.classList.remove('active'));
         modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
 
+        // Функция входа через Supabase Auth
+        async function loginAdmin(email, password) {
+            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
+            if (error) {
+                console.error('Ошибка входа:', error);
+                return false;
+            }
+            return true;
+        }
+
         loginBtn.addEventListener('click', async () => {
-            if (passwordInput.value === ADMIN_PASSWORD) {
+            const email = emailInput.value.trim();
+            const password = passwordInput.value.trim();
+            if (!email || !password) {
+                loginError.innerText = 'Введите email и пароль';
+                return;
+            }
+            const success = await loginAdmin(email, password);
+            if (success) {
                 adminLoginDiv.style.display = 'none';
                 adminContent.style.display = 'block';
                 await loadAllData();
                 initTabs();
             } else {
-                loginError.innerText = 'Неверный пароль';
+                loginError.innerText = 'Неверный email или пароль';
             }
         });
 
@@ -3080,30 +3101,30 @@ if (priceSlidesContainer && pricePrev && priceNext && priceDotsContainer) {
             await loadServices();
         });
         document.getElementById('saveServicesBtn').addEventListener('click', async () => {
-    console.log('=== Сохранение услуг ===');
-    let hasError = false;
-    for (const s of servicesData) {
-        console.log(`Обновление услуги id=${s.id}, цена="${s.price}"`);
-        const { error } = await supabase.from('services').update({ 
-            title: s.title, 
-            description: s.description, 
-            price: s.price 
-        }).eq('id', s.id);
-        if (error) {
-            console.error(`Ошибка при обновлении id=${s.id}:`, error);
-            hasError = true;
-        } else {
-            console.log(`✅ Услуга id=${s.id} обновлена`);
-        }
-    }
-    if (hasError) {
-        alert('Ошибка при сохранении. Подробности в консоли (F12).');
-    } else {
-        await updateMainPageServices();
-        alert('Услуги сохранены. Страница будет перезагружена.');
-        location.reload();
-    }
-});
+            console.log('=== Сохранение услуг ===');
+            let hasError = false;
+            for (const s of servicesData) {
+                console.log(`Обновление услуги id=${s.id}, цена="${s.price}"`);
+                const { error } = await supabase.from('services').update({ 
+                    title: s.title, 
+                    description: s.description, 
+                    price: s.price 
+                }).eq('id', s.id);
+                if (error) {
+                    console.error(`Ошибка при обновлении id=${s.id}:`, error);
+                    hasError = true;
+                } else {
+                    console.log(`✅ Услуга id=${s.id} обновлена`);
+                }
+            }
+            if (hasError) {
+                alert('Ошибка при сохранении. Подробности в консоли (F12).');
+            } else {
+                await updateMainPageServices();
+                alert('Услуги сохранены. Страница будет перезагружена.');
+                location.reload();
+            }
+        });
 
         // Контакты
         async function loadContacts() {
