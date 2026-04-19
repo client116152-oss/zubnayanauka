@@ -3080,12 +3080,30 @@ if (priceSlidesContainer && pricePrev && priceNext && priceDotsContainer) {
             await loadServices();
         });
         document.getElementById('saveServicesBtn').addEventListener('click', async () => {
-            for (const s of servicesData) {
-                await supabase.from('services').update({ title: s.title, description: s.description, price: s.price }).eq('id', s.id);
-            }
-            await updateMainPageServices();
-            alert('Услуги сохранены');
-        });
+    console.log('=== Сохранение услуг ===');
+    let hasError = false;
+    for (const s of servicesData) {
+        console.log(`Обновление услуги id=${s.id}, цена="${s.price}"`);
+        const { error } = await supabase.from('services').update({ 
+            title: s.title, 
+            description: s.description, 
+            price: s.price 
+        }).eq('id', s.id);
+        if (error) {
+            console.error(`Ошибка при обновлении id=${s.id}:`, error);
+            hasError = true;
+        } else {
+            console.log(`✅ Услуга id=${s.id} обновлена`);
+        }
+    }
+    if (hasError) {
+        alert('Ошибка при сохранении. Подробности в консоли (F12).');
+    } else {
+        await updateMainPageServices();
+        alert('Услуги сохранены. Страница будет перезагружена.');
+        location.reload();
+    }
+});
 
         // Контакты
         async function loadContacts() {
