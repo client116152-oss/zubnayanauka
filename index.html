@@ -2636,11 +2636,13 @@ if (priceSlidesContainer && pricePrev && priceNext && priceDotsContainer) {
     });
     createPriceDots();
 }
-        // === ЗАГРУЗКА ДАННЫХ ИЗ SUPABASE ПРИ СТАРТЕ СТРАНИЦЫ ===
+             // === ЗАГРУЗКА ДАННЫХ ИЗ SUPABASE ПРИ СТАРТЕ СТРАНИЦЫ ===
         async function loadSiteDataFromSupabase() {
+            console.log('Загрузка данных из Supabase...');
             try {
                 // 1. Услуги
-                const { data: services } = await supabaseClient.from('services').select('*').order('sort_order', { ascending: true });
+                const { data: services, error: servicesErr } = await supabaseClient.from('services').select('*').order('sort_order', { ascending: true });
+                if (servicesErr) throw servicesErr;
                 if (services && services.length) {
                     const container = document.querySelector('#services .services-grid');
                     if (container) {
@@ -2651,12 +2653,15 @@ if (priceSlidesContainer && pricePrev && priceNext && priceDotsContainer) {
                             card.innerHTML = `<div class="service-icon"><i class="fas fa-tooth"></i></div><h4>${escapeHtml(s.title)}</h4><p>${escapeHtml(s.description)}</p><div class="price-tag">${escapeHtml(s.price)}</div>`;
                             container.appendChild(card);
                         });
+                        console.log('Услуги обновлены');
+                    } else {
+                        console.warn('Контейнер #services .services-grid не найден');
                     }
                 }
 
                 // 2. Контакты
-                const { data: contacts } = await supabaseClient.from('contacts').select('*').eq('id', 1).single();
-                if (contacts) {
+                const { data: contacts, error: contactsErr } = await supabaseClient.from('contacts').select('*').eq('id', 1).single();
+                if (!contactsErr && contacts) {
                     const contactDiv = document.querySelector('#contacts .contact-info');
                     if (contactDiv) {
                         const ps = contactDiv.querySelectorAll('p');
@@ -2664,12 +2669,13 @@ if (priceSlidesContainer && pricePrev && priceNext && priceDotsContainer) {
                         if (ps[1]) ps[1].innerHTML = `<i class="fas fa-phone-alt"></i> <a href="tel:${escapeHtml(contacts.phone)}">${escapeHtml(contacts.phone)}</a>`;
                         if (ps[2]) ps[2].innerHTML = `<i class="fas fa-envelope"></i> <a href="mailto:${escapeHtml(contacts.email)}">${escapeHtml(contacts.email)}</a>`;
                         if (ps[3]) ps[3].innerHTML = `<i class="fas fa-clock"></i> ${escapeHtml(contacts.hours)}`;
+                        console.log('Контакты обновлены');
                     }
                 }
 
                 // 3. Сотрудники
-                const { data: employees } = await supabaseClient.from('employees').select('*').order('sort_order', { ascending: true });
-                if (employees && employees.length) {
+                const { data: employees, error: empErr } = await supabaseClient.from('employees').select('*').order('sort_order', { ascending: true });
+                if (!empErr && employees && employees.length) {
                     const staffGrid = document.querySelector('#page-employees .staff-grid');
                     if (staffGrid) {
                         staffGrid.innerHTML = '';
@@ -2684,19 +2690,20 @@ if (priceSlidesContainer && pricePrev && priceNext && priceDotsContainer) {
                                 <strong>График приёма:</strong> ${escapeHtml(emp.schedule)}`;
                             staffGrid.appendChild(card);
                         });
+                        console.log('Сотрудники обновлены');
                     }
                 }
 
                 // 4. Открытые должности
-                const { data: openPos } = await supabaseClient.from('open_positions').select('text').eq('id', 1).single();
-                if (openPos) {
+                const { data: openPos, error: openErr } = await supabaseClient.from('open_positions').select('text').eq('id', 1).single();
+                if (!openErr && openPos) {
                     const openPosP = document.querySelector('#page-employees .info-block p:last-child');
                     if (openPosP) openPosP.innerHTML = `<strong>Открытые должности:</strong> ${escapeHtml(openPos.text)}`;
                 }
 
                 // 5. Лекарственные препараты
-                const { data: drugs } = await supabaseClient.from('drugs').select('content').eq('id', 1).single();
-                if (drugs) {
+                const { data: drugs, error: drugsErr } = await supabaseClient.from('drugs').select('content').eq('id', 1).single();
+                if (!drugsErr && drugs) {
                     const drugsBlock = document.querySelector('#page-drugs .info-block');
                     if (drugsBlock) {
                         drugsBlock.innerHTML = `<h3><i class="fas fa-pills"></i> О лекарственных препаратах</h3><p>${escapeHtml(drugs.content).replace(/\n/g, '<br>')}</p>`;
@@ -2704,8 +2711,8 @@ if (priceSlidesContainer && pricePrev && priceNext && priceDotsContainer) {
                 }
 
                 // 6. Данные о СМО
-                const { data: smo } = await supabaseClient.from('smo').select('*').eq('id', 1).single();
-                if (smo) {
+                const { data: smo, error: smoErr } = await supabaseClient.from('smo').select('*').eq('id', 1).single();
+                if (!smoErr && smo) {
                     const smoBlock = document.querySelector('#page-smo .info-block');
                     if (smoBlock) {
                         const companiesHtml = smo.companies.split('\n').map(line => `<li>${escapeHtml(line)}</li>`).join('');
@@ -2717,8 +2724,8 @@ if (priceSlidesContainer && pricePrev && priceNext && priceDotsContainer) {
                 }
 
                 // 7. Лицензии (карусель)
-                const { data: licenses } = await supabaseClient.from('licenses').select('*').order('sort_order', { ascending: true });
-                if (licenses && licenses.length) {
+                const { data: licenses, error: licErr } = await supabaseClient.from('licenses').select('*').order('sort_order', { ascending: true });
+                if (!licErr && licenses && licenses.length) {
                     const carouselContainer = document.querySelector('#page-licenses .carousel-container');
                     if (carouselContainer) {
                         const slidesContainer = carouselContainer.querySelector('.carousel-slides');
@@ -2732,13 +2739,14 @@ if (priceSlidesContainer && pricePrev && priceNext && priceDotsContainer) {
                             });
                             const dots = carouselContainer.parentElement.querySelector('.carousel-dots');
                             if (dots) dots.innerHTML = '';
+                            console.log('Лицензии обновлены');
                         }
                     }
                 }
 
-                // 8. Примеры работ (гигиена и лечение кариеса)
-                const { data: examples } = await supabaseClient.from('work_examples').select('*').order('sort_order', { ascending: true });
-                if (examples && examples.length) {
+                // 8. Примеры работ
+                const { data: examples, error: exErr } = await supabaseClient.from('work_examples').select('*').order('sort_order', { ascending: true });
+                if (!exErr && examples && examples.length) {
                     const hygieneExamples = examples.filter(ex => ex.category === 'hygiene');
                     const cariesExamples = examples.filter(ex => ex.category === 'caries');
                     const medicalHelpBlock = document.querySelector('#page-medical-help .info-block');
@@ -2776,12 +2784,13 @@ if (priceSlidesContainer && pricePrev && priceNext && priceDotsContainer) {
                                 cariesDiv.appendChild(imgDiv);
                             });
                         }
+                        console.log('Примеры работ обновлены');
                     }
                 }
 
                 // 9. Прайс-лист (карусель)
-                const { data: pricelist } = await supabaseClient.from('pricelist').select('*').order('sort_order', { ascending: true });
-                if (pricelist && pricelist.length) {
+                const { data: pricelist, error: priceErr } = await supabaseClient.from('pricelist').select('*').order('sort_order', { ascending: true });
+                if (!priceErr && pricelist && pricelist.length) {
                     const priceCarouselSlides = document.querySelector('#priceCarousel .carousel-slides');
                     if (priceCarouselSlides) {
                         priceCarouselSlides.innerHTML = '';
@@ -2793,18 +2802,22 @@ if (priceSlidesContainer && pricePrev && priceNext && priceDotsContainer) {
                         });
                         const dots = document.querySelector('#priceCarousel .carousel-dots');
                         if (dots) dots.innerHTML = '';
+                        console.log('Прайс-лист обновлён');
                     }
                 }
+                console.log('Загрузка данных завершена');
             } catch (e) {
                 console.error('Ошибка загрузки данных из Supabase:', e);
             }
         }
 
-        // Вызов после загрузки DOM
+        // Гарантированный вызов после полной загрузки DOM
         if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => loadSiteDataFromSupabase());
+            document.addEventListener('DOMContentLoaded', () => {
+                setTimeout(() => loadSiteDataFromSupabase(), 100);
+            });
         } else {
-            loadSiteDataFromSupabase();
+            setTimeout(() => loadSiteDataFromSupabase(), 100);
         }
     })();
 </script>
