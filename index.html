@@ -2671,89 +2671,6 @@ if (priceSlidesContainer && pricePrev && priceNext && priceDotsContainer) {
                             <p>${escapeHtml(smo.program).replace(/\n/g, '<br>')}</p>`;
                     }
                 }
-
-                // 7. Лицензии (карусель)
-                const { data: licenses, error: licErr } = await supabaseClient.from('licenses').select('*').order('sort_order', { ascending: true });
-                if (!licErr && licenses && licenses.length) {
-                    const carouselContainer = document.querySelector('#page-licenses .carousel-container');
-                    if (carouselContainer) {
-                        const slidesContainer = carouselContainer.querySelector('.carousel-slides');
-                        if (slidesContainer) {
-                            slidesContainer.innerHTML = '';
-                            licenses.forEach(lic => {
-                                const slide = document.createElement('div');
-                                slide.className = 'carousel-slide';
-                                slide.innerHTML = `<img src="${lic.image_url}" alt="${lic.caption}"><p>${lic.caption}</p>`;
-                                slidesContainer.appendChild(slide);
-                            });
-                            const dots = carouselContainer.parentElement.querySelector('.carousel-dots');
-                            if (dots) dots.innerHTML = '';
-                            console.log('Лицензии обновлены');
-                        }
-                    }
-                }
-
-                // 8. Примеры работ
-                const { data: examples, error: exErr } = await supabaseClient.from('work_examples').select('*').order('sort_order', { ascending: true });
-                if (!exErr && examples && examples.length) {
-                    const hygieneExamples = examples.filter(ex => ex.category === 'hygiene');
-                    const cariesExamples = examples.filter(ex => ex.category === 'caries');
-                    const medicalHelpBlock = document.querySelector('#page-medical-help .info-block');
-                    if (medicalHelpBlock) {
-                        let hygieneDiv = null, cariesDiv = null;
-                        const allDivs = medicalHelpBlock.querySelectorAll('div[style*="display: flex"]');
-                        for (let i = 0; i < allDivs.length; i++) {
-                            const prev = allDivs[i].previousElementSibling;
-                            if (prev && prev.tagName === 'H4' && prev.innerText.includes('профессиональная гигиена')) {
-                                hygieneDiv = allDivs[i];
-                            }
-                            if (prev && prev.tagName === 'H4' && prev.innerText.includes('лечение кариеса')) {
-                                cariesDiv = allDivs[i];
-                            }
-                        }
-                        if (hygieneDiv) {
-                            hygieneDiv.innerHTML = '';
-                            hygieneExamples.forEach(ex => {
-                                const imgDiv = document.createElement('div');
-                                imgDiv.style.flex = '1';
-                                imgDiv.style.minWidth = '250px';
-                                imgDiv.style.textAlign = 'center';
-                                imgDiv.innerHTML = `<img src="${ex.image_url}" alt="${ex.caption}" style="max-width:100%; border-radius:24px; box-shadow: var(--shadow-sm);"><p style="margin-top:12px; font-size:0.9rem; color:var(--text-muted);">${ex.caption}</p>`;
-                                hygieneDiv.appendChild(imgDiv);
-                            });
-                        }
-                        if (cariesDiv) {
-                            cariesDiv.innerHTML = '';
-                            cariesExamples.forEach(ex => {
-                                const imgDiv = document.createElement('div');
-                                imgDiv.style.flex = '1';
-                                imgDiv.style.minWidth = '200px';
-                                imgDiv.style.textAlign = 'center';
-                                imgDiv.innerHTML = `<div style="height: 200px; overflow: hidden; border-radius: 24px;"><img src="${ex.image_url}" alt="${ex.caption}" style="width:100%; height:100%; object-fit: cover; display: block;"></div><p style="margin-top:12px; font-size:0.9rem; color:var(--text-muted);">${ex.caption}</p>`;
-                                cariesDiv.appendChild(imgDiv);
-                            });
-                        }
-                        console.log('Примеры работ обновлены');
-                    }
-                }
-
-                // 9. Прайс-лист (карусель)
-                const { data: pricelist, error: priceErr } = await supabaseClient.from('pricelist').select('*').order('sort_order', { ascending: true });
-                if (!priceErr && pricelist && pricelist.length) {
-                    const priceCarouselSlides = document.querySelector('#priceCarousel .carousel-slides');
-                    if (priceCarouselSlides) {
-                        priceCarouselSlides.innerHTML = '';
-                        pricelist.forEach(p => {
-                            const slide = document.createElement('div');
-                            slide.className = 'carousel-slide';
-                            slide.innerHTML = `<img src="${p.image_url}" alt="${p.caption}">`;
-                            priceCarouselSlides.appendChild(slide);
-                        });
-                        const dots = document.querySelector('#priceCarousel .carousel-dots');
-                        if (dots) dots.innerHTML = '';
-                        console.log('Прайс-лист обновлён');
-                    }
-                }
                 console.log('Загрузка данных завершена');
             } catch (e) {
                 console.error('Ошибка загрузки данных из Supabase:', e);
@@ -2919,9 +2836,6 @@ if (priceSlidesContainer && pricePrev && priceNext && priceDotsContainer) {
             <div class="admin-tabs">
                 <div class="admin-tab" data-tab="services">Услуги</div>
                 <div class="admin-tab" data-tab="contacts">Контакты</div>
-                <div class="admin-tab" data-tab="licenses">Лицензии</div>
-                <div class="admin-tab" data-tab="examples">Примеры работ</div>
-                <div class="admin-tab" data-tab="pricelist">Прайс-лист</div>
                 <div class="admin-tab" data-tab="staff">Сотрудники</div>
                 <div class="admin-tab" data-tab="drugs">Препараты</div>
                 <div class="admin-tab" data-tab="smo">СМО</div>
@@ -2939,24 +2853,6 @@ if (priceSlidesContainer && pricePrev && priceNext && priceDotsContainer) {
                 <div class="form-group"><label>Email</label><input type="text" id="contactEmail"></div>
                 <div class="form-group"><label>Часы работы</label><input type="text" id="contactHours"></div>
                 <button id="saveContactsBtn">Сохранить контакты</button>
-            </div>
-            <div id="licensesTab" class="admin-tab-content">
-                <h3>Лицензии и сертификаты</h3>
-                <div id="licensesList"></div>
-                <button id="addLicenseBtn" class="add-btn">+ Добавить лицензию</button>
-                <button id="saveLicensesBtn">Сохранить лицензии</button>
-            </div>
-            <div id="examplesTab" class="admin-tab-content">
-                <h3>Примеры работ</h3>
-                <div id="examplesList"></div>
-                <button id="addExampleBtn" class="add-btn">+ Добавить пример</button>
-                <button id="saveExamplesBtn">Сохранить примеры</button>
-            </div>
-            <div id="pricelistTab" class="admin-tab-content">
-                <h3>Прайс-лист (изображения)</h3>
-                <div id="pricelistList"></div>
-                <button id="addPriceBtn" class="add-btn">+ Добавить изображение</button>
-                <button id="savePricelistBtn">Сохранить прайс-лист</button>
             </div>
             <div id="staffTab" class="admin-tab-content">
                 <h3>Сотрудники</h3>
@@ -3003,7 +2899,7 @@ if (priceSlidesContainer && pricePrev && priceNext && priceDotsContainer) {
         const adminContent = document.getElementById('adminContent');
         const adminLoginDiv = document.getElementById('adminLogin');
 
-        let servicesData = [], licensesData = [], examplesData = [], pricelistData = [], employeesData = [], contactsData = {}, openPositionsData = '', drugsData = '', smoData = { companies: '', program: '' };
+        let servicesData = [], employeesData = [], contactsData = {}, openPositionsData = '', drugsData = '', smoData = { companies: '', program: '' };
 
         const logo = document.querySelector('.logo img');
         if (logo) {
@@ -3051,9 +2947,6 @@ if (priceSlidesContainer && pricePrev && priceNext && priceDotsContainer) {
         async function loadAllData() {
             await loadServices();
             await loadContacts();
-            await loadLicenses();
-            await loadWorkExamples();
-            await loadPricelist();
             await loadEmployees();
             await loadOpenPositions();
             await loadDrugs();
@@ -3158,266 +3051,6 @@ if (priceSlidesContainer && pricePrev && priceNext && priceDotsContainer) {
             await updateMainPageContacts();
             alert('Контакты сохранены');
         });
-
-        // ========== ЛИЦЕНЗИИ ==========
-        async function loadLicenses() {
-            const { data, error } = await supabase.from('licenses').select('*').order('sort_order', { ascending: true });
-            if (error) console.error(error);
-            else { licensesData = data; renderLicenses(); }
-        }
-        function renderLicenses() {
-            const container = document.getElementById('licensesList');
-            container.innerHTML = '';
-            licensesData.forEach((lic, idx) => {
-                const div = document.createElement('div');
-                div.className = 'item-card';
-                div.innerHTML = `
-                    <div>
-                        ${lic.image_url ? `<img src="${lic.image_url}" class="preview-img"><br>` : ''}
-                        <input type="file" accept="image/*" data-id="${lic.id}" class="license-file-input" style="margin:5px 0;">
-                        <button class="upload-btn" data-id="${lic.id}" data-type="license">Загрузить изображение</button>
-                    </div>
-                    <input type="text" placeholder="Подпись" value="${escapeHtml(lic.caption)}" data-field="caption" data-id="${lic.id}" style="margin-top:10px;">
-                    <button class="remove-btn" data-id="${lic.id}">Удалить</button>
-                `;
-                container.appendChild(div);
-            });
-            attachLicenseEvents();
-        }
-        function attachLicenseEvents() {
-            document.querySelectorAll('#licensesList .upload-btn').forEach(btn => {
-                btn.removeEventListener('click', handleLicenseUpload);
-                btn.addEventListener('click', handleLicenseUpload);
-            });
-            document.querySelectorAll('#licensesList .remove-btn').forEach(btn => {
-                btn.removeEventListener('click', handleLicenseRemove);
-                btn.addEventListener('click', handleLicenseRemove);
-            });
-            document.querySelectorAll('#licensesList input[data-field="caption"]').forEach(input => {
-                input.removeEventListener('change', handleLicenseCaptionChange);
-                input.addEventListener('change', handleLicenseCaptionChange);
-            });
-        }
-        async function handleLicenseUpload(e) {
-            const id = parseInt(e.target.getAttribute('data-id'));
-            const fileInput = e.target.parentElement.querySelector('.license-file-input');
-            const file = fileInput.files[0];
-            if (!file) return alert('Выберите файл');
-            const ext = file.name.split('.').pop();
-            const fileName = `license_${id}_${Date.now()}.${ext}`;
-            const { error } = await supabase.storage.from(STORAGE_BUCKET).upload(fileName, file);
-            if (error) { alert('Ошибка загрузки: ' + error.message); return; }
-            const { data: urlData } = supabase.storage.from(STORAGE_BUCKET).getPublicUrl(fileName);
-            const { error: updateError } = await supabase.from('licenses').update({ image_url: urlData.publicUrl }).eq('id', id);
-            if (updateError) alert('Ошибка сохранения URL: ' + updateError.message);
-            else await loadLicenses();
-        }
-        async function handleLicenseRemove(e) {
-            const id = parseInt(e.target.getAttribute('data-id'));
-            if (!confirm('Удалить лицензию? Изображение также будет удалено из Storage.')) return;
-            const item = licensesData.find(l => l.id === id);
-            if (item && item.image_url) {
-                // Извлекаем имя файла из URL
-                const fileName = item.image_url.split('/').pop();
-                if (fileName) {
-                    const { error: storageError } = await supabase.storage.from(STORAGE_BUCKET).remove([fileName]);
-                    if (storageError) console.error('Ошибка удаления файла:', storageError);
-                }
-            }
-            await supabase.from('licenses').delete().eq('id', id);
-            await loadLicenses();
-        }
-        function handleLicenseCaptionChange(e) {
-            const id = parseInt(e.target.getAttribute('data-id'));
-            const value = e.target.value;
-            const item = licensesData.find(l => l.id === id);
-            if (item) item.caption = value;
-        }
-        document.getElementById('addLicenseBtn').addEventListener('click', async () => {
-            const newId = Date.now();
-            const newLicense = { id: newId, image_url: '', caption: 'Новый документ', sort_order: licensesData.length };
-            await supabase.from('licenses').insert(newLicense);
-            await loadLicenses();
-        });
-        document.getElementById('saveLicensesBtn').addEventListener('click', async () => {
-            for (const l of licensesData) {
-                await supabase.from('licenses').update({ caption: l.caption }).eq('id', l.id);
-            }
-            await updateMainPageLicenses();
-            alert('Лицензии сохранены');
-        });
-
-        // ========== ПРИМЕРЫ РАБОТ ==========
-        async function loadWorkExamples() {
-            const { data, error } = await supabase.from('work_examples').select('*').order('sort_order', { ascending: true });
-            if (error) console.error(error);
-            else { examplesData = data; renderExamples(); }
-        }
-        function renderExamples() {
-            const container = document.getElementById('examplesList');
-            container.innerHTML = '';
-            examplesData.forEach((ex, idx) => {
-                const div = document.createElement('div');
-                div.className = 'item-card';
-                div.innerHTML = `
-                    <div>
-                        ${ex.image_url ? `<img src="${ex.image_url}" class="preview-img"><br>` : ''}
-                        <input type="file" accept="image/*" data-id="${ex.id}" class="example-file-input">
-                        <button class="upload-btn" data-id="${ex.id}" data-type="example">Загрузить изображение</button>
-                    </div>
-                    <select data-field="category" data-id="${ex.id}">
-                        <option value="hygiene" ${ex.category === 'hygiene' ? 'selected' : ''}>Гигиена</option>
-                        <option value="caries" ${ex.category === 'caries' ? 'selected' : ''}>Лечение кариеса</option>
-                    </select>
-                    <input type="text" placeholder="Подпись" value="${escapeHtml(ex.caption)}" data-field="caption" data-id="${ex.id}">
-                    <button class="remove-btn" data-id="${ex.id}">Удалить</button>
-                `;
-                container.appendChild(div);
-            });
-            attachExampleEvents();
-        }
-        function attachExampleEvents() {
-            document.querySelectorAll('#examplesList .upload-btn').forEach(btn => {
-                btn.removeEventListener('click', handleExampleUpload);
-                btn.addEventListener('click', handleExampleUpload);
-            });
-            document.querySelectorAll('#examplesList .remove-btn').forEach(btn => {
-                btn.removeEventListener('click', handleExampleRemove);
-                btn.addEventListener('click', handleExampleRemove);
-            });
-            document.querySelectorAll('#examplesList select, #examplesList input[data-field="caption"]').forEach(el => {
-                el.removeEventListener('change', handleExampleChange);
-                el.addEventListener('change', handleExampleChange);
-            });
-        }
-        async function handleExampleUpload(e) {
-            const id = parseInt(e.target.getAttribute('data-id'));
-            const fileInput = e.target.parentElement.querySelector('.example-file-input');
-            const file = fileInput.files[0];
-            if (!file) return alert('Выберите файл');
-            const ext = file.name.split('.').pop();
-            const fileName = `example_${id}_${Date.now()}.${ext}`;
-            const { error } = await supabase.storage.from(STORAGE_BUCKET).upload(fileName, file);
-            if (error) { alert('Ошибка загрузки: ' + error.message); return; }
-            const { data: urlData } = supabase.storage.from(STORAGE_BUCKET).getPublicUrl(fileName);
-            await supabase.from('work_examples').update({ image_url: urlData.publicUrl }).eq('id', id);
-            await loadWorkExamples();
-        }
-        async function handleExampleRemove(e) {
-            const id = parseInt(e.target.getAttribute('data-id'));
-            if (!confirm('Удалить пример? Изображение также будет удалено.')) return;
-            const item = examplesData.find(ex => ex.id === id);
-            if (item && item.image_url) {
-                const fileName = item.image_url.split('/').pop();
-                if (fileName) await supabase.storage.from(STORAGE_BUCKET).remove([fileName]);
-            }
-            await supabase.from('work_examples').delete().eq('id', id);
-            await loadWorkExamples();
-        }
-        function handleExampleChange(e) {
-            const id = parseInt(e.target.getAttribute('data-id'));
-            const field = e.target.getAttribute('data-field');
-            const value = e.target.value;
-            const item = examplesData.find(ex => ex.id === id);
-            if (item) item[field] = value;
-        }
-        document.getElementById('addExampleBtn').addEventListener('click', async () => {
-            const newId = Date.now();
-            const newExample = { id: newId, category: 'hygiene', image_url: '', caption: 'Новый пример', sort_order: examplesData.length };
-            await supabase.from('work_examples').insert(newExample);
-            await loadWorkExamples();
-        });
-        document.getElementById('saveExamplesBtn').addEventListener('click', async () => {
-            for (const ex of examplesData) {
-                await supabase.from('work_examples').update({ category: ex.category, caption: ex.caption }).eq('id', ex.id);
-            }
-            await updateMainPageExamples();
-            alert('Примеры работ сохранены');
-        });
-
-        // ========== ПРАЙС-ЛИСТ ==========
-        async function loadPricelist() {
-            const { data, error } = await supabase.from('pricelist').select('*').order('sort_order', { ascending: true });
-            if (error) console.error(error);
-            else { pricelistData = data; renderPricelist(); }
-        }
-        function renderPricelist() {
-            const container = document.getElementById('pricelistList');
-            container.innerHTML = '';
-            pricelistData.forEach((p, idx) => {
-                const div = document.createElement('div');
-                div.className = 'item-card';
-                div.innerHTML = `
-                    <div>
-                        ${p.image_url ? `<img src="${p.image_url}" class="preview-img"><br>` : ''}
-                        <input type="file" accept="image/*" data-id="${p.id}" class="price-file-input">
-                        <button class="upload-btn" data-id="${p.id}" data-type="price">Загрузить изображение</button>
-                    </div>
-                    <input type="text" placeholder="Подпись" value="${escapeHtml(p.caption)}" data-field="caption" data-id="${p.id}">
-                    <button class="remove-btn" data-id="${p.id}">Удалить</button>
-                `;
-                container.appendChild(div);
-            });
-            attachPricelistEvents();
-        }
-        function attachPricelistEvents() {
-            document.querySelectorAll('#pricelistList .upload-btn').forEach(btn => {
-                btn.removeEventListener('click', handlePricelistUpload);
-                btn.addEventListener('click', handlePricelistUpload);
-            });
-            document.querySelectorAll('#pricelistList .remove-btn').forEach(btn => {
-                btn.removeEventListener('click', handlePricelistRemove);
-                btn.addEventListener('click', handlePricelistRemove);
-            });
-            document.querySelectorAll('#pricelistList input[data-field="caption"]').forEach(input => {
-                input.removeEventListener('change', handlePricelistCaptionChange);
-                input.addEventListener('change', handlePricelistCaptionChange);
-            });
-        }
-        async function handlePricelistUpload(e) {
-            const id = parseInt(e.target.getAttribute('data-id'));
-            const fileInput = e.target.parentElement.querySelector('.price-file-input');
-            const file = fileInput.files[0];
-            if (!file) return alert('Выберите файл');
-            const ext = file.name.split('.').pop();
-            const fileName = `price_${id}_${Date.now()}.${ext}`;
-            const { error } = await supabase.storage.from(STORAGE_BUCKET).upload(fileName, file);
-            if (error) { alert('Ошибка загрузки: ' + error.message); return; }
-            const { data: urlData } = supabase.storage.from(STORAGE_BUCKET).getPublicUrl(fileName);
-            await supabase.from('pricelist').update({ image_url: urlData.publicUrl }).eq('id', id);
-            await loadPricelist();
-        }
-        async function handlePricelistRemove(e) {
-            const id = parseInt(e.target.getAttribute('data-id'));
-            if (!confirm('Удалить элемент прайс-листа? Изображение также будет удалено.')) return;
-            const item = pricelistData.find(p => p.id === id);
-            if (item && item.image_url) {
-                const fileName = item.image_url.split('/').pop();
-                if (fileName) await supabase.storage.from(STORAGE_BUCKET).remove([fileName]);
-            }
-            await supabase.from('pricelist').delete().eq('id', id);
-            await loadPricelist();
-        }
-        function handlePricelistCaptionChange(e) {
-            const id = parseInt(e.target.getAttribute('data-id'));
-            const value = e.target.value;
-            const item = pricelistData.find(p => p.id === id);
-            if (item) item.caption = value;
-        }
-        document.getElementById('addPriceBtn').addEventListener('click', async () => {
-            const newId = Date.now();
-            const newItem = { id: newId, image_url: '', caption: 'Новый прайс-лист', sort_order: pricelistData.length };
-            await supabase.from('pricelist').insert(newItem);
-            await loadPricelist();
-        });
-        document.getElementById('savePricelistBtn').addEventListener('click', async () => {
-            for (const p of pricelistData) {
-                await supabase.from('pricelist').update({ caption: p.caption }).eq('id', p.id);
-            }
-            await updateMainPagePricelist();
-            alert('Прайс-лист сохранён');
-        });
-
         // ========== СОТРУДНИКИ ==========
         async function loadEmployees() {
             const { data, error } = await supabase.from('employees').select('*').order('sort_order', { ascending: true });
@@ -3543,40 +3176,6 @@ if (priceSlidesContainer && pricePrev && priceNext && priceDotsContainer) {
                 if (ps[1]) ps[1].innerHTML = `<i class="fas fa-phone-alt"></i> <a href="tel:${contactsData.phone}">${contactsData.phone}</a>`;
                 if (ps[2]) ps[2].innerHTML = `<i class="fas fa-envelope"></i> <a href="mailto:${contactsData.email}">${contactsData.email}</a>`;
                 if (ps[3]) ps[3].innerHTML = `<i class="fas fa-clock"></i> ${contactsData.hours}`;
-            }
-        }
-        async function updateMainPageLicenses() {
-            const carouselContainer = document.querySelector('#page-licenses .carousel-container');
-            if (carouselContainer) {
-                const slidesContainer = carouselContainer.querySelector('.carousel-slides');
-                if (slidesContainer) {
-                    slidesContainer.innerHTML = '';
-                    licensesData.forEach(lic => {
-                        const slide = document.createElement('div');
-                        slide.className = 'carousel-slide';
-                        slide.innerHTML = `<img src="${lic.image_url}" alt="${lic.caption}"><p>${lic.caption}</p>`;
-                        slidesContainer.appendChild(slide);
-                    });
-                    const dots = carouselContainer.parentElement.querySelector('.carousel-dots');
-                    if (dots) dots.innerHTML = '';
-                }
-            }
-        }
-        async function updateMainPageExamples() {
-            location.reload();
-        }
-        async function updateMainPagePricelist() {
-            const priceCarousel = document.querySelector('#priceCarousel .carousel-slides');
-            if (priceCarousel) {
-                priceCarousel.innerHTML = '';
-                pricelistData.forEach(p => {
-                    const slide = document.createElement('div');
-                    slide.className = 'carousel-slide';
-                    slide.innerHTML = `<img src="${p.image_url}" alt="${p.caption}">`;
-                    priceCarousel.appendChild(slide);
-                });
-                const dots = document.querySelector('#priceCarousel .carousel-dots');
-                if (dots) dots.innerHTML = '';
             }
         }
         async function updateMainPageEmployees() {
