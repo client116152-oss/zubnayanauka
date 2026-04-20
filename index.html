@@ -2991,7 +2991,7 @@ if (priceSlidesContainer && pricePrev && priceNext && priceDotsContainer) {
         const SUPABASE_URL = 'https://uoapuoiopdxvmqixvpyx.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvYXB1b2lvcGR4dm1xaXh2cHl4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1NzkxNDAsImV4cCI6MjA5MTE1NTE0MH0.NZ3WKB3tspeBQejiJ3tLLRe5DxEXlpsrsTu9Id3cfos';
         const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        const STORAGE_BUCKET = 'clinic-images'; // название бакета в Storage
+        const STORAGE_BUCKET = 'clinic-images';
         
         let clickCount = 0, clickTimer = null;
         const modal = document.getElementById('adminModal');
@@ -3159,7 +3159,7 @@ if (priceSlidesContainer && pricePrev && priceNext && priceDotsContainer) {
             alert('Контакты сохранены');
         });
 
-        // ========== ЛИЦЕНЗИИ (с загрузкой изображений) ==========
+        // ========== ЛИЦЕНЗИИ ==========
         async function loadLicenses() {
             const { data, error } = await supabase.from('licenses').select('*').order('sort_order', { ascending: true });
             if (error) console.error(error);
@@ -3173,7 +3173,7 @@ if (priceSlidesContainer && pricePrev && priceNext && priceDotsContainer) {
                 div.className = 'item-card';
                 div.innerHTML = `
                     <div>
-                        ${lic.image_url ? `<img src="${lic.image_url}" class="preview-img" style="max-width:100px;"><br>` : ''}
+                        ${lic.image_url ? `<img src="${lic.image_url}" class="preview-img"><br>` : ''}
                         <input type="file" accept="image/*" data-id="${lic.id}" class="license-file-input" style="margin:5px 0;">
                         <button class="upload-btn" data-id="${lic.id}" data-type="license">Загрузить изображение</button>
                     </div>
@@ -3205,11 +3205,10 @@ if (priceSlidesContainer && pricePrev && priceNext && priceDotsContainer) {
             if (!file) return alert('Выберите файл');
             const ext = file.name.split('.').pop();
             const fileName = `license_${id}_${Date.now()}.${ext}`;
-            const { data, error } = await supabase.storage.from(STORAGE_BUCKET).upload(fileName, file, { cacheControl: '3600', upsert: false });
+            const { error } = await supabase.storage.from(STORAGE_BUCKET).upload(fileName, file);
             if (error) { alert('Ошибка загрузки: ' + error.message); return; }
             const { data: urlData } = supabase.storage.from(STORAGE_BUCKET).getPublicUrl(fileName);
-            const publicUrl = urlData.publicUrl;
-            const { error: updateError } = await supabase.from('licenses').update({ image_url: publicUrl }).eq('id', id);
+            const { error: updateError } = await supabase.from('licenses').update({ image_url: urlData.publicUrl }).eq('id', id);
             if (updateError) alert('Ошибка сохранения URL: ' + updateError.message);
             else await loadLicenses();
         }
@@ -3218,8 +3217,12 @@ if (priceSlidesContainer && pricePrev && priceNext && priceDotsContainer) {
             if (!confirm('Удалить лицензию? Изображение также будет удалено из Storage.')) return;
             const item = licensesData.find(l => l.id === id);
             if (item && item.image_url) {
-                const path = item.image_url.split('/').pop();
-                await supabase.storage.from(STORAGE_BUCKET).remove([path]);
+                // Извлекаем имя файла из URL
+                const fileName = item.image_url.split('/').pop();
+                if (fileName) {
+                    const { error: storageError } = await supabase.storage.from(STORAGE_BUCKET).remove([fileName]);
+                    if (storageError) console.error('Ошибка удаления файла:', storageError);
+                }
             }
             await supabase.from('licenses').delete().eq('id', id);
             await loadLicenses();
@@ -3305,8 +3308,8 @@ if (priceSlidesContainer && pricePrev && priceNext && priceDotsContainer) {
             if (!confirm('Удалить пример? Изображение также будет удалено.')) return;
             const item = examplesData.find(ex => ex.id === id);
             if (item && item.image_url) {
-                const path = item.image_url.split('/').pop();
-                await supabase.storage.from(STORAGE_BUCKET).remove([path]);
+                const fileName = item.image_url.split('/').pop();
+                if (fileName) await supabase.storage.from(STORAGE_BUCKET).remove([fileName]);
             }
             await supabase.from('work_examples').delete().eq('id', id);
             await loadWorkExamples();
@@ -3389,8 +3392,8 @@ if (priceSlidesContainer && pricePrev && priceNext && priceDotsContainer) {
             if (!confirm('Удалить элемент прайс-листа? Изображение также будет удалено.')) return;
             const item = pricelistData.find(p => p.id === id);
             if (item && item.image_url) {
-                const path = item.image_url.split('/').pop();
-                await supabase.storage.from(STORAGE_BUCKET).remove([path]);
+                const fileName = item.image_url.split('/').pop();
+                if (fileName) await supabase.storage.from(STORAGE_BUCKET).remove([fileName]);
             }
             await supabase.from('pricelist').delete().eq('id', id);
             await loadPricelist();
@@ -3433,7 +3436,7 @@ if (priceSlidesContainer && pricePrev && priceNext && priceDotsContainer) {
                     <textarea placeholder="Образование" data-field="education" data-id="${emp.id}">${escapeHtml(emp.education || '')}</textarea>
                     <textarea placeholder="Аккредитация" data-field="accreditation" data-id="${emp.id}">${escapeHtml(emp.accreditation || '')}</textarea>
                     <input type="text" placeholder="График приёма" value="${escapeHtml(emp.schedule)}" data-field="schedule" data-id="${emp.id}">
-                    <button class="remove-btn" data-id="${emp.id}">Удалить</button>
+                    <button class="remove-btn" data-id="${emp.id}">Удалить сотрудника</button>
                 `;
                 container.appendChild(div);
             });
@@ -3482,7 +3485,8 @@ if (priceSlidesContainer && pricePrev && priceNext && priceDotsContainer) {
             const openPosText = document.getElementById('openPositions').value;
             await supabase.from('open_positions').update({ text: openPosText }).eq('id', 1);
             await updateMainPageEmployees();
-            alert('Сотрудники сохранены');
+            alert('Сотрудники сохранены. Страница будет перезагружена.');
+            location.reload();
         });
 
         async function loadOpenPositions() {
@@ -3559,7 +3563,6 @@ if (priceSlidesContainer && pricePrev && priceNext && priceDotsContainer) {
             }
         }
         async function updateMainPageExamples() {
-            // Обновление примеров работ (для медицинской помощи) – сложная логика, перезагрузим страницу
             location.reload();
         }
         async function updateMainPagePricelist() {
