@@ -1638,6 +1638,11 @@ body.vision-mode .tech-item {
     <div class="services-grid">
     <div style="text-align:center; grid-column:1/-1; padding:40px;">Загрузка услуг...</div>
 </div>
+        <div style="text-align: center; margin-top: 40px;">
+    <button id="showFullPriceListBtn" class="btn-outline">
+        <i class="fas fa-list-ul"></i> Все услуги и цены
+    </button>
+</div>
 </div>
         </section>
 
@@ -2685,6 +2690,20 @@ if (priceSlidesContainer && pricePrev && priceNext && priceDotsContainer) {
         } else {
             setTimeout(() => loadSiteDataFromSupabase(), 100);
         }
+        // Кнопка "Все услуги" – открывает боковое меню и показывает прайс-лист (раздел "Правила работы")
+const allServicesBtn = document.getElementById('showFullPriceListBtn');
+if (allServicesBtn) {
+    allServicesBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        openSideMenu();                 // открываем боковое меню
+        showInfoPage('work-rules');     // показываем страницу "Правила работы" (там находится прайс-лист)
+        // Если нужно дополнительно прокрутить к карусели прайс-листа, можно раскомментировать:
+        setTimeout(() => {
+             const priceCarousel = document.querySelector('#priceCarousel');
+             if (priceCarousel) priceCarousel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+         }, 300);
+    });
+}
     })();
 </script>
 <!-- Админ-панель -->
