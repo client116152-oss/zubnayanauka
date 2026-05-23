@@ -6,7 +6,6 @@
     <title>Зубная наука | Премиум стоматология в Казани</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         * {
             margin: 0;
@@ -2126,10 +2125,6 @@ E-mail: tax16@nalog.ru</p>
 
 <script>
     (function() {
-        const SUPABASE_URL = 'https://uoapuoiopdxvmqixvpyx.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvYXB1b2lvcGR4dm1xaXh2cHl4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1NzkxNDAsImV4cCI6MjA5MTE1NTE0MH0.NZ3WKB3tspeBQejiJ3tLLRe5DxEXlpsrsTu9Id3cfos';
-        const supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        
         const mainPageDiv = document.getElementById('mainPageContent');
         const infoContainer = document.getElementById('infoPagesContainer');
         const allInfoPages = document.querySelectorAll('.info-page-content');
@@ -2161,37 +2156,51 @@ E-mail: tax16@nalog.ru</p>
             window.scrollTo({ top: 0, behavior: 'smooth' }); 
         }
         
-        async function loadReviews() { 
-            const container = document.getElementById('dynamicReviewsList'); 
-            if(!container) return; 
-            container.innerHTML = '<div style="text-align:center; grid-column:1/-1;">Загрузка отзывов...</div>'; 
-            try { 
-                const { data, error } = await supabaseClient.from('reviews').select('*').order('created_at', { ascending: false }); 
-                if(error) throw error; 
-                if(!data || data.length === 0) { 
-                    container.innerHTML = '<div style="text-align:center; grid-column:1/-1;">Пока нет отзывов. Будьте первым!</div>'; 
-                    return; 
-                } 
-                container.innerHTML = ''; 
-                data.forEach(review => { 
-                    const card = document.createElement('div'); 
-                    card.className = 'review-card'; 
-                    const filledStars = Array(review.rating).fill('<i class="fas fa-star"></i>').join(''); 
-                    const emptyStars = Array(5 - review.rating).fill('<i class="far fa-star"></i>').join(''); 
-                    const date = new Date(review.created_at).toLocaleDateString('ru-RU'); 
-                    card.innerHTML = `<div class="stars">${filledStars}${emptyStars}</div><p class="review-text">${escapeHtml(review.text)}</p><div class="review-author"><img src="review-avatar-1.jpg" alt="avatar" onerror="this.src='https://via.placeholder.com/48'"><span><strong>${escapeHtml(review.name)}</strong><br>${date}</span></div>`; 
-                    container.appendChild(card); 
-                }); 
-            } catch(err) { 
-                console.error(err); 
-                container.innerHTML = '<div style="text-align:center; grid-column:1/-1;">Ошибка загрузки отзывов.</div>'; 
-            } 
+        async function loadReviews() {
+    const container = document.getElementById('dynamicReviewsList');
+    if (!container) return;
+    container.innerHTML = '<div style="text-align:center; grid-column:1/-1;">Загрузка отзывов...</div>';
+    try {
+        const response = await fetch('/get_reviews.php');
+        if (!response.ok) throw new Error('Ошибка сети');
+        const reviews = await response.json();
+        if (!reviews.length) {
+            container.innerHTML = '<div style="text-align:center; grid-column:1/-1;">Пока нет отзывов. Будьте первым!</div>';
+            return;
         }
+        container.innerHTML = '';
+        reviews.forEach(review => {
+            const card = document.createElement('div');
+            card.className = 'review-card';
+            const filledStars = Array(review.rating).fill('<i class="fas fa-star"></i>').join('');
+            const emptyStars = Array(5 - review.rating).fill('<i class="far fa-star"></i>').join('');
+            const date = new Date(review.created_at).toLocaleDateString('ru-RU');
+            card.innerHTML = `<div class="stars">${filledStars}${emptyStars}</div>
+                              <p class="review-text">${escapeHtml(review.text)}</p>
+                              <div class="review-author">
+                                  <img src="review-avatar-1.jpg" alt="avatar" onerror="this.src='https://via.placeholder.com/48'">
+                                  <span><strong>${escapeHtml(review.name)}</strong><br>${date}</span>
+                              </div>`;
+            container.appendChild(card);
+        });
+    } catch (err) {
+        console.error(err);
+        container.innerHTML = '<div style="text-align:center; grid-column:1/-1;">Ошибка загрузки отзывов.</div>';
+    }
+}
         
-        async function submitReview(name, rating, text) { 
-            const { error } = await supabaseClient.from('reviews').insert([{ name, rating, text }]); 
-            if(error) throw error; 
-        }
+      async function submitReview(name, rating, text) {
+    const response = await fetch('/add_review.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, rating, text })
+    });
+    const result = await response.json();
+    if (!response.ok || result.error) {
+        throw new Error(result.error || 'Ошибка сервера');
+    }
+    return result;
+}
         
         function escapeHtml(str) { 
             if(!str) return ''; 
@@ -2643,106 +2652,7 @@ if (priceSlidesContainer && pricePrev && priceNext && priceDotsContainer) {
     });
     createPriceDots();
 }
-             // === ЗАГРУЗКА ДАННЫХ ИЗ SUPABASE ПРИ СТАРТЕ СТРАНИЦЫ ===
-        async function loadSiteDataFromSupabase() {
-            console.log('Загрузка данных из Supabase...');
-            try {
-                // 1. Услуги
-                const { data: services, error: servicesErr } = await supabaseClient.from('services').select('*').order('sort_order', { ascending: true });
-                if (servicesErr) throw servicesErr;
-                if (services && services.length) {
-                    const container = document.querySelector('#services .services-grid');
-                    if (container) {
-                        container.innerHTML = '';
-                        services.forEach(s => {
-                            const card = document.createElement('div');
-                            card.className = 'service-card';
-                            card.innerHTML = `<div class="service-icon"><i class="fas fa-tooth"></i></div><h4>${escapeHtml(s.title)}</h4><p>${escapeHtml(s.description)}</p><div class="price-tag">${escapeHtml(s.price)}</div>`;
-                            container.appendChild(card);
-                        });
-                        console.log('Услуги обновлены');
-                    } else {
-                        console.warn('Контейнер #services .services-grid не найден');
-                    }
-                }
 
-                // 2. Контакты
-                const { data: contacts, error: contactsErr } = await supabaseClient.from('contacts').select('*').eq('id', 1).single();
-                if (!contactsErr && contacts) {
-                    const contactDiv = document.querySelector('#contacts .contact-info');
-                    if (contactDiv) {
-                        const ps = contactDiv.querySelectorAll('p');
-                        if (ps[0]) ps[0].innerHTML = `<i class="fas fa-map-marker-alt"></i> ${escapeHtml(contacts.address)}`;
-                        if (ps[1]) ps[1].innerHTML = `<i class="fas fa-phone-alt"></i> <a href="tel:${escapeHtml(contacts.phone)}">${escapeHtml(contacts.phone)}</a>`;
-                        if (ps[2]) ps[2].innerHTML = `<i class="fas fa-envelope"></i> <a href="mailto:${escapeHtml(contacts.email)}">${escapeHtml(contacts.email)}</a>`;
-                        if (ps[3]) ps[3].innerHTML = `<i class="fas fa-clock"></i> ${escapeHtml(contacts.hours)}`;
-                        console.log('Контакты обновлены');
-                    }
-                }
-
-                // 3. Сотрудники
-                const { data: employees, error: empErr } = await supabaseClient.from('employees').select('*').order('sort_order', { ascending: true });
-                if (!empErr && employees && employees.length) {
-                    const staffGrid = document.querySelector('#page-employees .staff-grid');
-                    if (staffGrid) {
-                        staffGrid.innerHTML = '';
-                        employees.forEach(emp => {
-                            const card = document.createElement('div');
-                            card.className = 'staff-card';
-                            card.innerHTML = `<i class="fas fa-user-md"></i>
-                                <strong>${escapeHtml(emp.full_name)}</strong><br>
-                                <em>${escapeHtml(emp.position)}</em><br><br>
-                                <strong>Образование:</strong> ${escapeHtml(emp.education)}<br>
-                                <strong>Аккредитация:</strong><br>${escapeHtml(emp.accreditation).replace(/\n/g, '<br>')}<br>
-                                <strong>График приёма:</strong> ${escapeHtml(emp.schedule)}`;
-                            staffGrid.appendChild(card);
-                        });
-                        console.log('Сотрудники обновлены');
-                    }
-                }
-
-                // 4. Открытые должности
-                const { data: openPos, error: openErr } = await supabaseClient.from('open_positions').select('text').eq('id', 1).single();
-                if (!openErr && openPos) {
-                    const openPosP = document.querySelector('#page-employees .info-block p:last-child');
-                    if (openPosP) openPosP.innerHTML = `<strong>Открытые должности:</strong> ${escapeHtml(openPos.text)}`;
-                }
-
-                // 5. Лекарственные препараты
-                const { data: drugs, error: drugsErr } = await supabaseClient.from('drugs').select('content').eq('id', 1).single();
-                if (!drugsErr && drugs) {
-                    const drugsBlock = document.querySelector('#page-drugs .info-block');
-                    if (drugsBlock) {
-                        drugsBlock.innerHTML = `<h3><i class="fas fa-pills"></i> О лекарственных препаратах</h3><p>${escapeHtml(drugs.content).replace(/\n/g, '<br>')}</p>`;
-                    }
-                }
-
-                // 6. Данные о СМО
-                const { data: smo, error: smoErr } = await supabaseClient.from('smo').select('*').eq('id', 1).single();
-                if (!smoErr && smo) {
-                    const smoBlock = document.querySelector('#page-smo .info-block');
-                    if (smoBlock) {
-                        const companiesHtml = smo.companies.split('\n').map(line => `<li>${escapeHtml(line)}</li>`).join('');
-                        smoBlock.innerHTML = `<h3><i class="fas fa-hand-holding-usd"></i> Данные о СМО (ОМС)</h3>
-                            <p><strong>Страховые медицинские организации, с которыми заключены договоры ОМС:</strong></p>
-                            <ul>${companiesHtml}</ul>
-                            <p>${escapeHtml(smo.program).replace(/\n/g, '<br>')}</p>`;
-                    }
-                }
-                console.log('Загрузка данных завершена');
-            } catch (e) {
-                console.error('Ошибка загрузки данных из Supabase:', e);
-            }
-        }
-
-        // Гарантированный вызов после полной загрузки DOM
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', () => {
-                setTimeout(() => loadSiteDataFromSupabase(), 100);
-            });
-        } else {
-            setTimeout(() => loadSiteDataFromSupabase(), 100);
-        }
         // Кнопка "Все услуги" – открывает боковое меню и показывает прайс-лист (раздел "Правила работы")
 const allServicesBtn = document.getElementById('showFullPriceListBtn');
 if (allServicesBtn) {
@@ -2757,559 +2667,6 @@ if (allServicesBtn) {
          }, 300);
     });
 }
-    })();
-</script>
-<!-- Админ-панель -->
-<style>
-    .admin-modal {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.8);
-        z-index: 10000;
-        display: none;
-        justify-content: center;
-        align-items: center;
-    }
-    .admin-modal.active {
-        display: flex;
-    }
-    .admin-panel {
-        background: white;
-        width: 90%;
-        max-width: 800px;
-        max-height: 90%;
-        overflow-y: auto;
-        border-radius: 28px;
-        padding: 30px;
-        position: relative;
-        font-family: 'Inter', sans-serif;
-    }
-    .admin-panel h2 {
-        margin-bottom: 20px;
-        color: var(--dark-charcoal);
-    }
-    .admin-panel .form-group {
-        margin-bottom: 20px;
-    }
-    .admin-panel label {
-        display: block;
-        font-weight: 600;
-        margin-bottom: 8px;
-    }
-    .admin-panel input, .admin-panel textarea, .admin-panel select {
-        width: 100%;
-        padding: 10px;
-        border-radius: 28px;
-        border: 1px solid #ccc;
-        font-family: inherit;
-    }
-    .admin-panel button {
-        background: var(--gold);
-        color: white;
-        border: none;
-        padding: 10px 20px;
-        border-radius: 40px;
-        cursor: pointer;
-        margin-top: 10px;
-    }
-    .admin-panel button:hover {
-        background: var(--gold-dark);
-    }
-    .admin-panel .close-btn {
-        position: absolute;
-        top: 15px;
-        right: 20px;
-        background: none;
-        font-size: 24px;
-        cursor: pointer;
-        color: #999;
-    }
-    .admin-panel .close-btn:hover {
-        color: black;
-    }
-    .admin-tabs {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 10px;
-        margin-bottom: 20px;
-        border-bottom: 1px solid #eee;
-        padding-bottom: 10px;
-    }
-    .admin-tab {
-        background: #f0f0f0;
-        padding: 8px 16px;
-        border-radius: 40px;
-        cursor: pointer;
-    }
-    .admin-tab.active {
-        background: var(--gold);
-        color: white;
-    }
-    .admin-tab-content {
-        display: none;
-    }
-    .admin-tab-content.active {
-        display: block;
-    }
-    .item-card {
-        border: 1px solid #ddd;
-        padding: 15px;
-        border-radius: 20px;
-        margin-bottom: 15px;
-    }
-    .remove-btn {
-        background: #e74c3c;
-        color: white;
-        border: none;
-        padding: 5px 10px;
-        border-radius: 20px;
-        cursor: pointer;
-        font-size: 12px;
-        margin-top: 10px;
-        margin-right: 10px;
-    }
-    .upload-btn {
-        background: #2c3e50;
-        margin-top: 5px;
-        margin-bottom: 5px;
-    }
-    .add-btn {
-        background: #27ae60;
-        margin-bottom: 15px;
-    }
-    .preview-img {
-        max-width: 100px;
-        max-height: 100px;
-        margin-top: 10px;
-        border-radius: 8px;
-    }
-</style>
-
-<div id="adminModal" class="admin-modal">
-    <div class="admin-panel">
-        <span class="close-btn" id="closeAdminPanel">&times;</span>
-        <h2>Админ-панель</h2>
-        <div id="adminLogin" style="display: block;">
-            <div class="form-group">
-                <label>Email:</label>
-                <input type="email" id="adminEmail" placeholder="admin@example.com">
-            </div>
-            <div class="form-group">
-                <label>Пароль:</label>
-                <input type="password" id="adminPassword" placeholder="Пароль">
-            </div>
-            <button id="adminLoginBtn">Войти</button>
-            <div id="loginError" style="color:red; margin-top:10px;"></div>
-        </div>
-        <div id="adminContent" style="display: none;">
-            <div class="admin-tabs">
-                <div class="admin-tab" data-tab="services">Услуги</div>
-                <div class="admin-tab" data-tab="contacts">Контакты</div>
-                <div class="admin-tab" data-tab="staff">Сотрудники</div>
-                <div class="admin-tab" data-tab="drugs">Препараты</div>
-                <div class="admin-tab" data-tab="smo">СМО</div>
-            </div>
-            <div id="servicesTab" class="admin-tab-content">
-                <h3>Редактирование услуг</h3>
-                <div id="servicesList"></div>
-                <button id="addServiceBtn" class="add-btn">+ Добавить услугу</button>
-                <button id="saveServicesBtn" class="save-btn">Сохранить изменения</button>
-            </div>
-            <div id="contactsTab" class="admin-tab-content">
-                <h3>Редактирование контактов</h3>
-                <div class="form-group"><label>Адрес</label><input type="text" id="contactAddress"></div>
-                <div class="form-group"><label>Телефон</label><input type="text" id="contactPhone"></div>
-                <div class="form-group"><label>Email</label><input type="text" id="contactEmail"></div>
-                <div class="form-group"><label>Часы работы</label><input type="text" id="contactHours"></div>
-                <button id="saveContactsBtn">Сохранить контакты</button>
-            </div>
-            <div id="staffTab" class="admin-tab-content">
-                <h3>Сотрудники</h3>
-                <div id="staffList"></div>
-                <button id="addStaffBtn" class="add-btn">+ Добавить сотрудника</button>
-                <button id="saveStaffBtn">Сохранить сотрудников</button>
-                <div class="form-group"><label>Открытые должности</label><textarea id="openPositions" rows="3"></textarea></div>
-            </div>
-            <div id="drugsTab" class="admin-tab-content">
-                <h3>О лекарственных препаратах</h3>
-                <div class="form-group"><label>Текст</label><textarea id="drugsText" rows="8"></textarea></div>
-                <button id="saveDrugsBtn">Сохранить</button>
-            </div>
-            <div id="smoTab" class="admin-tab-content">
-                <h3>Данные о СМО и программах ОМС</h3>
-                <div class="form-group">
-                    <label>Страховые медицинские организации (каждая с новой строки)</label>
-                    <textarea id="smoCompanies" rows="5"></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Программа ОМС</label>
-                    <textarea id="smoProgram" rows="5"></textarea>
-                </div>
-                <button id="saveSmoBtn">Сохранить</button>
-            </div>
-        </div>
-    </div>
-</div>
-
-<script>
-    (function() {
-        const SUPABASE_URL = 'https://uoapuoiopdxvmqixvpyx.supabase.co';
-        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVvYXB1b2lvcGR4dm1xaXh2cHl4Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU1NzkxNDAsImV4cCI6MjA5MTE1NTE0MH0.NZ3WKB3tspeBQejiJ3tLLRe5DxEXlpsrsTu9Id3cfos';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        const STORAGE_BUCKET = 'clinic-images';
-        
-        let clickCount = 0, clickTimer = null;
-        const modal = document.getElementById('adminModal');
-        const closeBtn = document.getElementById('closeAdminPanel');
-        const loginBtn = document.getElementById('adminLoginBtn');
-        const emailInput = document.getElementById('adminEmail');
-        const passwordInput = document.getElementById('adminPassword');
-        const loginError = document.getElementById('loginError');
-        const adminContent = document.getElementById('adminContent');
-        const adminLoginDiv = document.getElementById('adminLogin');
-
-        let servicesData = [], employeesData = [], contactsData = {}, openPositionsData = '', drugsData = '', smoData = { companies: '', program: '' };
-
-        const logo = document.querySelector('.logo img');
-        if (logo) {
-            logo.addEventListener('click', () => {
-                clickCount++;
-                if (clickTimer) clearTimeout(clickTimer);
-                clickTimer = setTimeout(() => { clickCount = 0; }, 500);
-                if (clickCount === 3) {
-                    clickCount = 0;
-                    modal.classList.add('active');
-                }
-            });
-        }
-
-        closeBtn.addEventListener('click', () => modal.classList.remove('active'));
-        modal.addEventListener('click', (e) => { if (e.target === modal) modal.classList.remove('active'); });
-
-        async function loginAdmin(email, password) {
-            const { data, error } = await supabase.auth.signInWithPassword({ email, password });
-            if (error) {
-                console.error('Ошибка входа:', error);
-                return false;
-            }
-            return true;
-        }
-
-        loginBtn.addEventListener('click', async () => {
-            const email = emailInput.value.trim();
-            const password = passwordInput.value.trim();
-            if (!email || !password) {
-                loginError.innerText = 'Введите email и пароль';
-                return;
-            }
-            const success = await loginAdmin(email, password);
-            if (success) {
-                adminLoginDiv.style.display = 'none';
-                adminContent.style.display = 'block';
-                await loadAllData();
-                initTabs();
-            } else {
-                loginError.innerText = 'Неверный email или пароль';
-            }
-        });
-
-        async function loadAllData() {
-            await loadServices();
-            await loadContacts();
-            await loadEmployees();
-            await loadOpenPositions();
-            await loadDrugs();
-            await loadSmo();
-        }
-
-        // ========== УСЛУГИ ==========
-        async function loadServices() {
-            const { data, error } = await supabase.from('services').select('*').order('sort_order', { ascending: true });
-            if (error) console.error(error);
-            else { servicesData = data; renderServices(); }
-        }
-        function renderServices() {
-            const container = document.getElementById('servicesList');
-            container.innerHTML = '';
-            servicesData.forEach((s, idx) => {
-                const div = document.createElement('div');
-                div.className = 'item-card';
-                div.innerHTML = `
-                    <input type="text" placeholder="Название" value="${escapeHtml(s.title)}" data-field="title" data-id="${s.id}">
-                    <input type="text" placeholder="Описание" value="${escapeHtml(s.description)}" data-field="description" data-id="${s.id}">
-                    <input type="text" placeholder="Цена" value="${escapeHtml(s.price)}" data-field="price" data-id="${s.id}">
-                    <button class="remove-btn" data-id="${s.id}">Удалить</button>
-                `;
-                container.appendChild(div);
-            });
-            attachServiceEvents();
-        }
-        function attachServiceEvents() {
-            document.querySelectorAll('#servicesList input').forEach(input => {
-                input.removeEventListener('change', handleServiceChange);
-                input.addEventListener('change', handleServiceChange);
-            });
-            document.querySelectorAll('#servicesList .remove-btn').forEach(btn => {
-                btn.removeEventListener('click', handleServiceRemove);
-                btn.addEventListener('click', handleServiceRemove);
-            });
-        }
-        function handleServiceChange(e) {
-            const id = parseInt(e.target.getAttribute('data-id'));
-            const field = e.target.getAttribute('data-field');
-            const value = e.target.value;
-            const item = servicesData.find(s => s.id === id);
-            if (item) item[field] = value;
-        }
-        async function handleServiceRemove(e) {
-            const id = parseInt(e.target.getAttribute('data-id'));
-            if (confirm('Удалить услугу?')) {
-                await supabase.from('services').delete().eq('id', id);
-                await loadServices();
-            }
-        }
-        document.getElementById('addServiceBtn').addEventListener('click', async () => {
-            const newId = Date.now();
-            const newService = { id: newId, title: 'Новая услуга', description: 'Описание', price: '0 ₽', sort_order: servicesData.length };
-            await supabase.from('services').insert(newService);
-            await loadServices();
-        });
-        document.getElementById('saveServicesBtn').addEventListener('click', async () => {
-            console.log('=== Сохранение услуг ===');
-            let hasError = false;
-            for (const s of servicesData) {
-                const { error } = await supabase.from('services').update({ 
-                    title: s.title, 
-                    description: s.description, 
-                    price: s.price 
-                }).eq('id', s.id);
-                if (error) {
-                    console.error(`Ошибка при обновлении id=${s.id}:`, error);
-                    hasError = true;
-                }
-            }
-            if (hasError) {
-                alert('Ошибка при сохранении. Подробности в консоли (F12).');
-            } else {
-                await updateMainPageServices();
-                alert('Услуги сохранены. Страница будет перезагружена.');
-                location.reload();
-            }
-        });
-
-        // ========== КОНТАКТЫ ==========
-        async function loadContacts() {
-            const { data, error } = await supabase.from('contacts').select('*').eq('id', 1).single();
-            if (error) console.error(error);
-            else { contactsData = data; renderContacts(); }
-        }
-        function renderContacts() {
-            document.getElementById('contactAddress').value = contactsData.address || '';
-            document.getElementById('contactPhone').value = contactsData.phone || '';
-            document.getElementById('contactEmail').value = contactsData.email || '';
-            document.getElementById('contactHours').value = contactsData.hours || '';
-        }
-        document.getElementById('saveContactsBtn').addEventListener('click', async () => {
-            const updates = {
-                address: document.getElementById('contactAddress').value,
-                phone: document.getElementById('contactPhone').value,
-                email: document.getElementById('contactEmail').value,
-                hours: document.getElementById('contactHours').value
-            };
-            await supabase.from('contacts').update(updates).eq('id', 1);
-            await updateMainPageContacts();
-            alert('Контакты сохранены');
-        });
-        // ========== СОТРУДНИКИ ==========
-        async function loadEmployees() {
-            const { data, error } = await supabase.from('employees').select('*').order('sort_order', { ascending: true });
-            if (error) console.error(error);
-            else { employeesData = data; renderEmployees(); }
-        }
-        function renderEmployees() {
-            const container = document.getElementById('staffList');
-            container.innerHTML = '';
-            employeesData.forEach((emp, idx) => {
-                const div = document.createElement('div');
-                div.className = 'item-card';
-                div.innerHTML = `
-                    <input type="text" placeholder="ФИО" value="${escapeHtml(emp.full_name)}" data-field="full_name" data-id="${emp.id}">
-                    <input type="text" placeholder="Должность" value="${escapeHtml(emp.position)}" data-field="position" data-id="${emp.id}">
-                    <textarea placeholder="Образование" data-field="education" data-id="${emp.id}">${escapeHtml(emp.education || '')}</textarea>
-                    <textarea placeholder="Аккредитация" data-field="accreditation" data-id="${emp.id}">${escapeHtml(emp.accreditation || '')}</textarea>
-                    <input type="text" placeholder="График приёма" value="${escapeHtml(emp.schedule)}" data-field="schedule" data-id="${emp.id}">
-                    <button class="remove-btn" data-id="${emp.id}">Удалить сотрудника</button>
-                `;
-                container.appendChild(div);
-            });
-            attachEmployeeEvents();
-        }
-        function attachEmployeeEvents() {
-            document.querySelectorAll('#staffList input, #staffList textarea').forEach(el => {
-                el.removeEventListener('change', handleEmployeeChange);
-                el.addEventListener('change', handleEmployeeChange);
-            });
-            document.querySelectorAll('#staffList .remove-btn').forEach(btn => {
-                btn.removeEventListener('click', handleEmployeeRemove);
-                btn.addEventListener('click', handleEmployeeRemove);
-            });
-        }
-        function handleEmployeeChange(e) {
-            const id = parseInt(e.target.getAttribute('data-id'));
-            const field = e.target.getAttribute('data-field');
-            const value = e.target.value;
-            const item = employeesData.find(emp => emp.id === id);
-            if (item) item[field] = value;
-        }
-        async function handleEmployeeRemove(e) {
-            const id = parseInt(e.target.getAttribute('data-id'));
-            if (confirm('Удалить сотрудника?')) {
-                await supabase.from('employees').delete().eq('id', id);
-                await loadEmployees();
-            }
-        }
-        document.getElementById('addStaffBtn').addEventListener('click', async () => {
-            const newId = Date.now();
-            const newEmp = { id: newId, full_name: 'Новый сотрудник', position: '', education: '', accreditation: '', schedule: 'Пн–Пт 08:00–20:00', sort_order: employeesData.length };
-            await supabase.from('employees').insert(newEmp);
-            await loadEmployees();
-        });
-        document.getElementById('saveStaffBtn').addEventListener('click', async () => {
-            for (const emp of employeesData) {
-                await supabase.from('employees').update({
-                    full_name: emp.full_name,
-                    position: emp.position,
-                    education: emp.education,
-                    accreditation: emp.accreditation,
-                    schedule: emp.schedule
-                }).eq('id', emp.id);
-            }
-            const openPosText = document.getElementById('openPositions').value;
-            await supabase.from('open_positions').update({ text: openPosText }).eq('id', 1);
-            await updateMainPageEmployees();
-            alert('Сотрудники сохранены. Страница будет перезагружена.');
-            location.reload();
-        });
-
-        async function loadOpenPositions() {
-            const { data, error } = await supabase.from('open_positions').select('text').eq('id', 1).single();
-            if (error) console.error(error);
-            else { openPositionsData = data?.text || ''; document.getElementById('openPositions').value = openPositionsData; }
-        }
-        async function loadDrugs() {
-            const { data, error } = await supabase.from('drugs').select('content').eq('id', 1).single();
-            if (error) console.error(error);
-            else { drugsData = data?.content || ''; document.getElementById('drugsText').value = drugsData; }
-        }
-        async function loadSmo() {
-            const { data, error } = await supabase.from('smo').select('*').eq('id', 1).single();
-            if (error) console.error(error);
-            else { smoData = data; renderSmo(); }
-        }
-        function renderSmo() {
-            document.getElementById('smoCompanies').value = smoData.companies || '';
-            document.getElementById('smoProgram').value = smoData.program || '';
-        }
-        document.getElementById('saveDrugsBtn').addEventListener('click', async () => {
-            const content = document.getElementById('drugsText').value;
-            await supabase.from('drugs').update({ content }).eq('id', 1);
-            await updateMainPageDrugs();
-            alert('Данные о препаратах сохранены');
-        });
-        document.getElementById('saveSmoBtn').addEventListener('click', async () => {
-            const companies = document.getElementById('smoCompanies').value;
-            const program = document.getElementById('smoProgram').value;
-            await supabase.from('smo').update({ companies, program }).eq('id', 1);
-            await updateMainPageSmo();
-            alert('Данные о СМО сохранены');
-        });
-
-        // ========== ФУНКЦИИ ОБНОВЛЕНИЯ ГЛАВНОЙ СТРАНИЦЫ ==========
-        async function updateMainPageServices() {
-            const container = document.querySelector('#services .services-grid');
-            if (container) {
-                container.innerHTML = '';
-                for (const s of servicesData) {
-                    const card = document.createElement('div');
-                    card.className = 'service-card';
-                    card.innerHTML = `<div class="service-icon"><i class="fas fa-tooth"></i></div><h4>${escapeHtml(s.title)}</h4><p>${escapeHtml(s.description)}</p><div class="price-tag">${escapeHtml(s.price)}</div>`;
-                    container.appendChild(card);
-                }
-            }
-        }
-        async function updateMainPageContacts() {
-            const contactDiv = document.querySelector('#contacts .contact-info');
-            if (contactDiv) {
-                const ps = contactDiv.querySelectorAll('p');
-                if (ps[0]) ps[0].innerHTML = `<i class="fas fa-map-marker-alt"></i> ${contactsData.address}`;
-                if (ps[1]) ps[1].innerHTML = `<i class="fas fa-phone-alt"></i> <a href="tel:${contactsData.phone}">${contactsData.phone}</a>`;
-                if (ps[2]) ps[2].innerHTML = `<i class="fas fa-envelope"></i> <a href="mailto:${contactsData.email}">${contactsData.email}</a>`;
-                if (ps[3]) ps[3].innerHTML = `<i class="fas fa-clock"></i> ${contactsData.hours}`;
-            }
-        }
-        async function updateMainPageEmployees() {
-            const staffGrid = document.querySelector('#page-employees .staff-grid');
-            if (staffGrid) {
-                staffGrid.innerHTML = '';
-                employeesData.forEach(emp => {
-                    const card = document.createElement('div');
-                    card.className = 'staff-card';
-                    card.innerHTML = `<i class="fas fa-user-md"></i>
-                        <strong>${escapeHtml(emp.full_name)}</strong><br>
-                        <em>${escapeHtml(emp.position)}</em><br><br>
-                        <strong>Образование:</strong> ${escapeHtml(emp.education)}<br>
-                        <strong>Аккредитация:</strong><br>${escapeHtml(emp.accreditation).replace(/\n/g, '<br>')}<br>
-                        <strong>График приёма:</strong> ${escapeHtml(emp.schedule)}`;
-                    staffGrid.appendChild(card);
-                });
-            }
-            const openPositionsP = document.querySelector('#page-employees .info-block p:last-child');
-            if (openPositionsP) openPositionsP.innerHTML = `<strong>Открытые должности:</strong> ${escapeHtml(openPositionsData)}`;
-        }
-        async function updateMainPageDrugs() {
-            const drugsBlock = document.querySelector('#page-drugs .info-block');
-            if (drugsBlock) {
-                drugsBlock.innerHTML = `<h3><i class="fas fa-pills"></i> О лекарственных препаратах</h3><p>${escapeHtml(drugsData).replace(/\n/g, '<br>')}</p>`;
-            }
-        }
-        async function updateMainPageSmo() {
-            const smoBlock = document.querySelector('#page-smo .info-block');
-            if (smoBlock) {
-                const companiesHtml = smoData.companies.split('\n').map(line => `<li>${escapeHtml(line)}</li>`).join('');
-                smoBlock.innerHTML = `<h3><i class="fas fa-hand-holding-usd"></i> Данные о СМО (ОМС)</h3>
-                    <p><strong>Страховые медицинские организации, с которыми заключены договоры ОМС:</strong></p>
-                    <ul>${companiesHtml}</ul>
-                    <p>${escapeHtml(smoData.program).replace(/\n/g, '<br>')}</p>`;
-            }
-        }
-
-        function initTabs() {
-            const tabs = document.querySelectorAll('.admin-tab');
-            const contents = document.querySelectorAll('.admin-tab-content');
-            tabs.forEach(tab => {
-                tab.addEventListener('click', () => {
-                    const target = tab.getAttribute('data-tab');
-                    tabs.forEach(t => t.classList.remove('active'));
-                    tab.classList.add('active');
-                    contents.forEach(c => c.classList.remove('active'));
-                    document.getElementById(target + 'Tab').classList.add('active');
-                });
-            });
-            if (tabs.length) tabs[0].click();
-        }
-
-        function escapeHtml(str) {
-            if (!str) return '';
-            return str.replace(/[&<>]/g, function(m) {
-                if (m === '&') return '&amp;';
-                if (m === '<') return '&lt;';
-                if (m === '>') return '&gt;';
-                return m;
-            });
-        }
     })();
 </script>
 </body>
