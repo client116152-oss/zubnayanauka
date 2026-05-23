@@ -2243,10 +2243,16 @@ E-mail: tax16@nalog.ru</p>
             } 
         }
         
-        function initReviewForm() { 
-    const submitBtn = document.getElementById('submitReviewBtn'); 
+       function initReviewForm() {
     const consentCheckbox = document.getElementById('privacyConsent');
-    if(!submitBtn || !consentCheckbox) return; 
+    if (!consentCheckbox) return;
+
+    // Находим кнопку и заменяем её на чистую копию, чтобы сбросить все старые обработчики
+    const oldBtn = document.getElementById('submitReviewBtn');
+    if (!oldBtn) return;
+    const newBtn = oldBtn.cloneNode(true);
+    oldBtn.parentNode.replaceChild(newBtn, oldBtn);
+    const submitBtn = document.getElementById('submitReviewBtn'); // свежая ссылка
 
     // Функция обновления состояния кнопки
     function updateButtonState() {
@@ -2260,62 +2266,58 @@ E-mail: tax16@nalog.ru</p>
             submitBtn.style.cursor = 'not-allowed';
         }
     }
-    
+
+    // Устанавливаем начальное состояние
+    updateButtonState();
+
     // Слушаем изменения чекбокса
     consentCheckbox.addEventListener('change', updateButtonState);
-    // Инициализация: кнопка неактивна по умолчанию
-    updateButtonState();
-    
-    // Клонируем кнопку, чтобы убрать старые обработчики
-    const newBtn = submitBtn.cloneNode(true);
-    submitBtn.parentNode.replaceChild(newBtn, submitBtn); 
-    const finalBtn = document.getElementById('submitReviewBtn'); 
-    
-    finalBtn.addEventListener('click', async () => { 
-        // Дополнительная проверка на случай, если скрипт обойдёт disabled
+
+    // Добавляем обработчик отправки
+    submitBtn.addEventListener('click', async () => {
         if (!consentCheckbox.checked) {
             document.getElementById('reviewFormStatus').innerHTML = '<span style="color:#c00;">Необходимо согласие на обработку персональных данных</span>';
             return;
         }
-        const nameInput = document.getElementById('reviewName'); 
-        const textInput = document.getElementById('reviewText'); 
-        const ratingInput = document.getElementById('reviewRating'); 
-        const statusDiv = document.getElementById('reviewFormStatus'); 
-        const name = nameInput.value.trim(); 
-        const text = textInput.value.trim(); 
-        const rating = parseInt(ratingInput.value); 
-        if(!name || name.length < 2) { 
-            statusDiv.innerHTML = '<span style="color:#c00;">Укажите имя и фамилию</span>'; 
-            return; 
-        } 
-        if(!text || text.length < 5) { 
-            statusDiv.innerHTML = '<span style="color:#c00;">Текст отзыва слишком короткий</span>'; 
-            return; 
-        } 
-        if(!rating || rating < 1 || rating > 5) { 
-            statusDiv.innerHTML = '<span style="color:#c00;">Поставьте оценку от 1 до 5 звёзд</span>'; 
-            return; 
-        } 
-        statusDiv.innerHTML = '<span>Отправка...</span>'; 
-        try { 
-            await submitReview(name, rating, text); 
-            statusDiv.innerHTML = '<span style="color:green;">Спасибо! Отзыв добавлен.</span>'; 
-            nameInput.value = ''; 
-            textInput.value = ''; 
-            ratingInput.value = '0'; 
+        const nameInput = document.getElementById('reviewName');
+        const textInput = document.getElementById('reviewText');
+        const ratingInput = document.getElementById('reviewRating');
+        const statusDiv = document.getElementById('reviewFormStatus');
+        const name = nameInput.value.trim();
+        const text = textInput.value.trim();
+        const rating = parseInt(ratingInput.value);
+        if (!name || name.length < 2) {
+            statusDiv.innerHTML = '<span style="color:#c00;">Укажите имя и фамилию</span>';
+            return;
+        }
+        if (!text || text.length < 5) {
+            statusDiv.innerHTML = '<span style="color:#c00;">Текст отзыва слишком короткий</span>';
+            return;
+        }
+        if (!rating || rating < 1 || rating > 5) {
+            statusDiv.innerHTML = '<span style="color:#c00;">Поставьте оценку от 1 до 5 звёзд</span>';
+            return;
+        }
+        statusDiv.innerHTML = '<span>Отправка...</span>';
+        try {
+            await submitReview(name, rating, text);
+            statusDiv.innerHTML = '<span style="color:green;">Спасибо! Отзыв добавлен.</span>';
+            nameInput.value = '';
+            textInput.value = '';
+            ratingInput.value = '0';
             consentCheckbox.checked = false;
-            updateButtonState(); // снова блокируем кнопку
-            document.querySelectorAll('#ratingStars i').forEach(star => { 
-                star.classList.remove('fas'); 
-                star.classList.add('far'); 
-            }); 
-            await loadReviews(); 
-            setTimeout(() => { statusDiv.innerHTML = ''; }, 3000); 
-        } catch(err) { 
-            console.error(err); 
-            statusDiv.innerHTML = '<span style="color:#c00;">Ошибка при отправке. Попробуйте позже.</span>'; 
-        } 
-    }); 
+            updateButtonState(); // заблокировать кнопку после отправки
+            document.querySelectorAll('#ratingStars i').forEach(star => {
+                star.classList.remove('fas');
+                star.classList.add('far');
+            });
+            await loadReviews();
+            setTimeout(() => { statusDiv.innerHTML = ''; }, 3000);
+        } catch (err) {
+            console.error(err);
+            statusDiv.innerHTML = '<span style="color:#c00;">Ошибка при отправке. Попробуйте позже.</span>';
+        }
+    });
 }
         
         document.querySelectorAll('.side-menu-nav a').forEach(link => { 
